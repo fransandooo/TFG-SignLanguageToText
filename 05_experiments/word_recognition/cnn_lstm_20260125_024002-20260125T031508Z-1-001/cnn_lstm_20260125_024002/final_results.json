@@ -1,0 +1,25 @@
+{
+  "experiment_name": "cnn_lstm_20260125_024002",
+  "best_epoch": 9,
+  "val_top1_acc": 16.840277910232544,
+  "val_top5_acc": 28.993055820465088,
+  "test_top1_acc": 10.416666666666666,
+  "test_top5_acc": 27.77777862548828,
+  "config": {
+    "experiment_name": "cnn_lstm_20260125_024002",
+    "dataset": "/content/wlasl30",
+    "batch_size": 16,
+    "max_frames": 64,
+    "hidden_size": 256,
+    "num_layers": 2,
+    "bidirectional": true,
+    "dropout": 0.3,
+    "freeze_cnn": false,
+    "num_epochs": 30,
+    "learning_rate": 0.0001,
+    "weight_decay": 0.0001,
+    "num_classes": 30,
+    "train_samples": 245,
+    "val_samples": 57
+  }
+}

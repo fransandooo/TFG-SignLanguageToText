@@ -1,0 +1,62 @@
+{
+  "generated_at": "2026-02-25T13:24",
+  "experiments": {
+    "kfold_30": {
+      "num_classes": 30,
+      "total_samples": 332,
+      "eval_method": "5-fold cross-validation (tutor-approved)",
+      "test_top1": 63.85345997286297,
+      "test_top1_std": 4.499501065479561,
+      "test_top5": 86.45861601085481,
+      "test_top5_std": 2.0411694222793
+    },
+    "wlasl_100": {
+      "num_classes": 100,
+      "train_samples": 795,
+      "val_samples": 186,
+      "test_samples": 132,
+      "eval_method": "standard train/val/test split",
+      "val_top1": 51.61290322580645,
+      "val_top5": 73.11827956989248,
+      "test_top1": 44.696969696969695,
+      "test_top5": 70.45454545454545,
+      "best_epoch": 99,
+      "total_epochs": 129,
+      "training_time_s": 83.0,
+      "random_chance": 1.0,
+      "date": "2026-02-19 18:20"
+    },
+    "wlasl_300": {
+      "num_classes": 300,
+      "train_samples": 1974,
+      "val_samples": 474,
+      "test_samples": 360,
+      "eval_method": "standard train/val/test split",
+      "val_top1": 32.06751054852321,
+      "val_top5": 60.12658227848101,
+      "test_top1": 28.61111111111111,
+      "test_top5": 59.72222222222222,
+      "best_epoch": 112,
+      "total_epochs": 142,
+      "training_time_s": 224.3,
+      "random_chance": 0.3333333333333333,
+      "date": "2026-02-19 19:05"
+    },
+    "wlasl_1000": {
+      "num_classes": 1000,
+      "train_samples": 5122,
+      "val_samples": 1329,
+      "test_samples": 938,
+      "eval_method": "standard train/val/test split",
+      "val_top1": 13.694507148231754,
+      "val_top5": 32.43039879608728,
+      "test_top1": 11.194029850746269,
+      "test_top5": 31.236673773987206,
+      "best_epoch": 113,
+      "total_epochs": 143,
+      "training_time_s": 601.8,
+      "random_chance": 0.1,
+      "date": "2026-02-19 19:15"
+    }
+  }
+}

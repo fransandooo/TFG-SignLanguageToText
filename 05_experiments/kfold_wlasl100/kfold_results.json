@@ -1,0 +1,131 @@
+{
+  "experiment": "kfold_wlasl100",
+  "model": "PoseClassifierAttention (GRU + Temporal Attention)",
+  "dataset": "WLASL100",
+  "total_samples": 332,
+  "num_classes": 30,
+  "n_folds": 5,
+  "config": {
+    "max_frames": 64,
+    "input_size": 63,
+    "num_classes": 30,
+    "hidden_size": 256,
+    "num_layers": 2,
+    "dropout": 0.4,
+    "bidirectional": true,
+    "batch_size": 32,
+    "epochs": 150,
+    "lr": 0.001,
+    "weight_decay": 0.0005,
+    "label_smoothing": 0.1,
+    "patience": 30,
+    "n_folds": 5,
+    "kfold_seed": 42
+  },
+  "results": {
+    "top1_mean": 63.85345997286297,
+    "top1_std": 4.499501065479561,
+    "top5_mean": 86.45861601085481,
+    "top5_std": 2.0411694222793,
+    "top1_per_fold": [
+      65.67164179104478,
+      62.6865671641791,
+      69.6969696969697,
+      56.06060606060606,
+      65.15151515151516
+    ],
+    "top5_per_fold": [
+      85.07462686567165,
+      83.58208955223881,
+      87.87878787878788,
+      86.36363636363636,
+      89.39393939393939
+    ]
+  },
+  "global_accuracy": 63.85542168674698,
+  "per_class_accuracy": {
+    "all": 50.0,
+    "before": 66.66666666666667,
+    "black": 55.55555555555556,
+    "book": 33.333333333333336,
+    "candy": 53.84615384615385,
+    "chair": 71.42857142857143,
+    "clothes": 40.0,
+    "computer": 71.42857142857143,
+    "cool": 12.5,
+    "cousin": 71.42857142857143,
+    "deaf": 90.9090909090909,
+    "drink": 66.66666666666667,
+    "fine": 22.22222222222222,
+    "finish": 66.66666666666667,
+    "go": 80.0,
+    "help": 92.85714285714286,
+    "many": 70.0,
+    "mother": 63.63636363636363,
+    "no": 90.9090909090909,
+    "now": 88.88888888888889,
+    "orange": 100.0,
+    "table": 100.0,
+    "thanksgiving": 38.46153846153846,
+    "thin": 62.5,
+    "walk": 80.0,
+    "what": 8.333333333333334,
+    "who": 57.142857142857146,
+    "woman": 60.0,
+    "year": 70.0,
+    "yes": 90.9090909090909
+  },
+  "fold_details": [
+    {
+      "fold": 0,
+      "val_top1": 65.67164179104478,
+      "val_top5": 85.07462686567165,
+      "best_epoch": 73,
+      "total_epochs": 103,
+      "n_train": 265,
+      "n_val": 67
+    },
+    {
+      "fold": 1,
+      "val_top1": 62.6865671641791,
+      "val_top5": 83.58208955223881,
+      "best_epoch": 22,
+      "total_epochs": 52,
+      "n_train": 265,
+      "n_val": 67
+    },
+    {
+      "fold": 2,
+      "val_top1": 69.6969696969697,
+      "val_top5": 87.87878787878788,
+      "best_epoch": 31,
+      "total_epochs": 61,
+      "n_train": 266,
+      "n_val": 66
+    },
+    {
+      "fold": 3,
+      "val_top1": 56.06060606060606,
+      "val_top5": 86.36363636363636,
+      "best_epoch": 37,
+      "total_epochs": 67,
+      "n_train": 266,
+      "n_val": 66
+    },
+    {
+      "fold": 4,
+      "val_top1": 65.15151515151516,
+      "val_top5": 89.39393939393939,
+      "best_epoch": 60,
+      "total_epochs": 90,
+      "n_train": 266,
+      "n_val": 66
+    }
+  ],
+  "reference": {
+    "original_split_top1": 58.8,
+    "original_split_top5": 91.2,
+    "original_test_size": 34,
+    "note": "Resultado original en WLASL30 test set (34 muestras). K-Fold usa WLASL100 (1002 muestras)."
+  }
+}

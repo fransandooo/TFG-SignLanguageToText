@@ -1,0 +1,213 @@
+\documentclass[openany]{book}
+
+\usepackage[DIV=9]{typearea}
+
+\makeatletter
+\if@twoside % commands below work only for twoside option of \documentclass
+    \newlength{\textblockoffset}
+    \setlength{\textblockoffset}{12mm}
+    \addtolength{\hoffset}{\textblockoffset}
+    \addtolength{\evensidemargin}{-2.0\textblockoffset}
+\fi
+\makeatother
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc} % For spanish characters
+\usepackage[T1]{fontenc} % For special characters
+\usepackage{times} 
+\usepackage{emptypage} 
+\usepackage{pgfplots}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage{float, multirow, rotating}
+\usepackage[autolanguage]{numprint}
+\usepackage{xspace}
+\usepackage{mathtools, amsmath, amsthm, amssymb, enumerate}
+\usepackage{hyphenat}
+\usepackage{caption, subcaption}
+\usepackage{url}
+\usepackage{multirow} 
+\usepackage{rotating}
+\usepackage[ruled, vlined, linesnumbered, resetcount]{algorithm2e}
+\usepackage{appendix}
+\usepackage{units}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{lipsum}
+\usepackage{csquotes}
+\usepackage{subcaption}   % for subfigure
+\usepackage{float}        % for [H] (exact placement)
+\usepackage{placeins}     % for \FloatBarrier
+\usepackage{needspace}
+% Optionally (nice tables):
+\usepackage{booktabs}
+\usepackage[
+  backend=biber,
+  style=ieee,
+  citestyle=ieee,
+  sorting=none,
+  defernumbers=true,
+  maxbibnames=99,
+  maxcitenames=2,
+  giveninits=true,
+  isbn=false,
+  doi=true,
+  url=false,
+  eprint=false
+]{biblatex}
+% Añadir espacio entre párrafos y quitar sangría
+\usepackage{parskip}
+
+% Hacer que el título sea un enlace si hay DOI (Opcional pero recomendado)
+\newbibmacro{string+doi}[1]{%
+  \iffieldundef{doi}{#1}{\href{https://doi.org/\thefield{doi}}{#1}}}
+\DeclareFieldFormat{title}{\usebibmacro{string+doi}{\mkbibemph{#1}}}
+\DeclareFieldFormat[article,inproceedings,incollection]{title}%
+    {\usebibmacro{string+doi}{\mkbibquote{#1}}}
+
+\addto\captionsspanish{}
+
+% Redefine the name of the list of tables
+\addto\captionsspanish{
+  \renewcommand{\listtablename}{List of Tables}
+}
+
+\DeclareNameAlias{sortname}{first-last}
+\setlength{\bibitemsep}{\baselineskip}
+
+\newcommand{\image}[4]{
+\begin{figure}[H]
+\centering
+\includegraphics[width=#2\linewidth,height=0.45\textheight,keepaspectratio]{./images/#1}
+\caption{#3.}
+\label{#4}
+\end{figure}
+}
+
+\newcommand{\requirement}[3]{
+\begin{table}[h!]
+\centering
+\input{#1}
+\caption{#2}
+\label{#3}
+\end{table}
+}
+
+\addto\captionsspanish{\renewcommand{\tablename}{Table}}
+
+\addbibresource{references.bib}
+
+\let\parencite\cite
+
+\usepackage{hyperref}
+\hypersetup{
+   colorlinks,
+   linktoc=all, 
+   linkcolor=blue, 
+   citecolor=blue,
+   urlcolor=blue
+}
+
+\DefineBibliographyStrings{english}{%
+  backrefpage = {page},% originally "cited on page"
+  backrefpages = {pages},% originally "cited on pages"
+}
+
+\sloppy
+\addtocontents{toc}{\protect\thispagestyle{empty}}
+
+% Custom command to add keywords
+\newenvironment{keywords}[1]{
+  \list{}{\advance\topsep by 0.35cm\relax\small
+  \leftmargin=0.7cm
+  \labelsep=0.1cm
+  \listparindent=0cm
+  \itemindent\listparindent
+  \rightmargin\leftmargin}\item[\hskip\labelsep\bfseries#1:]}
+  {\endlist}
+
+\definecolor{maincolor}{RGB}{240,127,9} 
+
+\pagestyle{plain}
+\fancyhf{} % Clears the default header and footer
+
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyhead{}
+  \fancyfoot[RO]{\rule{\textwidth}{0.2pt} \\ \hfill \textbf{\textcolor{maincolor}{COMPUTER SCIENCE DEGREE}}}
+  \fancyfoot[LE]{\rule{\textwidth}{0.2pt} \\ \textbf{\textcolor{maincolor}{FINAL DEGREE PROJECT}} | Universidad Francisco de Vitoria \hfill \thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+% Redefine the plain page style for the first page of chapters
+\fancypagestyle{fancy}{
+  \fancyhf{}
+  \fancyhead{}
+  \fancyfoot[RO]{\rule{\textwidth}{0.1pt} \\ \hfill \textbf{\textcolor{maincolor}{COMPUTER SCIENCE DEGREE}}}
+  \fancyfoot[LE]{\rule{\textwidth}{0.1pt} \\ \textbf{\textcolor{maincolor}{FINAL DEGREE PROJECT}} | Universidad Francisco de Vitoria \hfill \thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
+
+
+\setcounter{tocdepth}{1}
+\newcommand{\myname}{Francisco Sandoval Hern{\'a}ndez}
+\newcommand{\tutor}{Mois{\'e}s Mart{\'i}nez Muñ{\'o}z}
+\newcommand{\subject}{Final Degree Project (FDP)}
+\newcommand{\mykeywords}{sign language recognition, hand detection, deep learning, YOLO, object detection, computer vision, ASL}
+\newcommand{\mykeywordses}{reconocimiento de lengua de signos, detecci{\'o}n de manos, aprendizaje profundo, YOLO, detecci{\'o}n de objetos, visi{\'o}n por computador, ASL}
+\newcommand{\mytitle}{Sign Lenguage Recognition System: Hand Detection and Word Classification using Deep Learning}
+
+\hypersetup{pdfauthor={\myname{}},%
+            pdftitle={\mytitle{}},%
+            pdfsubject={\subject{}},%
+            pdfkeywords={\mykeywords{}},%
+            pdfproducer={LaTeX},%
+            pdfcreator={pdfLaTeX}}
+
+\begin{document}
+
+\renewcommand{\thepage}{\roman{page}}
+
+\input{./sections/portrait}
+
+\newpage{}
+
+\phantom{}
+
+\newpage{}
+
+\input{./sections/grade}
+
+\newpage{}
+
+\pagestyle{empty}
+
+\input{./sections/acknowledgements}
+\input{./sections/resumen}
+\input{./sections/abstract}
+
+\tableofcontents{}
+\listoffigures{}
+\listoftables{}
+%%\listofalgorithms{}
+
+\pagestyle{fancy}
+
+\cleardoublepage
+\setcounter{page}{1}% Start page number with 2
+\renewcommand{\thepage}{\arabic{page}}% Arabic numerals for page counter
+
+\input{./chapters/introduction}
+\input{./chapters/state_of_the_art}
+\input{./chapters/objectives}
+\input{./chapters/plan}
+\input{./chapters/development}
+\input{./chapters/experiments}
+\input{./chapters/ethical_evaluation}
+\input{./chapters/journey}
+\input{./chapters/conclusions}
+
+\printbibliography[heading=bibintoc]
+
+\end{document}

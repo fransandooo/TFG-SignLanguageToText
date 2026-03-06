@@ -1,0 +1,111 @@
+{
+  "models": [
+    "LSTM",
+    "GRU",
+    "GRU_Enriched",
+    "GRU_Attention",
+    "Transformer"
+  ],
+  "individual_results": {
+    "LSTM": {
+      "val": {
+        "top1_acc": 37.5,
+        "top5_acc": 67.85714285714286
+      },
+      "test": {
+        "top1_acc": 41.1764705882353,
+        "top5_acc": 67.6470588235294
+      }
+    },
+    "GRU": {
+      "val": {
+        "top1_acc": 53.57142857142857,
+        "top5_acc": 78.57142857142857
+      },
+      "test": {
+        "top1_acc": 38.23529411764706,
+        "top5_acc": 76.47058823529412
+      }
+    },
+    "GRU_Enriched": {
+      "val": {
+        "top1_acc": 51.785714285714285,
+        "top5_acc": 82.14285714285714
+      },
+      "test": {
+        "top1_acc": 47.05882352941177,
+        "top5_acc": 79.41176470588235
+      }
+    },
+    "GRU_Attention": {
+      "val": {
+        "top1_acc": 64.28571428571429,
+        "top5_acc": 83.92857142857143
+      },
+      "test": {
+        "top1_acc": 58.8235294117647,
+        "top5_acc": 91.17647058823529
+      }
+    },
+    "Transformer": {
+      "val": {
+        "top1_acc": 50.0,
+        "top5_acc": 75.0
+      },
+      "test": {
+        "top1_acc": 50.0,
+        "top5_acc": 73.52941176470588
+      }
+    }
+  },
+  "ensemble_no_tta": {
+    "val": {
+      "top1_acc": 57.142857142857146,
+      "top5_acc": 85.71428571428571
+    },
+    "test": {
+      "top1_acc": 58.8235294117647,
+      "top5_acc": 79.41176470588235
+    }
+  },
+  "ensemble_with_tta": {
+    "val": {
+      "top1_acc": 55.357142857142854,
+      "top5_acc": 85.71428571428571
+    },
+    "test": {
+      "top1_acc": 58.8235294117647,
+      "top5_acc": 79.41176470588235
+    }
+  },
+  "config_attention": {
+    "max_frames": 64,
+    "input_size": 63,
+    "num_classes": 30,
+    "hidden_size": 256,
+    "num_layers": 2,
+    "dropout": 0.4,
+    "bidirectional": true,
+    "batch_size": 32,
+    "epochs": 150,
+    "lr": 0.001,
+    "weight_decay": 0.0005,
+    "label_smoothing": 0.1,
+    "patience": 30
+  },
+  "config_transformer": {
+    "max_frames": 64,
+    "input_size": 63,
+    "num_classes": 30,
+    "d_model": 256,
+    "nhead": 8,
+    "num_transformer_layers": 4,
+    "dropout": 0.3,
+    "batch_size": 32,
+    "epochs": 150,
+    "lr": 0.0005,
+    "weight_decay": 0.0001,
+    "label_smoothing": 0.1,
+    "patience": 30
+  }
+}

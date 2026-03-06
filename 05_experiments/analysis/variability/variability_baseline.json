@@ -1,0 +1,140 @@
+{
+  "dataset": "WLASL30",
+  "split": "train",
+  "augmentation": "none",
+  "n_samples": 245,
+  "n_classes": 30,
+  "metrics": {
+    "mean_intra_class_variance": 0.13876745676000912,
+    "inter_class_distance": 4.606990246133342,
+    "fisher_discriminant_ratio": 0.1483885057735935,
+    "samples_per_class": {
+      "min": 4,
+      "max": 12,
+      "mean": 8.166666666666666,
+      "std": 2.1615323782497966
+    }
+  },
+  "per_class": {
+    "all": {
+      "n_samples": 7,
+      "intra_variance": 0.14018097519874573
+    },
+    "before": {
+      "n_samples": 12,
+      "intra_variance": 0.13225223124027252
+    },
+    "black": {
+      "n_samples": 8,
+      "intra_variance": 0.14320969581604004
+    },
+    "book": {
+      "n_samples": 5,
+      "intra_variance": 0.14148324728012085
+    },
+    "candy": {
+      "n_samples": 8,
+      "intra_variance": 0.13152578473091125
+    },
+    "chair": {
+      "n_samples": 5,
+      "intra_variance": 0.1144830510020256
+    },
+    "clothes": {
+      "n_samples": 4,
+      "intra_variance": 0.1194259375333786
+    },
+    "computer": {
+      "n_samples": 10,
+      "intra_variance": 0.1459951400756836
+    },
+    "cool": {
+      "n_samples": 11,
+      "intra_variance": 0.13101181387901306
+    },
+    "cousin": {
+      "n_samples": 9,
+      "intra_variance": 0.1380988210439682
+    },
+    "deaf": {
+      "n_samples": 7,
+      "intra_variance": 0.13264502584934235
+    },
+    "drink": {
+      "n_samples": 11,
+      "intra_variance": 0.13282926380634308
+    },
+    "fine": {
+      "n_samples": 6,
+      "intra_variance": 0.13124488294124603
+    },
+    "finish": {
+      "n_samples": 6,
+      "intra_variance": 0.15690606832504272
+    },
+    "go": {
+      "n_samples": 11,
+      "intra_variance": 0.14254093170166016
+    },
+    "help": {
+      "n_samples": 10,
+      "intra_variance": 0.1530805081129074
+    },
+    "many": {
+      "n_samples": 9,
+      "intra_variance": 0.14025679230690002
+    },
+    "mother": {
+      "n_samples": 10,
+      "intra_variance": 0.1528761237859726
+    },
+    "no": {
+      "n_samples": 8,
+      "intra_variance": 0.15043723583221436
+    },
+    "now": {
+      "n_samples": 5,
+      "intra_variance": 0.12944740056991577
+    },
+    "orange": {
+      "n_samples": 8,
+      "intra_variance": 0.13518032431602478
+    },
+    "table": {
+      "n_samples": 5,
+      "intra_variance": 0.13911250233650208
+    },
+    "thanksgiving": {
+      "n_samples": 9,
+      "intra_variance": 0.11961911618709564
+    },
+    "thin": {
+      "n_samples": 11,
+      "intra_variance": 0.12480056285858154
+    },
+    "walk": {
+      "n_samples": 9,
+      "intra_variance": 0.17152294516563416
+    },
+    "what": {
+      "n_samples": 6,
+      "intra_variance": 0.15283383429050446
+    },
+    "who": {
+      "n_samples": 10,
+      "intra_variance": 0.13922224938869476
+    },
+    "woman": {
+      "n_samples": 9,
+      "intra_variance": 0.1312960684299469
+    },
+    "year": {
+      "n_samples": 7,
+      "intra_variance": 0.1470078080892563
+    },
+    "yes": {
+      "n_samples": 9,
+      "intra_variance": 0.14249736070632935
+    }
+  }
+}

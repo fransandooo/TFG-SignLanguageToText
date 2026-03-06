@@ -1,0 +1,18 @@
+{
+    "build": {
+        "dockerfile": "../Dockerfile"
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "james-yu.latex-workshop",   // Comprehensive LaTeX support
+                "nickfode.latex-formatter", // Automatic formatting for LaTeX
+                "mathematic.vscode-latex",  // Math-focused LaTeX utilities
+                "ms-azuretools.vscode-docker", // Docker tools
+                "meezilla.json",            // JSON utilities for configs
+                "valentjn.vscode-ltex"      // Grammar and style checking
+            ]
+        }
+    },
+    "postCreateCommand": "sed -i 's/\r$//' .devcontainer/misc/*.sh; sh .devcontainer/misc/initialize.sh"
+}

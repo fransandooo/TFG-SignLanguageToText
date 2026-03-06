@@ -1,0 +1,158 @@
+================================================================================
+                    REFERENCIAS DE DATASETS - TFG
+                  Sign Language Recognition System
+================================================================================
+
+Este archivo contiene todas las referencias necesarias para descargar los
+datasets utilizados en este proyecto. Guarda este archivo para poder
+reproducir el entorno de trabajo en caso de necesidad.
+
+================================================================================
+                           DATASETS DE KAGGLE
+================================================================================
+
+Para usar estos datasets necesitas:
+1. Tener una cuenta en Kaggle (https://www.kaggle.com)
+2. Tener el archivo utils/kaggle.json con tus credenciales
+3. Instalar kagglehub: pip install kagglehub
+
+--------------------------------------------------------------------------------
+1. HAND DATASET (Kaggle)
+--------------------------------------------------------------------------------
+Dataset: armannikkhah/hand-dataset
+Uso: Detección de manos con bounding boxes
+Tamaño: ~1.3GB
+
+Comando de descarga:
+    import kagglehub
+    kaggle_path = kagglehub.dataset_download("armannikkhah/hand-dataset")
+
+Ubicación en el código:
+    - HandDetectionNotebooks/BoundingBoxHandDetectionModelV2.ipynb
+    - HandDetectionNotebooks/BBHD.ipynb
+    - 01_yolo_hands_mixed_fixed.ipynb
+    - YOLOv8n_Only_Training_Final.ipynb
+
+--------------------------------------------------------------------------------
+2. SIGN LANGUAGE MNIST
+--------------------------------------------------------------------------------
+Dataset: datamunge/sign-language-mnist
+Uso: Clasificación de letras del alfabeto ASL (American Sign Language)
+Formato: CSV con imágenes 28x28 en escala de grises
+Clases: 24 letras (excluye J y Z por ser dinámicas)
+Tamaño: ~65MB
+
+Comando de descarga:
+    kagglehub.dataset_download("datamunge/sign-language-mnist")
+
+Archivos principales:
+    - sign_mnist_train.csv
+    - sign_mnist_test.csv
+
+Ubicación en el código:
+    - 01_notebooks/dataset_preparation/Dataset.ipynb
+    - 01_notebooks/dataset_preparation/Datasetv2.ipynb
+
+--------------------------------------------------------------------------------
+3. ASL ALPHABET DATASET
+--------------------------------------------------------------------------------
+Dataset: grassknoted/asl-alphabet
+Uso: Clasificación de letras ASL con imágenes RGB
+Tamaño: ~1.1GB
+Formato: Imágenes JPG en carpetas por letra
+
+Comando de descarga:
+    kagglehub.dataset_download("grassknoted/asl-alphabet")
+
+Ubicación en el código:
+    - 01_notebooks/dataset_preparation/Datasetv2.ipynb
+
+================================================================================
+                        DATASETS DE DESCARGA DIRECTA
+================================================================================
+
+--------------------------------------------------------------------------------
+4. EGOHANDS DATASET
+--------------------------------------------------------------------------------
+Descripción: Dataset de detección de manos desde perspectiva egocéntrica
+              (primera persona). Incluye frames de video con anotaciones
+              pixel-level de manos.
+Tamaño: ~1.3GB
+URL: https://vision.soic.indiana.edu/egohands_files/egohands_data.zip
+
+Comando de descarga (Python):
+    import urllib.request
+    url = "https://vision.soic.indiana.edu/egohands_files/egohands_data.zip"
+    urllib.request.urlretrieve(url, "egohands_data.zip")
+
+Ubicación en el código:
+    - 01_notebooks/hand_detection/YOLOv8n_Only_Training.ipynb
+    - 01_notebooks/hand_detection/01_yolo_hands_mixed_fixed.ipynb
+    - 01_notebooks/hand_detection/YOLOv8n_Only_Training_Final.ipynb
+
+Variable en código:
+    EGO_ZIP_URL = "https://vision.soic.indiana.edu/egohands_files/egohands_data.zip"
+
+================================================================================
+                          DATASET PROCESADO LOCAL
+================================================================================
+
+Ubicación: 06_datasets/processed/SignLanguageMNIST_ASLAlphabet/
+
+Este dataset combina:
+    - Sign Language MNIST (convertido de CSV a PNG)
+    - ASL Alphabet (convertido a escala de grises)
+
+Estructura:
+    train/
+        A/
+        B/
+        ...
+    test/
+        A/
+        B/
+        ...
+
+Total: ~34,000+ imágenes de entrenamiento y ~7,000+ de test
+
+Generado por: 01_notebooks/dataset_preparation/Datasetv2.ipynb
+
+================================================================================
+                          CONFIGURACIÓN DE KAGGLE
+================================================================================
+
+El archivo utils/kaggle.json debe tener el siguiente formato:
+{
+    "username": "tu_usuario_kaggle",
+    "key": "tu_api_key_aqui"
+}
+
+Para obtener tu API key:
+1. Ve a https://www.kaggle.com/
+2. Haz clic en tu perfil → Account
+3. Scroll hasta "API" → "Create New API Token"
+4. Descarga el archivo kaggle.json
+5. Copia el contenido a utils/kaggle.json
+
+================================================================================
+                          NOTAS IMPORTANTES
+================================================================================
+
+- Los datasets de Kaggle se descargan automáticamente en caché
+- EgoHands debe descargarse y descomprimirse manualmente
+- El dataset procesado local NO necesita descargarse, ya está generado
+- Todos los notebooks incluyen código para verificar si el dataset ya existe
+  antes de descargarlo nuevamente
+
+================================================================================
+                          ESPACIO EN DISCO REQUERIDO
+================================================================================
+
+Datasets descargables (raw):        ~4.2 GB
+Datasets procesados:                ~1.3 GB
+Modelos entrenados:                 ~12 MB
+Total aproximado:                   ~5.5 GB
+
+================================================================================
+Última actualización: 2025-12-30
+================================================================================

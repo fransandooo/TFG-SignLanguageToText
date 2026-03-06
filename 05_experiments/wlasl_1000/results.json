@@ -1,0 +1,4274 @@
+{
+  "experiment": "wlasl_1000",
+  "date": "2026-02-19 19:15",
+  "subset_path": "/home/fransando/Dev/tfg-sign-language-recognition/06_datasets/wlasl/subsets/wlasl_1000_subset.json",
+  "num_classes": 1000,
+  "config": {
+    "max_frames": 64,
+    "input_size": 63,
+    "num_classes": 1000,
+    "hidden_size": 256,
+    "num_layers": 2,
+    "dropout": 0.4,
+    "bidirectional": true,
+    "batch_size": 32,
+    "epochs": 150,
+    "lr": 0.001,
+    "weight_decay": 0.0005,
+    "label_smoothing": 0.1,
+    "patience": 30
+  },
+  "dataset": {
+    "train": 5122,
+    "val": 1329,
+    "test": 938
+  },
+  "training": {
+    "best_val_top1": 13.694507148231754,
+    "best_epoch": 113,
+    "total_epochs": 143,
+    "training_time_s": 601.8
+  },
+  "val_metrics": {
+    "top1_acc": 13.694507148231754,
+    "top5_acc": 32.43039879608728
+  },
+  "test_metrics": {
+    "top1_acc": 11.194029850746269,
+    "top5_acc": 31.236673773987206
+  },
+  "per_class_accuracy": {
+    "0": {
+      "gloss": "a lot",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "3": {
+      "gloss": "accident",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "5": {
+      "gloss": "action",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "7": {
+      "gloss": "adapt",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "8": {
+      "gloss": "add",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "11": {
+      "gloss": "affect",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "12": {
+      "gloss": "africa",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "13": {
+      "gloss": "after",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "14": {
+      "gloss": "afternoon",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "16": {
+      "gloss": "age",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "17": {
+      "gloss": "ago",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "18": {
+      "gloss": "agreement",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "20": {
+      "gloss": "all",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "22": {
+      "gloss": "allow",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "23": {
+      "gloss": "alone",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "24": {
+      "gloss": "already",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "25": {
+      "gloss": "also",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "26": {
+      "gloss": "always",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "27": {
+      "gloss": "america",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "28": {
+      "gloss": "analyze",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "29": {
+      "gloss": "angel",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "30": {
+      "gloss": "angle",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "32": {
+      "gloss": "animal",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "33": {
+      "gloss": "answer",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "35": {
+      "gloss": "appear",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "37": {
+      "gloss": "appointment",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "38": {
+      "gloss": "approve",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "39": {
+      "gloss": "area",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "40": {
+      "gloss": "argue",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "42": {
+      "gloss": "arrest",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "43": {
+      "gloss": "arrive",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "44": {
+      "gloss": "arrogant",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "45": {
+      "gloss": "art",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "46": {
+      "gloss": "asia",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "47": {
+      "gloss": "ask",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "49": {
+      "gloss": "attitude",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "51": {
+      "gloss": "audience",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "53": {
+      "gloss": "aunt",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "54": {
+      "gloss": "australia",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "56": {
+      "gloss": "avoid",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "57": {
+      "gloss": "away",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "58": {
+      "gloss": "awful",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "59": {
+      "gloss": "awkward",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "60": {
+      "gloss": "baby",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "61": {
+      "gloss": "back",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "62": {
+      "gloss": "backpack",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "63": {
+      "gloss": "bacon",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "64": {
+      "gloss": "bad",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "65": {
+      "gloss": "bake",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "66": {
+      "gloss": "balance",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "67": {
+      "gloss": "bald",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "68": {
+      "gloss": "ball",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "69": {
+      "gloss": "balloon",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "70": {
+      "gloss": "banana",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "71": {
+      "gloss": "bar",
+      "acc": 0.0,
+      "n_test": 3
+    },
+    "72": {
+      "gloss": "barely",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "73": {
+      "gloss": "bark",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "74": {
+      "gloss": "baseball",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "75": {
+      "gloss": "basement",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "76": {
+      "gloss": "basketball",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "77": {
+      "gloss": "bath",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "78": {
+      "gloss": "bathroom",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "82": {
+      "gloss": "because",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "84": {
+      "gloss": "bedroom",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "86": {
+      "gloss": "beer",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "87": {
+      "gloss": "before",
+      "acc": 0.0,
+      "n_test": 3
+    },
+    "88": {
+      "gloss": "beginning",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "89": {
+      "gloss": "belief",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "90": {
+      "gloss": "believe",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "92": {
+      "gloss": "below",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "93": {
+      "gloss": "belt",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "94": {
+      "gloss": "benefit",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "98": {
+      "gloss": "big",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "100": {
+      "gloss": "bird",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "101": {
+      "gloss": "birth",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "102": {
+      "gloss": "birthday",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "103": {
+      "gloss": "bite",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "104": {
+      "gloss": "bitter",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "107": {
+      "gloss": "blanket",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "109": {
+      "gloss": "blind",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "110": {
+      "gloss": "blue",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "111": {
+      "gloss": "boat",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "112": {
+      "gloss": "body",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "114": {
+      "gloss": "bored",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "115": {
+      "gloss": "borrow",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "118": {
+      "gloss": "bother",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "119": {
+      "gloss": "bottle",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "121": {
+      "gloss": "bowl",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "122": {
+      "gloss": "bowling",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "123": {
+      "gloss": "box",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "124": {
+      "gloss": "boy",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "125": {
+      "gloss": "bracelet",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "127": {
+      "gloss": "bread",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "129": {
+      "gloss": "bright",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "130": {
+      "gloss": "bring",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "131": {
+      "gloss": "brother",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "132": {
+      "gloss": "brown",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "133": {
+      "gloss": "brush",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "134": {
+      "gloss": "build",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "135": {
+      "gloss": "building",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "136": {
+      "gloss": "bully",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "137": {
+      "gloss": "bush",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "138": {
+      "gloss": "business",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "139": {
+      "gloss": "but",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "140": {
+      "gloss": "butter",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "141": {
+      "gloss": "buy",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "142": {
+      "gloss": "cafeteria",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "143": {
+      "gloss": "cake",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "144": {
+      "gloss": "calculate",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "145": {
+      "gloss": "california",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "146": {
+      "gloss": "call",
+      "acc": 100.0,
+      "n_test": 2
+    },
+    "147": {
+      "gloss": "calm",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "148": {
+      "gloss": "can",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "149": {
+      "gloss": "canada",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "150": {
+      "gloss": "cancel",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "151": {
+      "gloss": "candle",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "152": {
+      "gloss": "candy",
+      "acc": 0.0,
+      "n_test": 3
+    },
+    "153": {
+      "gloss": "cannot",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "154": {
+      "gloss": "caption",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "155": {
+      "gloss": "car",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "156": {
+      "gloss": "card",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "157": {
+      "gloss": "care",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "158": {
+      "gloss": "careful",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "159": {
+      "gloss": "carrot",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "161": {
+      "gloss": "cat",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "162": {
+      "gloss": "catch",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "163": {
+      "gloss": "cause",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "164": {
+      "gloss": "ceiling",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "166": {
+      "gloss": "cemetery",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "169": {
+      "gloss": "cereal",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "173": {
+      "gloss": "champion",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "174": {
+      "gloss": "change",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "175": {
+      "gloss": "character",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "177": {
+      "gloss": "chat",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "179": {
+      "gloss": "cheat",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "180": {
+      "gloss": "check",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "181": {
+      "gloss": "cheese",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "183": {
+      "gloss": "child",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "185": {
+      "gloss": "chocolate",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "186": {
+      "gloss": "choice",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "187": {
+      "gloss": "choir",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "188": {
+      "gloss": "choose",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "189": {
+      "gloss": "chop",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "190": {
+      "gloss": "christian",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "191": {
+      "gloss": "christmas",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "192": {
+      "gloss": "church",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "193": {
+      "gloss": "city",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "194": {
+      "gloss": "class",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "195": {
+      "gloss": "clean",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "197": {
+      "gloss": "close",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "198": {
+      "gloss": "cloud",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "200": {
+      "gloss": "cochlear implant",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "202": {
+      "gloss": "cold",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "204": {
+      "gloss": "color",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "205": {
+      "gloss": "comb",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "206": {
+      "gloss": "come",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "207": {
+      "gloss": "come here",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "208": {
+      "gloss": "comfortable",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "210": {
+      "gloss": "compare",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "212": {
+      "gloss": "complex",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "213": {
+      "gloss": "compromise",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "214": {
+      "gloss": "computer",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "215": {
+      "gloss": "conflict",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "216": {
+      "gloss": "confront",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "217": {
+      "gloss": "confused",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "218": {
+      "gloss": "congress",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "219": {
+      "gloss": "constitution",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "220": {
+      "gloss": "contact",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "221": {
+      "gloss": "continue",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "222": {
+      "gloss": "contribute",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "223": {
+      "gloss": "convince",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "225": {
+      "gloss": "cookie",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "226": {
+      "gloss": "cool",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "229": {
+      "gloss": "corn",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "230": {
+      "gloss": "correct",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "232": {
+      "gloss": "cough",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "234": {
+      "gloss": "country",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "235": {
+      "gloss": "cousin",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "236": {
+      "gloss": "cow",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "237": {
+      "gloss": "crab",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "239": {
+      "gloss": "crash",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "240": {
+      "gloss": "crazy",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "241": {
+      "gloss": "cry",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "242": {
+      "gloss": "cup",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "246": {
+      "gloss": "cut",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "250": {
+      "gloss": "dangerous",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "251": {
+      "gloss": "dark",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "253": {
+      "gloss": "day",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "254": {
+      "gloss": "deaf",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "256": {
+      "gloss": "decorate",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "257": {
+      "gloss": "deduct",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "258": {
+      "gloss": "deep",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "259": {
+      "gloss": "deer",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "260": {
+      "gloss": "degree",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "261": {
+      "gloss": "delay",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "262": {
+      "gloss": "delicious",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "263": {
+      "gloss": "demand",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "265": {
+      "gloss": "dentist",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "266": {
+      "gloss": "deodorant",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "267": {
+      "gloss": "depend",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "269": {
+      "gloss": "desert",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "271": {
+      "gloss": "dessert",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "272": {
+      "gloss": "destroy",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "273": {
+      "gloss": "develop",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "274": {
+      "gloss": "diamond",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "279": {
+      "gloss": "dinner",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "280": {
+      "gloss": "dinosaur",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "281": {
+      "gloss": "dirty",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "282": {
+      "gloss": "disappear",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "283": {
+      "gloss": "disconnect",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "286": {
+      "gloss": "disgust",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "288": {
+      "gloss": "dive",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "291": {
+      "gloss": "doctor",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "292": {
+      "gloss": "document",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "293": {
+      "gloss": "dog",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "294": {
+      "gloss": "doll",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "295": {
+      "gloss": "dollar",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "298": {
+      "gloss": "dorm",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "301": {
+      "gloss": "draw",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "302": {
+      "gloss": "drawer",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "303": {
+      "gloss": "dream",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "304": {
+      "gloss": "dress",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "305": {
+      "gloss": "drink",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "306": {
+      "gloss": "drive",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "307": {
+      "gloss": "drop",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "308": {
+      "gloss": "drunk",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "309": {
+      "gloss": "dry",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "312": {
+      "gloss": "dull",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "313": {
+      "gloss": "eagle",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "314": {
+      "gloss": "ear",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "315": {
+      "gloss": "early",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "317": {
+      "gloss": "earring",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "319": {
+      "gloss": "east",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "320": {
+      "gloss": "easter",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "321": {
+      "gloss": "easy",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "324": {
+      "gloss": "egg",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "325": {
+      "gloss": "egypt",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "327": {
+      "gloss": "eighteen",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "328": {
+      "gloss": "elephant",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "329": {
+      "gloss": "elevator",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "331": {
+      "gloss": "emotion",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "333": {
+      "gloss": "end",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "336": {
+      "gloss": "environment",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "337": {
+      "gloss": "equal",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "338": {
+      "gloss": "escape",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "339": {
+      "gloss": "europe",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "341": {
+      "gloss": "evidence",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "343": {
+      "gloss": "example",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "344": {
+      "gloss": "exchange",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "345": {
+      "gloss": "excited",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "347": {
+      "gloss": "expensive",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "348": {
+      "gloss": "experience",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "349": {
+      "gloss": "experiment",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "350": {
+      "gloss": "expert",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "351": {
+      "gloss": "explain",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "352": {
+      "gloss": "eye",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "353": {
+      "gloss": "face",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "358": {
+      "gloss": "fancy",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "359": {
+      "gloss": "far",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "360": {
+      "gloss": "farm",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "361": {
+      "gloss": "fast",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "362": {
+      "gloss": "fat",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "363": {
+      "gloss": "father",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "364": {
+      "gloss": "fault",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "366": {
+      "gloss": "feedback",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "367": {
+      "gloss": "feel",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "368": {
+      "gloss": "fence",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "369": {
+      "gloss": "fight",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "370": {
+      "gloss": "finally",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "371": {
+      "gloss": "find",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "372": {
+      "gloss": "fine",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "373": {
+      "gloss": "finish",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "375": {
+      "gloss": "fish",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "376": {
+      "gloss": "fishing",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "377": {
+      "gloss": "fix",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "378": {
+      "gloss": "flag",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "379": {
+      "gloss": "flexible",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "381": {
+      "gloss": "floor",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "382": {
+      "gloss": "flower",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "383": {
+      "gloss": "flute",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "385": {
+      "gloss": "fold",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "386": {
+      "gloss": "follow",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "387": {
+      "gloss": "food",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "388": {
+      "gloss": "football",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "389": {
+      "gloss": "forest",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "390": {
+      "gloss": "forever",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "391": {
+      "gloss": "forget",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "392": {
+      "gloss": "form",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "394": {
+      "gloss": "france",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "395": {
+      "gloss": "freeze",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "396": {
+      "gloss": "french fries",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "397": {
+      "gloss": "friday",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "399": {
+      "gloss": "friendly",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "400": {
+      "gloss": "frog",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "402": {
+      "gloss": "front",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "403": {
+      "gloss": "fruit",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "404": {
+      "gloss": "full",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "407": {
+      "gloss": "future",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "408": {
+      "gloss": "game",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "409": {
+      "gloss": "gas",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "410": {
+      "gloss": "gather",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "412": {
+      "gloss": "geography",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "413": {
+      "gloss": "germany",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "414": {
+      "gloss": "get",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "415": {
+      "gloss": "get up",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "416": {
+      "gloss": "giraffe",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "417": {
+      "gloss": "girl",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "418": {
+      "gloss": "give",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "420": {
+      "gloss": "glass",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "421": {
+      "gloss": "glasses",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "422": {
+      "gloss": "go",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "424": {
+      "gloss": "goat",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "425": {
+      "gloss": "god",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "426": {
+      "gloss": "golf",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "427": {
+      "gloss": "good",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "428": {
+      "gloss": "gossip",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "429": {
+      "gloss": "government",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "432": {
+      "gloss": "grandfather",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "433": {
+      "gloss": "grandmother",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "434": {
+      "gloss": "grapes",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "436": {
+      "gloss": "great",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "437": {
+      "gloss": "greece",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "438": {
+      "gloss": "green",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "439": {
+      "gloss": "group",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "440": {
+      "gloss": "grow",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "442": {
+      "gloss": "guilty",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "447": {
+      "gloss": "hamburger",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "449": {
+      "gloss": "happy",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "450": {
+      "gloss": "hard",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "452": {
+      "gloss": "have",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "453": {
+      "gloss": "hawaii",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "455": {
+      "gloss": "headache",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "456": {
+      "gloss": "health",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "457": {
+      "gloss": "hear",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "458": {
+      "gloss": "hearing",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "460": {
+      "gloss": "helicopter",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "461": {
+      "gloss": "help",
+      "acc": 100.0,
+      "n_test": 2
+    },
+    "462": {
+      "gloss": "her",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "463": {
+      "gloss": "here",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "464": {
+      "gloss": "herself",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "465": {
+      "gloss": "highway",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "466": {
+      "gloss": "history",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "467": {
+      "gloss": "hit",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "468": {
+      "gloss": "home",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "469": {
+      "gloss": "honor",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "470": {
+      "gloss": "hope",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "471": {
+      "gloss": "hospital",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "473": {
+      "gloss": "hour",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "474": {
+      "gloss": "house",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "475": {
+      "gloss": "how",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "476": {
+      "gloss": "humble",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "477": {
+      "gloss": "hungry",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "478": {
+      "gloss": "hurry",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "479": {
+      "gloss": "husband",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "481": {
+      "gloss": "idea",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "482": {
+      "gloss": "important",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "483": {
+      "gloss": "impossible",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "484": {
+      "gloss": "improve",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "485": {
+      "gloss": "in",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "486": {
+      "gloss": "independent",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "487": {
+      "gloss": "infection",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "489": {
+      "gloss": "inform",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "490": {
+      "gloss": "information",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "491": {
+      "gloss": "inside",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "492": {
+      "gloss": "insurance",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "493": {
+      "gloss": "interest",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "494": {
+      "gloss": "interesting",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "495": {
+      "gloss": "internet",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "496": {
+      "gloss": "introduce",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "497": {
+      "gloss": "invest",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "498": {
+      "gloss": "investigate",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "499": {
+      "gloss": "iran",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "500": {
+      "gloss": "island",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "502": {
+      "gloss": "japan",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "503": {
+      "gloss": "jealous",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "506": {
+      "gloss": "join",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "507": {
+      "gloss": "jump",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "508": {
+      "gloss": "keep",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "511": {
+      "gloss": "kill",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "512": {
+      "gloss": "king",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "513": {
+      "gloss": "kiss",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "514": {
+      "gloss": "kitchen",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "516": {
+      "gloss": "know",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "517": {
+      "gloss": "label",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "519": {
+      "gloss": "language",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "520": {
+      "gloss": "laptop",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "521": {
+      "gloss": "large",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "522": {
+      "gloss": "last",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "523": {
+      "gloss": "last year",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "526": {
+      "gloss": "laugh",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "527": {
+      "gloss": "law",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "528": {
+      "gloss": "lazy",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "529": {
+      "gloss": "lead",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "532": {
+      "gloss": "leave",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "533": {
+      "gloss": "lecture",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "534": {
+      "gloss": "lemon",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "537": {
+      "gloss": "lesson",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "538": {
+      "gloss": "letter",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "539": {
+      "gloss": "lettuce",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "541": {
+      "gloss": "lift",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "542": {
+      "gloss": "light",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "543": {
+      "gloss": "lightning",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "544": {
+      "gloss": "like",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "545": {
+      "gloss": "limit",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "547": {
+      "gloss": "linguistics",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "548": {
+      "gloss": "list",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "550": {
+      "gloss": "live",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "551": {
+      "gloss": "lobster",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "553": {
+      "gloss": "lonely",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "554": {
+      "gloss": "losear",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "555": {
+      "gloss": "loud",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "558": {
+      "gloss": "lucky",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "561": {
+      "gloss": "make",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "564": {
+      "gloss": "march",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "565": {
+      "gloss": "marry",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "566": {
+      "gloss": "match",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "569": {
+      "gloss": "maybe",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "570": {
+      "gloss": "mean",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "571": {
+      "gloss": "measure",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "572": {
+      "gloss": "meat",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "574": {
+      "gloss": "medicine",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "575": {
+      "gloss": "meet",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "576": {
+      "gloss": "meeting",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "578": {
+      "gloss": "mexico",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "579": {
+      "gloss": "microwave",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "581": {
+      "gloss": "minute",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "582": {
+      "gloss": "mirror",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "583": {
+      "gloss": "miss",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "584": {
+      "gloss": "mix",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "585": {
+      "gloss": "mom",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "586": {
+      "gloss": "monday",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "587": {
+      "gloss": "money",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "588": {
+      "gloss": "monkey",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "589": {
+      "gloss": "month",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "590": {
+      "gloss": "moon",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "591": {
+      "gloss": "more",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "592": {
+      "gloss": "morning",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "593": {
+      "gloss": "most",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "595": {
+      "gloss": "motivate",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "596": {
+      "gloss": "motorcycle",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "597": {
+      "gloss": "move",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "598": {
+      "gloss": "much",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "599": {
+      "gloss": "multiply",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "600": {
+      "gloss": "music",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "603": {
+      "gloss": "myself",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "604": {
+      "gloss": "name",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "605": {
+      "gloss": "napkin",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "606": {
+      "gloss": "near",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "608": {
+      "gloss": "necklace",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "611": {
+      "gloss": "neighbor",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "612": {
+      "gloss": "nephew",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "613": {
+      "gloss": "nervous",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "614": {
+      "gloss": "network",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "615": {
+      "gloss": "neutral",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "616": {
+      "gloss": "never",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "617": {
+      "gloss": "new",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "618": {
+      "gloss": "nice",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "619": {
+      "gloss": "niece",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "620": {
+      "gloss": "nineteen",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "621": {
+      "gloss": "no",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "622": {
+      "gloss": "none",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "623": {
+      "gloss": "noon",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "624": {
+      "gloss": "north",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "625": {
+      "gloss": "nose",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "626": {
+      "gloss": "not",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "628": {
+      "gloss": "notice",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "629": {
+      "gloss": "now",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "630": {
+      "gloss": "nurse",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "631": {
+      "gloss": "obsess",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "632": {
+      "gloss": "off",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "634": {
+      "gloss": "office",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "635": {
+      "gloss": "often",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "636": {
+      "gloss": "ok",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "637": {
+      "gloss": "old",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "638": {
+      "gloss": "one",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "639": {
+      "gloss": "onion",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "641": {
+      "gloss": "open",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "642": {
+      "gloss": "operate",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "643": {
+      "gloss": "opinion",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "645": {
+      "gloss": "order",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "646": {
+      "gloss": "outside",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "650": {
+      "gloss": "pants",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "653": {
+      "gloss": "party",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "654": {
+      "gloss": "pass",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "655": {
+      "gloss": "past",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "657": {
+      "gloss": "patient",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "658": {
+      "gloss": "pay",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "659": {
+      "gloss": "peaceful",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "661": {
+      "gloss": "people",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "662": {
+      "gloss": "pepper",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "663": {
+      "gloss": "perfect",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "665": {
+      "gloss": "perspective",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "666": {
+      "gloss": "philosophy",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "667": {
+      "gloss": "phrase",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "668": {
+      "gloss": "physician",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "671": {
+      "gloss": "pig",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "674": {
+      "gloss": "pizza",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "675": {
+      "gloss": "plan",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "676": {
+      "gloss": "play",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "677": {
+      "gloss": "please",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "678": {
+      "gloss": "plus",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "680": {
+      "gloss": "point",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "683": {
+      "gloss": "politics",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "684": {
+      "gloss": "poor",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "687": {
+      "gloss": "postpone",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "688": {
+      "gloss": "potato",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "690": {
+      "gloss": "power",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "691": {
+      "gloss": "practice",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "692": {
+      "gloss": "pray",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "693": {
+      "gloss": "precipitation",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "694": {
+      "gloss": "predict",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "695": {
+      "gloss": "prepare",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "696": {
+      "gloss": "present",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "697": {
+      "gloss": "presentation",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "698": {
+      "gloss": "president",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "699": {
+      "gloss": "price",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "702": {
+      "gloss": "prison",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "703": {
+      "gloss": "private",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "704": {
+      "gloss": "problem",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "706": {
+      "gloss": "professional",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "707": {
+      "gloss": "program",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "708": {
+      "gloss": "project",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "713": {
+      "gloss": "publish",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "714": {
+      "gloss": "pull",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "716": {
+      "gloss": "purple",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "718": {
+      "gloss": "push",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "720": {
+      "gloss": "queen",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "721": {
+      "gloss": "quick",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "722": {
+      "gloss": "quiet",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "723": {
+      "gloss": "quit",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "724": {
+      "gloss": "quote",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "725": {
+      "gloss": "rabbit",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "726": {
+      "gloss": "raccoon",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "728": {
+      "gloss": "radio",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "729": {
+      "gloss": "rain",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "730": {
+      "gloss": "rat",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "732": {
+      "gloss": "ready",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "733": {
+      "gloss": "really",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "734": {
+      "gloss": "reason",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "735": {
+      "gloss": "recent",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "737": {
+      "gloss": "red",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "740": {
+      "gloss": "religion",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "744": {
+      "gloss": "require",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "745": {
+      "gloss": "research",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "746": {
+      "gloss": "respect",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "747": {
+      "gloss": "responsibility",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "748": {
+      "gloss": "restaurant",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "750": {
+      "gloss": "retire",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "751": {
+      "gloss": "revenge",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "752": {
+      "gloss": "review",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "753": {
+      "gloss": "rich",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "754": {
+      "gloss": "ride",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "755": {
+      "gloss": "right",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "757": {
+      "gloss": "rob",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "758": {
+      "gloss": "rock",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "759": {
+      "gloss": "room",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "760": {
+      "gloss": "rough",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "761": {
+      "gloss": "rude",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "762": {
+      "gloss": "rule",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "763": {
+      "gloss": "run",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "764": {
+      "gloss": "russia",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "765": {
+      "gloss": "sad",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "766": {
+      "gloss": "salad",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "767": {
+      "gloss": "salt",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "768": {
+      "gloss": "same",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "769": {
+      "gloss": "sandwich",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "770": {
+      "gloss": "saturday",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "771": {
+      "gloss": "save",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "773": {
+      "gloss": "scared",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "775": {
+      "gloss": "science",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "776": {
+      "gloss": "scissors",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "777": {
+      "gloss": "score",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "778": {
+      "gloss": "scotland",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "782": {
+      "gloss": "secret",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "783": {
+      "gloss": "secretary",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "787": {
+      "gloss": "senior",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "789": {
+      "gloss": "separate",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "790": {
+      "gloss": "serious",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "793": {
+      "gloss": "shape",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "796": {
+      "gloss": "shine",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "797": {
+      "gloss": "shirt",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "799": {
+      "gloss": "shoes",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "800": {
+      "gloss": "shop",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "801": {
+      "gloss": "short",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "802": {
+      "gloss": "should",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "803": {
+      "gloss": "show",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "804": {
+      "gloss": "shrimp",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "805": {
+      "gloss": "shy",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "806": {
+      "gloss": "sick",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "807": {
+      "gloss": "sign",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "808": {
+      "gloss": "silly",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "809": {
+      "gloss": "silver",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "811": {
+      "gloss": "since",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "812": {
+      "gloss": "single",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "813": {
+      "gloss": "siren",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "814": {
+      "gloss": "sister",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "815": {
+      "gloss": "sit",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "818": {
+      "gloss": "sixteen",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "820": {
+      "gloss": "skin",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "821": {
+      "gloss": "skinny",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "822": {
+      "gloss": "sky",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "825": {
+      "gloss": "slip",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "826": {
+      "gloss": "slow",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "827": {
+      "gloss": "small",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "828": {
+      "gloss": "smart",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "829": {
+      "gloss": "smile",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "830": {
+      "gloss": "snake",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "832": {
+      "gloss": "snow",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "833": {
+      "gloss": "soap",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "836": {
+      "gloss": "soft",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "838": {
+      "gloss": "some",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "840": {
+      "gloss": "soon",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "841": {
+      "gloss": "sore throat",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "842": {
+      "gloss": "sorry",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "846": {
+      "gloss": "south",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "847": {
+      "gloss": "south america",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "849": {
+      "gloss": "special",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "851": {
+      "gloss": "speech",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "852": {
+      "gloss": "spell",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "854": {
+      "gloss": "spin",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "856": {
+      "gloss": "spray",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "857": {
+      "gloss": "spring",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "858": {
+      "gloss": "sprint",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "859": {
+      "gloss": "squirrel",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "860": {
+      "gloss": "stadium",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "862": {
+      "gloss": "star",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "863": {
+      "gloss": "stare",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "864": {
+      "gloss": "stay",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "867": {
+      "gloss": "stink",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "868": {
+      "gloss": "stomach",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "870": {
+      "gloss": "story",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "871": {
+      "gloss": "straight",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "872": {
+      "gloss": "strange",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "873": {
+      "gloss": "straw",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "874": {
+      "gloss": "strawberry",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "875": {
+      "gloss": "street",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "876": {
+      "gloss": "stress",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "877": {
+      "gloss": "strict",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "878": {
+      "gloss": "strong",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "879": {
+      "gloss": "structure",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "880": {
+      "gloss": "struggle",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "881": {
+      "gloss": "stubborn",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "882": {
+      "gloss": "student",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "883": {
+      "gloss": "study",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "885": {
+      "gloss": "sugar",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "887": {
+      "gloss": "summer",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "890": {
+      "gloss": "sunset",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "893": {
+      "gloss": "surgery",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "895": {
+      "gloss": "suspect",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "896": {
+      "gloss": "swallow",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "898": {
+      "gloss": "sweet",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "899": {
+      "gloss": "sweetheart",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "900": {
+      "gloss": "swimming",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "901": {
+      "gloss": "switzerland",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "902": {
+      "gloss": "symbol",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "903": {
+      "gloss": "take",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "904": {
+      "gloss": "take turns",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "906": {
+      "gloss": "talk",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "907": {
+      "gloss": "tall",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "909": {
+      "gloss": "teach",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "911": {
+      "gloss": "tease",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "913": {
+      "gloss": "television",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "914": {
+      "gloss": "tell",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "915": {
+      "gloss": "temperature",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "917": {
+      "gloss": "tender",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "919": {
+      "gloss": "tent",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "921": {
+      "gloss": "test",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "922": {
+      "gloss": "text",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "923": {
+      "gloss": "thailand",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "924": {
+      "gloss": "thank you",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "925": {
+      "gloss": "thanksgiving",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "926": {
+      "gloss": "themselves",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "927": {
+      "gloss": "theory",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "928": {
+      "gloss": "therapy",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "929": {
+      "gloss": "thin",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "930": {
+      "gloss": "think",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "931": {
+      "gloss": "third",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "932": {
+      "gloss": "thirsty",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "935": {
+      "gloss": "throw",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "937": {
+      "gloss": "tie",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "938": {
+      "gloss": "tiger",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "939": {
+      "gloss": "time",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "941": {
+      "gloss": "to",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "942": {
+      "gloss": "toast",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "943": {
+      "gloss": "today",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "944": {
+      "gloss": "tomato",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "948": {
+      "gloss": "trade",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "949": {
+      "gloss": "train",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "950": {
+      "gloss": "transfer",
+      "acc": 100.0,
+      "n_test": 2
+    },
+    "951": {
+      "gloss": "translate",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "953": {
+      "gloss": "turkey",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "954": {
+      "gloss": "ugly",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "955": {
+      "gloss": "underwear",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "956": {
+      "gloss": "university",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "957": {
+      "gloss": "until",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "958": {
+      "gloss": "up",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "959": {
+      "gloss": "upset",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "960": {
+      "gloss": "violin",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "962": {
+      "gloss": "voice",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "963": {
+      "gloss": "volunteer",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "964": {
+      "gloss": "vomit",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "965": {
+      "gloss": "vote",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "966": {
+      "gloss": "wait",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "967": {
+      "gloss": "walk",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "968": {
+      "gloss": "want",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "969": {
+      "gloss": "war",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "970": {
+      "gloss": "watch",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "973": {
+      "gloss": "weak",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "974": {
+      "gloss": "weather",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "975": {
+      "gloss": "wednesday",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "977": {
+      "gloss": "weekend",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "978": {
+      "gloss": "west",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "979": {
+      "gloss": "wet",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "980": {
+      "gloss": "what",
+      "acc": 0.0,
+      "n_test": 3
+    },
+    "981": {
+      "gloss": "when",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "982": {
+      "gloss": "where",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "983": {
+      "gloss": "white",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "984": {
+      "gloss": "who",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "987": {
+      "gloss": "wind",
+      "acc": 0.0,
+      "n_test": 2
+    },
+    "988": {
+      "gloss": "with",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "990": {
+      "gloss": "word",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "991": {
+      "gloss": "work",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "992": {
+      "gloss": "wow",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "993": {
+      "gloss": "write",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "994": {
+      "gloss": "wrong",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "995": {
+      "gloss": "year",
+      "acc": 50.0,
+      "n_test": 2
+    },
+    "996": {
+      "gloss": "yellow",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "997": {
+      "gloss": "yes",
+      "acc": 100.0,
+      "n_test": 1
+    },
+    "998": {
+      "gloss": "yesterday",
+      "acc": 0.0,
+      "n_test": 1
+    },
+    "999": {
+      "gloss": "you",
+      "acc": 0.0,
+      "n_test": 1
+    }
+  },
+  "history": {
+    "train_loss": [
+      6.9313,
+      6.9082,
+      6.9034,
+      6.8796,
+      6.8459,
+      6.8214,
+      6.7894,
+      6.7707,
+      6.7651,
+      6.7435,
+      6.7357,
+      6.6948,
+      6.6583,
+      6.637,
+      6.6112,
+      6.5891,
+      6.5578,
+      6.5328,
+      6.4902,
+      6.4297,
+      6.3876,
+      6.3472,
+      6.3038,
+      6.2552,
+      6.242,
+      6.2082,
+      6.148,
+      6.1149,
+      6.0938,
+      6.0687,
+      6.0011,
+      5.9766,
+      5.9437,
+      5.8917,
+      5.8731,
+      5.8251,
+      5.7678,
+      5.7569,
+      5.7055,
+      5.6535,
+      5.6316,
+      5.5691,
+      5.5071,
+      5.459,
+      5.4029,
+      5.3238,
+      5.2605,
+      5.2068,
+      5.1581,
+      5.0726,
+      5.0211,
+      4.9706,
+      4.9202,
+      4.8488,
+      4.7862,
+      4.7745,
+      4.6889,
+      4.6222,
+      4.5806,
+      4.5362,
+      4.4597,
+      4.4088,
+      4.3425,
+      4.2825,
+      4.2192,
+      4.1933,
+      4.1157,
+      4.0972,
+      4.0292,
+      3.9719,
+      3.9156,
+      3.8592,
+      3.8102,
+      3.7666,
+      3.7416,
+      3.6559,
+      3.6161,
+      3.5859,
+      3.5663,
+      3.5501,
+      3.4959,
+      3.434,
+      3.3833,
+      3.3755,
+      3.3325,
+      3.2926,
+      3.2672,
+      3.2487,
+      3.2199,
+      3.1865,
+      3.164,
+      3.1273,
+      3.1062,
+      3.0668,
+      3.0531,
+      3.0299,
+      2.9903,
+      2.9727,
+      2.9533,
+      2.9215,
+      2.9252,
+      2.8889,
+      2.8689,
+      2.8535,
+      2.8482,
+      2.8168,
+      2.8127,
+      2.7656,
+      2.7735,
+      2.7621,
+      2.7321,
+      2.7365,
+      2.7251,
+      2.7096,
+      2.6854,
+      2.6889,
+      2.7025,
+      2.6687,
+      2.6671,
+      2.6525,
+      2.6441,
+      2.6539,
+      2.6217,
+      2.6133,
+      2.5896,
+      2.6279,
+      2.6164,
+      2.6161,
+      2.601,
+      2.5924,
+      2.5999,
+      2.5944,
+      2.6068,
+      2.572,
+      2.5806,
+      2.5658,
+      2.5889,
+      2.5674,
+      2.5877,
+      2.5589,
+      2.594,
+      2.5585,
+      2.5621
+    ],
+    "train_acc": [
+      0.0976,
+      0.2733,
+      0.2538,
+      0.2148,
+      0.2343,
+      0.2148,
+      0.2929,
+      0.3319,
+      0.1562,
+      0.5662,
+      0.4686,
+      0.5076,
+      0.3709,
+      0.5271,
+      0.449,
+      0.5467,
+      0.4881,
+      0.7029,
+      0.5857,
+      0.7614,
+      0.7809,
+      0.9567,
+      0.8981,
+      0.9371,
+      1.0348,
+      1.2886,
+      1.2105,
+      1.6205,
+      1.1324,
+      1.4838,
+      2.0695,
+      2.2062,
+      2.1671,
+      2.6747,
+      2.4209,
+      2.7333,
+      3.2604,
+      3.1824,
+      3.8657,
+      3.4557,
+      4.2952,
+      4.6466,
+      5.0566,
+      5.1738,
+      6.2476,
+      6.6966,
+      7.458,
+      8.6099,
+      8.2194,
+      9.8204,
+      10.0742,
+      11.2066,
+      12.0266,
+      12.0461,
+      13.4908,
+      13.198,
+      15.4432,
+      16.0484,
+      17.376,
+      16.8294,
+      18.8793,
+      19.6603,
+      21.5346,
+      21.7688,
+      23.2136,
+      23.4674,
+      24.5998,
+      25.8102,
+      27.1183,
+      29.4026,
+      30.125,
+      30.9059,
+      31.6283,
+      33.3268,
+      33.7368,
+      35.8258,
+      36.4116,
+      36.8411,
+      37.6415,
+      37.0754,
+      39.5939,
+      41.3901,
+      42.171,
+      42.4834,
+      43.401,
+      44.6701,
+      45.9,
+      45.5681,
+      46.271,
+      46.4077,
+      48.7505,
+      49.551,
+      48.7505,
+      51.6595,
+      52.2647,
+      51.9133,
+      53.2019,
+      53.3971,
+      53.6704,
+      55.3885,
+      55.0176,
+      55.2714,
+      56.4037,
+      57.3409,
+      56.4623,
+      59.469,
+      58.278,
+      59.1761,
+      59.4885,
+      59.6642,
+      60.1718,
+      60.4256,
+      59.8594,
+      61.148,
+      62.1827,
+      61.7337,
+      62.007,
+      62.8661,
+      62.3389,
+      62.9832,
+      62.7489,
+      63.1784,
+      63.7056,
+      63.9203,
+      65.5799,
+      63.1394,
+      63.9203,
+      64.5841,
+      65.248,
+      65.0527,
+      64.9356,
+      64.5061,
+      65.1113,
+      66.4194,
+      65.0332,
+      65.7751,
+      65.4041,
+      65.9313,
+      65.5994,
+      66.0484,
+      64.6037,
+      66.0289,
+      65.8141
+    ],
+    "val_top1": [
+      0.0,
+      0.0,
+      0.2257,
+      0.2257,
+      0.301,
+      0.1505,
+      0.301,
+      0.4515,
+      0.301,
+      0.2257,
+      0.3762,
+      0.2257,
+      0.0752,
+      0.301,
+      0.3762,
+      0.3762,
+      0.3762,
+      0.6772,
+      0.5267,
+      0.6772,
+      0.5267,
+      0.7524,
+      0.9782,
+      0.9782,
+      1.1287,
+      0.9782,
+      1.5801,
+      1.4296,
+      1.2792,
+      1.9564,
+      1.8059,
+      2.1821,
+      1.5801,
+      2.4078,
+      2.1821,
+      3.085,
+      2.2573,
+      3.1603,
+      3.1603,
+      3.988,
+      3.2355,
+      3.4612,
+      4.2889,
+      3.988,
+      4.2889,
+      4.5147,
+      4.3642,
+      4.2137,
+      4.5899,
+      4.7404,
+      5.6433,
+      5.4176,
+      6.0196,
+      6.3205,
+      5.8691,
+      6.3958,
+      6.3205,
+      7.2987,
+      6.772,
+      6.9977,
+      7.2987,
+      7.9759,
+      8.2769,
+      7.9759,
+      8.7284,
+      9.1798,
+      8.5779,
+      9.9323,
+      9.3303,
+      9.4808,
+      10.0828,
+      9.857,
+      10.0828,
+      10.0828,
+      10.158,
+      10.158,
+      10.2333,
+      9.7818,
+      10.459,
+      10.3085,
+      10.2333,
+      10.158,
+      10.3837,
+      10.6847,
+      11.5124,
+      10.9857,
+      11.2114,
+      11.4372,
+      10.9857,
+      11.4372,
+      11.8134,
+      11.4372,
+      10.8352,
+      12.1144,
+      12.0391,
+      11.7381,
+      12.3401,
+      12.1144,
+      12.1144,
+      11.9639,
+      12.4906,
+      12.1896,
+      12.1896,
+      12.7916,
+      12.5658,
+      13.0173,
+      12.8668,
+      12.4906,
+      12.8668,
+      12.7916,
+      12.7163,
+      12.4153,
+      13.6945,
+      13.3183,
+      13.243,
+      12.8668,
+      13.0926,
+      13.3935,
+      13.0173,
+      12.4153,
+      12.4906,
+      12.8668,
+      13.1678,
+      13.0173,
+      12.8668,
+      13.1678,
+      13.1678,
+      12.7163,
+      13.3183,
+      13.3183,
+      13.0926,
+      13.0173,
+      13.0173,
+      13.1678,
+      12.8668,
+      13.0926,
+      12.9421,
+      13.0926,
+      13.1678,
+      13.1678,
+      13.3183,
+      13.243,
+      13.1678
+    ],
+    "val_top5": [
+      0.2257,
+      0.301,
+      0.8277,
+      0.9029,
+      0.9782,
+      0.9782,
+      1.0534,
+      0.9782,
+      1.5049,
+      1.1287,
+      1.3544,
+      1.4296,
+      1.2792,
+      1.5801,
+      1.8811,
+      2.0316,
+      1.9564,
+      2.4831,
+      3.085,
+      3.085,
+      3.9127,
+      4.2137,
+      3.6117,
+      3.9127,
+      4.5147,
+      5.0414,
+      4.5147,
+      5.7186,
+      5.1919,
+      5.9443,
+      5.8691,
+      6.6215,
+      7.6749,
+      8.4274,
+      7.9759,
+      8.3521,
+      8.1264,
+      9.0293,
+      9.9323,
+      10.6847,
+      10.9105,
+      12.6411,
+      12.5658,
+      12.5658,
+      14.2965,
+      15.5756,
+      15.1994,
+      15.8766,
+      16.2528,
+      17.3815,
+      18.5854,
+      18.3597,
+      19.4131,
+      19.4131,
+      19.6388,
+      20.2408,
+      21.5199,
+      22.7991,
+      22.2724,
+      23.1753,
+      22.3476,
+      24.003,
+      24.8307,
+      24.4545,
+      24.605,
+      25.7336,
+      25.4327,
+      25.9594,
+      25.8841,
+      26.5613,
+      27.088,
+      27.3138,
+      26.8623,
+      26.9375,
+      27.6147,
+      28.5177,
+      28.0662,
+      28.1415,
+      28.8939,
+      28.2919,
+      28.3672,
+      28.2919,
+      29.2701,
+      28.8939,
+      30.0226,
+      29.5711,
+      28.8187,
+      29.1949,
+      29.7968,
+      30.2483,
+      30.1731,
+      29.3454,
+      30.1731,
+      29.9473,
+      31.0008,
+      30.6245,
+      30.3988,
+      31.9789,
+      31.6027,
+      31.678,
+      31.6027,
+      32.2799,
+      31.7532,
+      31.678,
+      31.3017,
+      31.1512,
+      31.4522,
+      32.2799,
+      32.3552,
+      32.2799,
+      32.8819,
+      32.1294,
+      32.4304,
+      32.1294,
+      32.8819,
+      32.2799,
+      31.8284,
+      32.5056,
+      32.2047,
+      31.7532,
+      32.5056,
+      32.4304,
+      31.9037,
+      31.9789,
+      32.2047,
+      32.5809,
+      32.2047,
+      32.2799,
+      32.3552,
+      32.3552,
+      32.3552,
+      32.1294,
+      32.8066,
+      32.4304,
+      32.8066,
+      32.3552,
+      32.5056,
+      32.2799,
+      32.4304,
+      32.5056,
+      32.5809,
+      32.6561,
+      32.4304
+    ]
+  }
+}

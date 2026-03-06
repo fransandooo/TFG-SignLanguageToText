@@ -1,0 +1,118 @@
+\chapter{State of the Art}
+\label{ch:sota}
+
+\section{From Symbolic to Subsymbolic AI}
+Early Artificial Intelligence (AI) systems were symbolic: they represented knowledge using explicit rules and logic, and solved problems through handcrafted if/then decision trees. This paradigm achieved success in constrained domains, but it struggled with perception tasks such as vision and speech because the real world is noisy, ambiguous, and high-dimensional. The so-called ``knowledge acquisition bottleneck'' meant that as tasks grew in complexity, engineering and maintaining rule bases became impossible. In the context of sign language, symbolic systems could encode simple gesture prototypes but failed to capture the fine-grained variability across signers, viewpoints, and execution speeds.
+
+The shift to subsymbolic AI reframed intelligence as pattern recognition. Instead of encoding expert rules, models learn distributed representations from data. This change was prompted by advances in statistical learning and neural networks, culminating in deep learning methods that learn hierarchical features directly from raw inputs \cite{lecun2015deeplearning}. Subsymbolic models are particularly effective in perception because they optimize representations for the task objective, allowing subtle visual patterns to emerge without explicit programming. In sign language recognition, subsymbolic models learn the visual semantics of hand shapes, motions, and temporal dynamics from examples rather than hand-coded descriptors.
+
+From a theoretical standpoint, subsymbolic approaches replace symbolic inference with continuous function approximation. A deep network implements a parameterized mapping $f_{\theta}$ that transforms inputs into task-specific embeddings, optimized by minimizing a loss over data. This paradigm aligns with the ``computational'' and ``algorithmic'' levels of explanation in vision, where representation learning is the core challenge. By training end-to-end models on large datasets, modern systems discover invariances to lighting, background, and signer variability that are nearly impossible to enumerate symbolically.
+
+The subsymbolic shift also enabled modular pipelines in which perceptual frontends (e.g., hand pose estimation) feed compact, structured features to temporal models. This decoupling is powerful for SLR: the vision module learns spatial representations, while the sequence model learns dynamics. The result is a scalable, data-driven framework that has largely replaced rule-based approaches in the literature. Contemporary SLR therefore reflects the broader AI trajectory: from symbolic rules to learned representations and, increasingly, to architectures that encode inductive biases (e.g., convolutional and recurrent structures) while remaining fully trainable from data.
+
+\section{Feature Extraction and Pose Estimation}
+
+The first challenge in Sign Language Recognition is extracting meaningful spatial features from video frames. This field has evolved from processing raw pixels to extracting high-level geometric structures.
+
+\subsection{Convolutional Neural Networks (CNNs)}
+Convolutional Neural Networks (CNNs) represent the foundational technology for modern computer vision \cite{lecun2015deeplearning}. Unlike fully connected networks that treat inputs as flat vectors, CNNs preserve the spatial structure of images through three main operations: convolution, non-linearity, and pooling. A typical convolutional layer computes a feature map $\mathbf{y}$ as:
+\begin{equation}
+\mathbf{y}_{i,j,k} = \sigma\left( \sum_{c=1}^{C} \sum_{u,v} \mathbf{w}_{u,v,c,k}\, \mathbf{x}_{i+u, j+v, c} + b_k \right)
+\end{equation}
+where $\mathbf{x}$ is the input tensor, $\mathbf{w}$ are learned kernels (filters), and $\sigma$ is a non-linearity (e.g., ReLU). This operation introduces an inductive bias toward \textit{translation equivariance}, meaning the network can recognize features regardless of their position in the image.
+
+Deep CNN architectures, such as AlexNet \cite{krizhevsky2012imagenet} or ResNet, stack many such layers to learn hierarchical representations. Initial layers typically behave as Gabor filters, detecting simple edges and textures. Deeper layers combine these low-level features to detect complex shapes, and finally, semantic objects like hands or faces. The use of pooling layers further enhances robustness by introducing local translation invariance, allowing the network to detect features even if they are slightly shifted or distorted.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{images/alexnet_architecture.png} 
+    \caption{Architecture of AlexNet. Note the split processing paths originally designed for dual-GPU training. Source: Krizhevsky et al. \cite{krizhevsky2012imagenet}.}
+    \label{fig:cnn_arch}
+\end{figure}
+
+\subsection{From Pixels to Landmarks: Pose Estimation}
+While CNNs can process raw RGB pixels directly (pixel-based approach), this method is computationally expensive and sensitive to background noise and lighting conditions. To address this, \textit{Pose Estimation} techniques leverage CNNs to regress the coordinates of anatomical keypoints, transforming the visual problem into a geometric one \cite{koller2020signlanguage}. In practice, pose pipelines are commonly framed as either top-down (detect hands first, then regress keypoints) or bottom-up (predict keypoints first, then group them into hands). For SLR, the top-down approach is especially attractive because it focuses computation on the hand region and naturally supports frame-to-frame tracking.
+
+\textbf{MediaPipe Hands} \cite{zhang2020mediapipehands} is a seminal system in this domain. It employs a two-stage pipeline to achieve real-time performance:
+\begin{enumerate}
+    \item \textbf{Palm Detector:} A lightweight single-shot detector operates on the full image to locate the hand palm. This step is crucial because detecting a rigid object like a palm is simpler than detecting articulating fingers.
+    \item \textbf{Landmark Regressor:} A high-capacity CNN processes the cropped hand region to predict the 3D coordinates of 21 skeletal joints.
+\end{enumerate}
+
+This architecture decouples detection from regression, allowing the system to track hands efficiently by re-using the crop from the previous frame. For SLR, this provides a compact, invariant representation of the hand shape, filtering out irrelevant visual information such as background clutter or skin tone variations. The landmark representation also enables geometric normalization (e.g., translation and scale alignment) and the derivation of higher-level features such as bone vectors, joint angles, and inter-finger distances, which often yield more stable temporal dynamics than raw pixels.
+
+Pose-based pipelines frequently integrate additional cues beyond the hands. Upper-body or face landmarks can capture non-manual signals (head pose, facial expression) that disambiguate signs or encode grammatical structure. Even when only hand keypoints are used, modern systems typically propagate per-joint confidence scores to handle occlusions and motion blur, masking unreliable points rather than forcing the sequence model to fit noise. These design choices make the pose representation more robust to real-world variability in signer appearance, speed, and viewpoint.
+
+\begin{figure}[t!] % CAMBIADO A [t!] PARA EVITAR EL HUECO BLANCO
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/mediapipe_pipeline.png}
+    \caption{MediaPipe Hands pipeline showing the interaction between the detection and landmark models. Source: Zhang et al. \cite{zhang2020mediapipehands}.}
+    \label{fig:mediapipe_pipeline}
+\end{figure}
+
+\section{Sequence Modeling}
+
+Since sign language is inherently temporal, recognizing signs requires modeling the evolution of features over time. Standard feedforward networks cannot handle this task because they accept fixed-size inputs and have no memory of previous states. This limitation necessitates the use of Recurrent Neural Networks (RNNs).
+
+\subsection{Recurrent Neural Networks (RNNs)}
+RNNs introduced the concept of "memory" in neural networks by maintaining a hidden state $\mathbf{h}_t$ that is updated at each time step based on the current input $\mathbf{x}_t$ and the previous state $\mathbf{h}_{t-1}$:
+\begin{equation}
+\mathbf{h}_t = \phi(\mathbf{W}_{xh}\mathbf{x}_t + \mathbf{W}_{hh}\mathbf{h}_{t-1} + \mathbf{b}_h)
+\end{equation}
+This recurrent connection allows the network to process sequences of variable length, sharing the same parameters (weights) across all time steps. Training is performed using \textit{Backpropagation Through Time} (BPTT), which unrolls the network graph for the duration of the sequence.
+
+However, RNNs suffer from a critical flaw known as the \textit{vanishing gradient problem}. During BPTT, gradients are calculated by the chain rule, which involves repeated multiplication of the weight matrix. If the eigenvalues of this matrix are smaller than 1, the gradients decay exponentially as they propagate back to earlier time steps. Consequently, the network fails to learn long-term dependencies, effectively "forgetting" the beginning of a sign by the time it reaches the end.
+
+\subsection{Long Short-Term Memory (LSTM)}
+To overcome the vanishing gradient problem, Hochreiter and Schmidhuber \cite{hochreiter1997lstm} proposed the Long Short-Term Memory (LSTM) network. The core innovation of the LSTM is the separation of the memory into two distinct vectors: the \textit{Hidden State} ($\mathbf{h}_t$), which carries short-term information, and the \textit{Cell State} ($\mathbf{C}_t$), which acts as a "highway" for information flow.
+
+The Cell State runs down the entire chain with only minor linear interactions, making it easy for information to flow unchanged. This flow is regulated by three distinct "gates" composed of sigmoid neural network layers:
+\begin{itemize}
+    \item \textbf{Forget Gate:} Decides what information to discard from the cell state (outputs numbers between 0 and 1).
+    \item \textbf{Input Gate:} Decides what new values will be updated in the cell state.
+    \item \textbf{Output Gate:} Controls what parts of the cell state are output to the hidden state.
+\end{itemize}
+This mechanism, known as the \textit{Constant Error Carousel} (CEC), protects the error signal from decaying, enabling LSTMs to bridge time lags of more than 1000 steps. While highly effective, the complexity of calculating four distinct linear layers for each time step results in high computational costs and parameter counts. The internal structure of an LSTM cell is shown in \textbf{Figure \ref{fig:rnn_comparison}(a)}.
+
+\subsection{Gated Recurrent Units (GRU)}
+Gated Recurrent Units (GRUs), proposed by Chung et al. \cite{chung2014gru}, represent a modern simplification of the LSTM architecture. GRUs address the redundancy in LSTMs by removing the separate cell state and merging the input and forget gates into a single \textbf{Update Gate} ($\mathbf{z}_t$). They also introduce a \textbf{Reset Gate} ($\mathbf{r}_t$).
+
+The mathematical formulation for a GRU at time $t$ is:
+\begin{align}
+\mathbf{z}_t &= \sigma(\mathbf{W}_z\mathbf{x}_t + \mathbf{U}_z\mathbf{h}_{t-1} + \mathbf{b}_z) \\
+\mathbf{r}_t &= \sigma(\mathbf{W}_r\mathbf{x}_t + \mathbf{U}_r\mathbf{h}_{t-1} + \mathbf{b}_r)
+\end{align}
+The candidate hidden state $\tilde{\mathbf{h}}_t$ uses the reset gate to drop irrelevant past information, while the final hidden state is a linear interpolation controlled by the update gate:
+\begin{equation}
+\mathbf{h}_t = (1-\mathbf{z}_t) \odot \mathbf{h}_{t-1} + \mathbf{z}_t \odot \tilde{\mathbf{h}}_t
+\end{equation}
+This interpolation is the key to GRU's efficiency: the network can decide to copy the previous state $\mathbf{h}_{t-1}$ directly (when $\mathbf{z}_t \approx 0$), preserving long-term memory without the complex machinery of the LSTM. Illustrated in \textbf{Figure \ref{fig:rnn_comparison}(b)}, GRUs typically match LSTM performance with fewer parameters, making them less prone to overfitting on datasets with limited samples.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/gru_paper_diagram.png}
+    \caption{Comparison of Recurrent Units. (a) Long Short-Term Memory (LSTM) with three gates. (b) Gated Recurrent Unit (GRU) with two gates. Source: Chung et al. \cite{chung2014gru}.}
+    \label{fig:rnn_comparison}
+\end{figure}
+
+\section{Attention Mechanisms}
+Attention mechanisms emerged as a response to the "information bottleneck" in fixed-length sequence encodings, first popularized in neural machine translation by Bahdanau et al. \cite{bahdanau2014neural}. In traditional Recurrent architectures, the entire input sequence must be compressed into a single context vector $\mathbf{v}$. For long sequences, this compression results in loss of detail, as the vector size is fixed regardless of the input length.
+
+Attention solves this by allowing the model to dynamically search for parts of the source sequence that are relevant to the current prediction. Instead of a static vector, Attention computes a \textit{Context Vector} as a weighted combination of all encoder states $\{\mathbf{h}_t\}_{t=1}^T$.
+
+Formally, the system learns an alignment model (or scoring function) $a(\mathbf{s}, \mathbf{h}_t)$ that measures how well the inputs around position $t$ and the output at position $i$ match. These scores are normalized using a Softmax function to produce attention weights $\alpha_t$:
+\begin{equation}
+\alpha_t = \frac{\exp(e_t)}{\sum_{k=1}^{T} \exp(e_k)}, \quad e_t = a(\mathbf{s}, \mathbf{h}_t)
+\end{equation}
+The context vector $\mathbf{c}$ is then derived as:
+\begin{equation}
+\mathbf{c} = \sum_{t=1}^{T} \alpha_t \mathbf{h}_t
+\end{equation}
+In the context of SLR, temporal attention acts as a learned filter. Sign language videos often contain "non-discriminative" frames, such as the hands returning to a resting position or preparatory movements. By assigning near-zero weights ($\alpha_t \approx 0$) to these frames, the model effectively ignores the noise and focuses its computational capacity on the "key frames" where the semantic meaning of the sign is contained. This improves robustness to variable execution speeds and intra-class variability.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/temporal_attention.png}
+    \caption{Neural Machine Translation architecture with Attention mechanism. The context vector is a weighted sum of encoder annotations. Source: Bahdanau et al. \cite{bahdanau2014neural}.}
+    \label{fig:attention_mech}
+\end{figure}
