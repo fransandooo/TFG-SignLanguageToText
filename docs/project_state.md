@@ -2,9 +2,10 @@
 
 ## Current Focus
 
-**Session**: `MS-ASL-Dataset-Preparation` (started 2026-03-06)
-**Status**: Starting — prepare MS-ASL as additional dataset per tutor directive (download videos + extract landmarks)
-**Previous Session**: `Big-TrainingWASL2000` (COMPLETED — WLASL scaling pipeline built, training runs completed for 100/300/1000 classes)
+**Session**: `LTSM-GapComparison` (started 2026-03-20)
+**Status**: About to train LSTM (same architecture as Nb 09 LSTMPose) progressively on WLASL subsets (100/300/500/700/900/1000/1200/1500 classes), mirroring the GRU+Attention notebooks 17a-17i, to produce a LSTM vs GRU gap comparison for the thesis.
+**Previous Session**: `GapTestingWASL` (COMPLETED — gap/bottleneck analysis notebook 21 done; new training runs 17e-17i completed for WLASL 500/700/900/1200/1500)
+**Older Session**: `MS-ASL-Dataset-Preparation` (IN PROGRESS — JSON annotations downloaded, videos not yet downloaded)
 
 ## Tutor Meeting (2026-02-11) - Key Directives
 
