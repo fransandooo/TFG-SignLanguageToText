@@ -1,329 +1,358 @@
-# main.py
-import os
-import uuid
+"""
+FastAPI server for ASL Word Recognition.
+Pipeline: video upload → MediaPipe landmarks → GRU+Attention model → top-5 predictions.
+
+Para cambiar de modelo basta con editar MODEL_WEIGHTS y METADATA_PATH.
+El servidor lee el config del propio checkpoint y el orden de clases del metadata
+del dataset — nada está hardcodeado.
+"""
+
+import json
+import tempfile
+import time
 from pathlib import Path
-from typing import List, Literal, Optional, Dict, Any
+from typing import List, Optional, Tuple
 
+import cv2
+import mediapipe as mp
 import numpy as np
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, Field
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
-# Optional: only if you want to debug by saving PNGs
-from PIL import Image
+# ── Rutas — lo único que hay que cambiar para usar otro modelo ─────────────────
+BASE_DIR = Path(__file__).parent.parent
 
-from ultralytics import YOLO
+MODEL_WEIGHTS = BASE_DIR / "05_experiments" / "final_assault" / "best_model_attention.pt"
 
-# ---- Config ----
-SESSIONS_ROOT = Path("./sessions")
-SESSIONS_ROOT.mkdir(exist_ok=True, parents=True)
+# metadata.json del dataset con el que se entrenó ese modelo (contiene gloss_to_idx)
+METADATA_PATH = BASE_DIR / "06_datasets" / "wlasl" / "landmarks" / "wlasl30" / "metadata.json"
 
-# Confidence threshold for keeping detections
-MIN_CONFIDENCE = 0.5  # try 0.5 or 0.6; you can tune this later
+HAND_LANDMARKER_TASK = BASE_DIR / "hand_landmarker.task"
 
+# ── Arquitectura del modelo (copia exacta del notebook 11) ────────────────────
+#
+# PyTorch guarda en el .pt solo los PESOS (números), no la arquitectura.
+# Necesitamos definir la clase aquí para darle a PyTorch el "molde vacío"
+# antes de rellenar los pesos con load_state_dict().
+# No se entrena nada — es solo la definición de la estructura.
 
-# YOLO model configuration: we are training with imgsz=416
-MODEL_IMG_SIZE = 416
-MODEL_CHANNELS = 3  # YOLO expects RGB
-
-# ✅ NEW: path to your trained YOLO checkpoint
-# Change this to your actual best.pt path
-MODEL_WEIGHTS_PATH = Path(
-    "../hand_bbox_baseline/runs_yolo/yolov8n_mix_base_lr/weights/best.pt"
-)
-
-if not MODEL_WEIGHTS_PATH.exists():
-    raise RuntimeError(f"YOLO weights not found at: {MODEL_WEIGHTS_PATH}")
-
-# ✅ NEW: load YOLO model once at startup
-hand_model = YOLO(str(MODEL_WEIGHTS_PATH))
-CLASS_NAMES = hand_model.names  # e.g. {0: "hand"} if you trained 1-class model
-
-app = FastAPI(
-    title="ASL Hand Detection Session API",
-    description=(
-        "API that receives pixel traces (frames as flattened pixel arrays) "
-        "grouped by session and runs a hand-detection YOLO model over them."
-    ),
-    version="0.2.0",
-)
-
-
-# ---- Pydantic models (request/response schemas) ----
-
-class CreateSessionResponse(BaseModel):
-    session_id: str
-
-
-class PixelTrace(BaseModel):
-    """
-    Representation of a single video frame as a flattened pixel array.
-
-    For this TFG setup, the client (mobile) should:
-      - Resize each frame to 416x416 pixels
-      - Use 3 channels (RGB)
-      - Flatten to width * height * channels values (0-255)
-    """
-    width: int = Field(
-        MODEL_IMG_SIZE,
-        gt=0,
-        description=f"Frame width in pixels (must be {MODEL_IMG_SIZE} for YOLO).",
-    )
-    height: int = Field(
-        MODEL_IMG_SIZE,
-        gt=0,
-        description=f"Frame height in pixels (must be {MODEL_IMG_SIZE} for YOLO).",
-    )
-    channels: int = Field(
-        MODEL_CHANNELS,
-        description="Number of channels: 3 for RGB (recommended).",
-    )
-    format: Literal["uint8"] = "uint8"
-    frame_index: int = Field(
-        ...,
-        ge=0,
-        description="Index of the frame in the session (0-based, assigned by client).",
-    )
-    data: List[int] = Field(
-        ...,
-        description="Flattened pixel values 0-255, length must be width * height * channels.",
-    )
-
-
-class AddFrameResponse(BaseModel):
-    session_id: str
-    frame_index: int
-    stored_path: str
-
-
-class PredictionDet(BaseModel):
-    frame_index: int
-    label: str
-    confidence: float
-    bbox: Optional[List[float]] = None  # [x_min, y_min, x_max, y_max] in pixel coordinates
-    crop_path: Optional[str] = None     # path to cropped image on server (optional)
-
-
-
-class SessionPredictionResponse(BaseModel):
-    session_id: str
-    num_frames: int
-    predictions: List[PredictionDet]
-    aggregated: Dict[str, Any]
-
-
-# ---- Helper functions ----
-
-def session_dir(session_id: str) -> Path:
-    return SESSIONS_ROOT / session_id
-
-
-def ensure_session_exists(session_id: str) -> Path:
-    sdir = session_dir(session_id)
-    if not sdir.exists():
-        raise HTTPException(status_code=404, detail="Session not found")
-    return sdir
-
-
-def save_pixel_trace(session_id: str, trace: PixelTrace) -> Path:
-    """Convert the flattened trace data to a numpy array and save it.
-
-    We enforce that the input resolution matches the YOLO training resolution (416x416).
-    """
-    sdir = ensure_session_exists(session_id)
-
-    # Enforce 416x416 for now, to match YOLO training
-    if trace.width != MODEL_IMG_SIZE or trace.height != MODEL_IMG_SIZE:
-        raise HTTPException(
-            status_code=400,
-            detail=(
-                f"Frame must be {MODEL_IMG_SIZE}x{MODEL_IMG_SIZE} pixels. "
-                f"Got {trace.width}x{trace.height}."
-            ),
+class TemporalAttention(nn.Module):
+    def __init__(self, hidden_size: int):
+        super().__init__()
+        self.attention = nn.Sequential(
+            nn.Linear(hidden_size, hidden_size // 2),
+            nn.Tanh(),
+            nn.Linear(hidden_size // 2, 1, bias=False),
         )
 
-    if trace.channels not in (1, 3):
-        raise HTTPException(
-            status_code=400,
-            detail="Only 1-channel (grayscale) or 3-channel (RGB) frames are supported.",
+    def forward(self, rnn_output: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+        scores = self.attention(rnn_output).squeeze(-1)
+        weights = F.softmax(scores, dim=1)
+        context = torch.bmm(weights.unsqueeze(1), rnn_output).squeeze(1)
+        return context, weights
+
+
+class PoseClassifierAttention(nn.Module):
+    def __init__(self, config: dict):
+        super().__init__()
+        input_size  = config["input_size"]
+        hidden_size = config["hidden_size"]
+        num_layers  = config["num_layers"]
+        num_classes = config["num_classes"]
+        dropout     = config["dropout"]
+        bidirectional = config.get("bidirectional", True)
+
+        self.num_directions = 2 if bidirectional else 1
+        rnn_hidden = hidden_size * self.num_directions
+
+        self.input_projection = nn.Sequential(
+            nn.Linear(input_size, hidden_size),
+            nn.LayerNorm(hidden_size),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+        )
+        self.gru = nn.GRU(
+            input_size=hidden_size,
+            hidden_size=hidden_size,
+            num_layers=num_layers,
+            batch_first=True,
+            dropout=dropout if num_layers > 1 else 0,
+            bidirectional=bidirectional,
+        )
+        self.attention = TemporalAttention(rnn_hidden)
+        self.classifier = nn.Sequential(
+            nn.Dropout(dropout),
+            nn.Linear(rnn_hidden, hidden_size),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(hidden_size, num_classes),
         )
 
-    expected_len = trace.width * trace.height * trace.channels
-    if len(trace.data) != expected_len:
-        raise HTTPException(
-            status_code=400,
-            detail=(
-                f"Data length {len(trace.data)} does not match "
-                f"width*height*channels = {expected_len}"
-            ),
-        )
-
-    # Convert to numpy array
-    arr = np.array(trace.data, dtype=np.uint8)
-
-    if trace.channels == 1:
-        arr = arr.reshape((trace.height, trace.width))
-    else:
-        arr = arr.reshape((trace.height, trace.width, trace.channels))
-
-    # Save as .npy for quick loading later
-    frame_name = f"frame_{trace.frame_index:04d}.npy"
-    frame_path = sdir / frame_name
-    np.save(frame_path, arr)
-
-    # Optional: also save as PNG for debugging / visualization
-    png_path = sdir / f"frame_{trace.frame_index:04d}.png"
-    img = Image.fromarray(arr)
-    img.save(png_path)
-
-    return frame_path
+    def forward(
+        self, x: torch.Tensor, return_attention: bool = False
+    ) -> torch.Tensor | Tuple[torch.Tensor, torch.Tensor]:
+        x = self.input_projection(x)
+        rnn_out, _ = self.gru(x)
+        context, attn_weights = self.attention(rnn_out)
+        logits = self.classifier(context)
+        if return_attention:
+            return logits, attn_weights
+        return logits
 
 
-def load_session_frames(session_id: str) -> List[np.ndarray]:
-    """Load all frames (.npy) for a given session in sorted order."""
-    sdir = ensure_session_exists(session_id)
-    frame_paths = sorted(sdir.glob("frame_*.npy"))
-    frames = [np.load(p) for p in frame_paths]
+# ── Pipeline de landmarks (igual que notebook 08) ─────────────────────────────
+
+MAX_FRAMES = 64  # debe coincidir con el entrenamiento
+
+def load_video_frames(video_path: Path, max_frames: int = MAX_FRAMES) -> List[np.ndarray]:
+    cap = cv2.VideoCapture(str(video_path))
+    total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    if total == 0:
+        cap.release()
+        return []
+    indices = set(np.linspace(0, total - 1, max_frames, dtype=int)) if total > max_frames else set(range(total))
+    frames, idx = [], 0
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        if idx in indices:
+            frames.append(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+        idx += 1
+    cap.release()
     return frames
 
-def load_session_frame_pngs(session_id: str) -> List[Path]:
-    """Load all frame PNG paths for a given session in sorted order."""
-    sdir = ensure_session_exists(session_id)
-    frame_paths = sorted(sdir.glob("frame_*.png"))
-    return frame_paths
 
-def yolo_model_predict_from_paths(frame_paths: List[Path]) -> (List[PredictionDet], Dict[str, Any]):
-    """
-    Run the loaded YOLO model on the list of frame PNG paths.
+def extract_landmarks_from_frame(frame: np.ndarray, detector) -> Optional[np.ndarray]:
+    mp_image = mp.Image(image_format=mp.ImageFormat.SRGB, data=frame)
+    result = detector.detect(mp_image)
+    if result.hand_landmarks:
+        lm = result.hand_landmarks[0]
+        return np.array([[p.x, p.y, p.z] for p in lm])
+    return None
 
-    For each detection with confidence >= MIN_CONFIDENCE:
-      - Save a cropped hand image in a 'crops' subfolder next to the frames.
-      - Attach the crop_path to the PredictionDet.
-    """
-    predictions: List[PredictionDet] = []
 
-    print(f"[YOLO] Running prediction on {len(frame_paths)} frames with MIN_CONFIDENCE={MIN_CONFIDENCE}...")
-
-    for frame_index, frame_path in enumerate(frame_paths):
-        print(f"[YOLO] Frame {frame_index}: {frame_path}")
-
-        # Load full frame once for cropping
-        img = Image.open(frame_path).convert("RGB")
-        img_w, img_h = img.size  # should be 416x416
-
-        # Use YOLO with confidence threshold
-        results = hand_model(
-            str(frame_path),
-            conf=MIN_CONFIDENCE,  # YOLO will discard lower-conf boxes
-            verbose=False,
-        )
-        res = results[0]
-        boxes = res.boxes
-
-        num_boxes = 0 if boxes is None else len(boxes)
-        print(f"[YOLO]   raw detections from model: {num_boxes}")
-
-        if boxes is None or len(boxes) == 0:
+def interpolate_missing_frames(landmarks_list: List[Optional[np.ndarray]]) -> np.ndarray:
+    n = len(landmarks_list)
+    result = np.zeros((n, 21, 3))
+    valid = [i for i, lm in enumerate(landmarks_list) if lm is not None]
+    if not valid:
+        return result
+    for i in valid:
+        result[i] = landmarks_list[i]
+    for i in range(n):
+        if landmarks_list[i] is not None:
             continue
+        prev = next((j for j in range(i - 1, -1, -1) if landmarks_list[j] is not None), None)
+        nxt  = next((j for j in range(i + 1, n)     if landmarks_list[j] is not None), None)
+        if prev is not None and nxt is not None:
+            alpha = (i - prev) / (nxt - prev)
+            result[i] = (1 - alpha) * landmarks_list[prev] + alpha * landmarks_list[nxt]
+        elif prev is not None:
+            result[i] = landmarks_list[prev]
+        elif nxt is not None:
+            result[i] = landmarks_list[nxt]
+    return result
 
-        crops_dir = frame_path.parent / "crops"
-        crops_dir.mkdir(exist_ok=True)
 
-        kept_for_frame = 0
+def normalize_landmarks(landmarks: np.ndarray) -> np.ndarray:
+    """Centra en muñeca (landmark 0) y escala por distancia muñeca→punta dedo medio (12)."""
+    out = np.copy(landmarks)
+    for t in range(landmarks.shape[0]):
+        frame = landmarks[t]
+        centered = frame - frame[0]
+        scale = np.linalg.norm(frame[12] - frame[0])
+        out[t] = centered / scale if scale > 1e-6 else centered
+    return out
 
-        for det_idx, box in enumerate(boxes):
-            xyxy = box.xyxy[0].cpu().numpy().tolist()  # [x1, y1, x2, y2]
-            conf = float(box.conf.cpu().numpy().ravel()[0])
-            cls_idx = int(box.cls.cpu().numpy().ravel()[0])
 
-            # Extra safety: skip low-confidence boxes in our own logic too
-            if conf < MIN_CONFIDENCE:
-                print(f"[YOLO]   skipping box conf={conf:.3f} < {MIN_CONFIDENCE}")
-                continue
+# ── Startup de la app ──────────────────────────────────────────────────────────
 
-            # Clamp coords
-            x1, y1, x2, y2 = xyxy
-            x1 = max(0, min(img_w, int(x1)))
-            y1 = max(0, min(img_h, int(y1)))
-            x2 = max(0, min(img_w, int(x2)))
-            y2 = max(0, min(img_h, int(y2)))
+app = FastAPI(
+    title="ASL Word Recognition API",
+    description="GRU+Attention sobre landmarks MediaPipe.",
+    version="2.0.0",
+)
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 
-            if x2 <= x1 or y2 <= y1:
-                print(f"[YOLO]   skipped degenerate box: {(x1, y1, x2, y2)}")
-                continue
+device = torch.device("cpu")
 
-            crop_img = img.crop((x1, y1, x2, y2))
+# Estos se rellenan en startup:
+model: Optional[PoseClassifierAttention] = None
+detector = None
+idx_to_gloss: dict[int, str] = {}
+model_config: dict = {}
 
-            crop_filename = f"crop_{frame_index:04d}_{kept_for_frame:02d}.png"
-            crop_path = crops_dir / crop_filename
-            crop_img.save(crop_path)
 
-            label = CLASS_NAMES.get(cls_idx, "hand") if isinstance(CLASS_NAMES, dict) else "hand"
+@app.on_event("startup")
+def load_resources():
+    global model, detector, idx_to_gloss, model_config
 
-            pred = PredictionDet(
-                frame_index=frame_index,
-                label=label,
-                confidence=conf,
-                bbox=[x1, y1, x2, y2],
-                crop_path=str(crop_path),
+    # 1. Cargar checkpoint — contiene pesos + config + métricas de entrenamiento
+    if not MODEL_WEIGHTS.exists():
+        raise RuntimeError(f"Pesos no encontrados: {MODEL_WEIGHTS}")
+
+    checkpoint = torch.load(MODEL_WEIGHTS, map_location=device, weights_only=False)
+    # El checkpoint tiene: epoch, model_state_dict, val_top1, config
+    model_config = checkpoint["config"]
+
+    print(f"Checkpoint: {MODEL_WEIGHTS.name}")
+    print(f"  Epoch:    {checkpoint.get('epoch', '?')}")
+    print(f"  Val top1: {checkpoint.get('val_top1', '?'):.2f}%")
+    print(f"  Config:   {model_config}")
+
+    # 2. Crear el molde vacío con el config del propio checkpoint
+    model = PoseClassifierAttention(model_config)
+
+    # 3. Cargar los pesos entrenados en el molde → modelo listo para inferencia
+    model.load_state_dict(checkpoint["model_state_dict"])
+    model.eval()
+    print(f"  Parámetros: {sum(p.numel() for p in model.parameters()):,}")
+
+    # 4. Cargar el mapping de clases del metadata del dataset
+    #    (mismo orden que durante el entrenamiento)
+    if not METADATA_PATH.exists():
+        raise RuntimeError(f"Metadata no encontrado: {METADATA_PATH}")
+
+    metadata = json.loads(METADATA_PATH.read_text())
+    gloss_to_idx: dict[str, int] = metadata["gloss_to_idx"]
+    idx_to_gloss = {int(v): k for k, v in gloss_to_idx.items()}
+    print(f"  Clases ({len(idx_to_gloss)}): {list(idx_to_gloss.values())[:5]} …")
+
+    # 5. Cargar MediaPipe HandLandmarker
+    if not HAND_LANDMARKER_TASK.exists():
+        raise RuntimeError(f"hand_landmarker.task no encontrado: {HAND_LANDMARKER_TASK}")
+    options = mp.tasks.vision.HandLandmarkerOptions(
+        base_options=mp.tasks.BaseOptions(model_asset_path=str(HAND_LANDMARKER_TASK)),
+        num_hands=1,
+        min_hand_detection_confidence=0.3,
+        min_hand_presence_confidence=0.3,
+        min_tracking_confidence=0.3,
+    )
+    detector = mp.tasks.vision.HandLandmarker.create_from_options(options)
+    print("MediaPipe HandLandmarker cargado.")
+
+
+# ── Modelos de respuesta ───────────────────────────────────────────────────────
+
+class Prediction(BaseModel):
+    word: str
+    confidence: float
+    rank: int
+
+class PredictResponse(BaseModel):
+    predictions: List[Prediction]
+    detection_rate: float
+    frames_processed: int
+    attention_weights: List[float]
+    processing_time_ms: float
+
+class HealthResponse(BaseModel):
+    status: str
+    model_loaded: bool
+    checkpoint: str
+    val_top1: float
+    num_classes: int
+    model_params: int
+    supported_words: List[str]
+
+
+# ── Endpoints ──────────────────────────────────────────────────────────────────
+
+@app.get("/health", response_model=HealthResponse)
+def health():
+    params = sum(p.numel() for p in model.parameters()) if model else 0
+    return HealthResponse(
+        status="ok",
+        model_loaded=model is not None,
+        checkpoint=MODEL_WEIGHTS.name,
+        val_top1=round(model_config.get("val_top1", 0.0), 2) if model else 0.0,
+        num_classes=len(idx_to_gloss),
+        model_params=params,
+        supported_words=list(idx_to_gloss.values()),
+    )
+
+
+@app.get("/classes")
+def get_classes():
+    return {"classes": list(idx_to_gloss.values()), "num_classes": len(idx_to_gloss)}
+
+
+@app.post("/predict", response_model=PredictResponse)
+async def predict(video: UploadFile = File(...)):
+    if model is None or detector is None:
+        raise HTTPException(status_code=503, detail="Modelo no cargado")
+
+    suffix = Path(video.filename).suffix if video.filename else ".mp4"
+    with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
+        tmp.write(await video.read())
+        tmp_path = Path(tmp.name)
+
+    t_start = time.perf_counter()
+
+    try:
+        frames = load_video_frames(tmp_path)
+        if not frames:
+            raise HTTPException(status_code=422, detail="No se pudieron extraer frames del vídeo")
+
+        raw_landmarks = [extract_landmarks_from_frame(f, detector) for f in frames]
+        detected = sum(1 for lm in raw_landmarks if lm is not None)
+        detection_rate = detected / len(raw_landmarks)
+
+        if detection_rate < 0.3:
+            raise HTTPException(
+                status_code=422,
+                detail=f"Tasa de detección de mano demasiado baja ({detection_rate:.0%}). Asegúrate de que la mano sea visible.",
             )
-            predictions.append(pred)
-            kept_for_frame += 1
 
-        print(f"[YOLO]   kept {kept_for_frame} detections after thresholding")
+        interpolated = interpolate_missing_frames(raw_landmarks)
+        normalized   = normalize_landmarks(interpolated)
 
-    has_hand = len(predictions) > 0
-    max_conf = max((p.confidence for p in predictions), default=0.0)
+        T = normalized.shape[0]
+        max_frames = model_config.get("max_frames", MAX_FRAMES)
+        if T < max_frames:
+            pad = np.zeros((max_frames - T, 21, 3))
+            normalized = np.concatenate([normalized, pad], axis=0)
+        else:
+            normalized = normalized[:max_frames]
 
-    aggregated = {
-        "has_hand": has_hand,
-        "max_confidence": max_conf,
-        "num_frames": len(frame_paths),
-        "num_detections": len(predictions),
-        "min_confidence": MIN_CONFIDENCE,
-    }
+        seq = torch.from_numpy(
+            normalized.reshape(max_frames, 63).astype(np.float32)
+        ).unsqueeze(0)  # (1, max_frames, 63)
 
-    print(f"[YOLO] Aggregated: {aggregated}")
-    return predictions, aggregated
+        with torch.no_grad():
+            logits, attn_weights = model(seq, return_attention=True)
+            probs = F.softmax(logits, dim=1)[0]
 
+        top5_vals, top5_idx = torch.topk(probs, k=5)
+        predictions = [
+            Prediction(
+                word=idx_to_gloss[idx.item()],
+                confidence=round(val.item(), 4),
+                rank=rank + 1,
+            )
+            for rank, (val, idx) in enumerate(zip(top5_vals, top5_idx))
+        ]
 
-# ---- Endpoints ----
+        attention_weights  = attn_weights[0].tolist()
+        processing_time_ms = (time.perf_counter() - t_start) * 1000
 
-@app.post("/session", response_model=CreateSessionResponse)
-def create_session() -> CreateSessionResponse:
-    """Generate a new session ID and create a folder to store its frames."""
-    session_id = str(uuid.uuid4())
-    sdir = session_dir(session_id)
-    sdir.mkdir(parents=True, exist_ok=False)
-    return CreateSessionResponse(session_id=session_id)
+    finally:
+        tmp_path.unlink(missing_ok=True)
 
-
-@app.post("/session/{session_id}/add_frame", response_model=AddFrameResponse)
-def add_frame(session_id: str, trace: PixelTrace) -> AddFrameResponse:
-    """Add a pixel trace frame to a given session.
-
-    The client must send the frame already resized to 416x416.
-    """
-    frame_path = save_pixel_trace(session_id, trace)
-    return AddFrameResponse(
-        session_id=session_id,
-        frame_index=trace.frame_index,
-        stored_path=str(frame_path),
-    )
-
-
-@app.post("/session/{session_id}/predict", response_model=SessionPredictionResponse)
-def predict_session(session_id: str) -> SessionPredictionResponse:
-    """Load all frames for a session and run YOLO model inference + cropping."""
-    frame_paths = load_session_frame_pngs(session_id)
-    if not frame_paths:
-        raise HTTPException(status_code=400, detail="Session has no frames")
-
-    predictions, aggregated = yolo_model_predict_from_paths(frame_paths)
-    return SessionPredictionResponse(
-        session_id=session_id,
-        num_frames=len(frame_paths),
+    return PredictResponse(
         predictions=predictions,
-        aggregated=aggregated,
+        detection_rate=round(detection_rate, 3),
+        frames_processed=len(frames),
+        attention_weights=[round(w, 5) for w in attention_weights],
+        processing_time_ms=round(processing_time_ms, 1),
     )
 
 
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000, reload=False)

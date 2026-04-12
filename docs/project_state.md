@@ -2,10 +2,10 @@
 
 ## Current Focus
 
-**Session**: `LTSM-GapComparison` (started 2026-03-20)
-**Status**: About to train LSTM (same architecture as Nb 09 LSTMPose) progressively on WLASL subsets (100/300/500/700/900/1000/1200/1500 classes), mirroring the GRU+Attention notebooks 17a-17i, to produce a LSTM vs GRU gap comparison for the thesis.
-**Previous Session**: `GapTestingWASL` (COMPLETED — gap/bottleneck analysis notebook 21 done; new training runs 17e-17i completed for WLASL 500/700/900/1200/1500)
-**Older Session**: `MS-ASL-Dataset-Preparation` (IN PROGRESS — JSON annotations downloaded, videos not yet downloaded)
+**Session**: `AppIntegration` (started 2026-04-08)
+**Status**: Building the Flutter mobile app for user-facing demo. App in `03_app/signtotext/`. Model investigation on hold.
+**Previous Session**: `LTSM-GapComparison` (ON HOLD — LSTM progressive training not started yet)
+**Older Session**: `GapTestingWASL` (COMPLETED — gap/bottleneck analysis notebook 21 done; new training runs 17e-17i completed for WLASL 500/700/900/1200/1500)
 
 ## Tutor Meeting (2026-02-11) - Key Directives
 

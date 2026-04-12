@@ -1,26 +1,181 @@
 \chapter{Ethical Implications and Social Impact}
 \setcounter{section}{0}
 
-\section{AI-Based Systems Ethical Impact}
-An ethical analysis in Artificial Intelligence is a process which consist in examining the implications, preoccupations and challenges associated with the development and
-deployment of these systems. With the recent advancements, AI is starting to integrate in applications which can be considered critical to society, that's why their technical improvement
-and evaluation should also be accompanied by an ethics review. This ethical impact review on AI systems is based on 4 general pillars:
+\section{AI Based Systems Ethical Impact}
+An ethical analysis in Artificial Intelligence is a process which consists in examining the implications, concerns and challenges associated with the development and deployment of these systems. With the recent advancements, AI is starting to integrate in applications which can be considered critical to society, and that is why their technical improvement and evaluation should also be accompanied by an ethics review. This ethical impact review on AI systems is based on 4 general pillars:
+
 \begin{itemize}
-    \item Human Rights and Fairness: it is necessary to prevent biases and discrimination against minority groups to ensure a fairness in treatment.
-    \item Accountability: it is crucial to establish who is responsible for the decisions the AI systems make, this could either be the development team, the users, the company, or even the system itself
-    \item Privacy and Security: it must be ensured that the user data is protected and that the system doesn't infringe any confidentiality of the users.
-    \item Transparency: it is indispensable to provide clarity on how the system is taking the decision and what are they based on, meaning black boxes system should be avoided.
+    \item \textbf{Human Rights and Fairness:} it is necessary to prevent biases and discrimination against minority groups to ensure fairness in treatment.
+    \item \textbf{Accountability:} it is crucial to establish who is responsible for the decisions the AI systems make, whether that is the development team, the users, the company, or even the system itself.
+    \item \textbf{Privacy and Security:} it must be ensured that user data is protected and that the system does not infringe any confidentiality of the users.
+    \item \textbf{Transparency:} it is indispensable to provide clarity on how the system is taking decisions and what they are based on, meaning black box systems should be avoided.
 \end{itemize}
-\section{Ethical Dimensions Descriptions}
-Now that we have defined why an ethics review must be done and what pillars it is based on. To standardize this ethics reviews, many organizations have developed different frameworks such as The European Ethics guidelines for trustworthy AI (CITA EU), and The Principles of AI by Microsoft. In this case to evaluate the system, we are going to adopt the Google's AI Principles, this framework covers seven fundamental dimensions which guide the responsible development:
+
+\section{Ethical Evaluation Framework: Google's AI Principles}
+
+Several organizations have developed frameworks to standardize the ethical evaluation of AI systems. For the evaluation of this project, the framework adopted is \textbf{Google's AI Principles} \cite{googleaiprinciples2018}, originally published in 2018 by Google CEO Sundar Pichai. This framework has been updated and detailed through annual progress reports, and the version used as the primary reference for this evaluation is the \textbf{2023 Progress Update} \cite{googleaiprinciples2023}, which represents the fifth edition of these reports and provides a comprehensive description of how the principles are applied in practice across different types of AI systems.
+
+The reason for choosing this specific framework is that it provides a clear, well structured set of seven principles that are practical enough to apply directly to a research project. Unlike other frameworks that tend to be more abstract or policy oriented, Google's AI Principles are formulated as concrete objectives that can be evaluated with quantifiable metrics. Furthermore, Google has been one of the pioneers in publishing annual progress reports on how these principles are applied in real products and services, which gives the framework a level of maturity and real world validation that makes it suitable for academic evaluation. The 2023 report, in particular, demonstrates how these principles can be put into practice across different types of AI systems, including generative AI, computer vision, and speech recognition, which aligns well with the nature of this project.
+
+The seven principles that make up this framework are:
+
 \begin{enumerate}
-    \item \textbf{Be socially beneficial:} The AI system needs to aim at solving a real societal problem and actually do it effectively.
-    \item \textbf{Avoid creating or reinforcing unfair bias:} We need to take steps to ensure that the AI system is fair and inclusive for everyone, avoiding discrimination.
-    \item \textbf{Be built and tested for safety:} Safety has to be a priority in how the system is designed and developed.
-    \item \textbf{Be accountable to people:} The system must provide transparency and let users have some control over it.
-    \item \textbf{Incorporate privacy design principles:} The AI has to be designed in a way that protects user data and privacy.
-    \item \textbf{Uphold high standards of scientific excellence:} The development of the AI must be based on rigorous research and sound scientific principles.
-    \item \textbf{Be made available for uses that accord with these principles:} We need to be clear about the intended use cases for the AI, making sure it is used properly and aligns with these values.
+    \item \textbf{Be socially beneficial:} The AI system should aim at solving a real societal problem and should do it effectively.
+    \item \textbf{Avoid creating or reinforcing unfair bias:} Steps should be taken to ensure that the AI system is fair and inclusive for everyone, avoiding discrimination.
+    \item \textbf{Be built and tested for safety:} Safety should be a priority in how the system is designed and developed.
+    \item \textbf{Be accountable to people:} The system should provide transparency and allow users to have some control over it.
+    \item \textbf{Incorporate privacy design principles:} The AI should be designed in a way that protects user data and privacy.
+    \item \textbf{Uphold high standards of scientific excellence:} The development of the AI should be based on rigorous research and sound scientific principles.
+    \item \textbf{Be made available for uses that accord with these principles:} The intended use cases for the AI should be clear, making sure it is used properly and aligns with these values.
 \end{enumerate}
-\section{Project Analysis}
-\section{Impact scale of Ethical Aspects}
+
+In the following sections, the ASL recognition system developed in this project is evaluated against each of these seven principles. For each principle, a set of quantitative metrics is defined to assess to what degree the project fulfills that principle. Each metric is scored on a simplified scale of \textbf{0}, \textbf{5} or \textbf{10}, where 0 means the principle is not addressed at all, 5 means it is partially addressed, and 10 means it is fully addressed. This scoring system keeps the evaluation straightforward while still providing enough granularity to distinguish between different levels of compliance. The metrics may or may not come directly from experimental results; some are derived from design decisions, documentation practices, or the nature of the data used. After evaluating all principles individually, a summary table is presented with the scores for each metric and the average score per principle, which provides an overall view of the ethical compliance of the project.
+
+\section{Project Analysis Against Google's AI Principles}
+
+\subsection{Principle 1: Be Socially Beneficial}
+
+The primary goal of this project is to develop an AI system capable of recognizing American Sign Language (ASL) words from video sequences. Sign language is the main means of communication for millions of deaf and hard of hearing individuals worldwide, and yet there is still a significant communication barrier between the deaf community and hearing people who do not know sign language. An automatic ASL recognition system can serve as a bridge to reduce this gap, potentially enabling real time translation in educational, medical and everyday settings.
+
+To evaluate how well this project fulfills the social benefit principle, the following metrics are defined:
+
+\begin{itemize}
+    \item \textbf{M1.1 --- Addresses a real societal need:} The system targets a genuine accessibility problem. According to the World Health Organization, over 430 million people worldwide have disabling hearing loss. Providing tools that facilitate communication for this community represents a clear social benefit. \textit{Score: 10.}
+    \item \textbf{M1.2 --- Effectiveness of the solution:} The best model achieved 63.9\% Top-1 accuracy (K-Fold validated) and 86.5\% Top-5 accuracy on a 30-class vocabulary, meeting the baseline accuracy targets established for the project. However, accuracy degrades when scaling to larger vocabularies, reaching 44.7\% at 100 classes and 28.6\% at 300 classes. The system shows promise as a research prototype but has not yet reached the level of reliability required for real world deployment. \textit{Score: 5.}
+    \item \textbf{M1.3 --- Accessibility of the technology:} The system is built entirely on open source tools (Python, PyTorch, MediaPipe) and uses publicly available datasets (WLASL). The research is documented in a university thesis, making the methodology accessible to other researchers. Additionally, the project was designed with the intention of running the recognition pipeline within a mobile application, which would make it accessible to end users regardless of their technical background. \textit{Score: 10.}
+\end{itemize}
+
+\subsection{Principle 2: Avoid Creating or Reinforcing Unfair Bias}
+
+Bias in AI systems is a well known problem, and it is particularly relevant in sign language recognition because different signers may have different hand sizes, skin tones, signing speeds, and styles. If the training data is not diverse enough, the model could perform significantly better for some demographics than for others. This concern applies not only to the word recognition phase but also to the earlier hand detection phase, which was trained on image datasets containing real photographs of people.
+
+\begin{itemize}
+    \item \textbf{M2.1 --- Dataset diversity (word recognition):} The WLASL dataset, used for word level recognition, contains videos from multiple signers with varying backgrounds. However, the dataset does not provide detailed demographic annotations (age distribution, skin tone, hand size, etc.), which makes it difficult to formally assess the diversity of the training data. On the other hand, the fact that the videos were collected from different YouTube sources means that there is likely some natural variation in the signers, even though this cannot be quantified. \textit{Score: 5.}
+    \item \textbf{M2.2 --- Dataset diversity (hand detection and letter classification):} The hand detection models (YOLOv8n, SSDLite-MobileNetV3, EfficientDet-D0) were trained on a combination of four datasets: EgoHands ($\sim$4,800 egocentric images from Indiana University), Oxford/Kaggle Hand Dataset ($\sim$13,000 images), HaGRID ($\sim$30,000 gesture images with bounding boxes), and TV-Hand ($\sim$5,000 images). Additionally, the initial letter classification experiments used the Sign Language MNIST ($\sim$7,000 grayscale images) and the ASL Alphabet Dataset ($\sim$72,000 RGB images). These datasets have varying levels of diversity: EgoHands is limited to a university context with an egocentric perspective, while HaGRID and the Oxford set offer more variety. None of them provide explicit demographic metadata, which means that potential biases in skin tone or hand morphology representation cannot be formally ruled out. \textit{Score: 5.}
+    \item \textbf{M2.3 --- Input representation fairness:} For the word recognition phase, the system uses MediaPipe hand landmarks (21 keypoints $\times$ 3 coordinates = 63 features per frame) instead of raw pixel data. This means that the model operates on geometric joint positions rather than visual appearance, which makes it inherently less sensitive to factors like skin color, lighting conditions or background. This significantly reduces the risk of appearance based bias in the recognition stage. However, it should be noted that the hand detection stage and the MediaPipe extraction itself do operate on raw images, so bias could still be introduced at the detection level. \textit{Score: 10.}
+    \item \textbf{M2.4 --- Per-class performance analysis:} Per class accuracy analysis was conducted across all experiments, identifying that some classes like ``what'' (8.3\%) and ``cool'' (12.5\%) had significantly lower accuracy than others like ``orange'' (100\%) and ``table'' (100\%). These disparities are mostly explained by visual similarity between certain signs and the limited number of training samples for some classes, rather than by demographic bias. While the disparities were documented and analyzed, specific corrective measures such as class weighted loss or oversampling were not implemented in this iteration, as the focus was on establishing baseline performance across progressive vocabulary sizes. The system does log per class metrics as part of training, which would facilitate targeted improvements in future iterations. \textit{Score: 5.}
+\end{itemize}
+
+\subsection{Principle 3: Be Built and Tested for Safety}
+
+Safety in this context refers to ensuring that the AI system operates reliably and does not produce harmful or misleading outputs. For a sign language recognition system, a misclassification could lead to a misunderstanding, which in a medical or legal context could have serious consequences.
+
+\begin{itemize}
+    \item \textbf{M3.1 --- Robust validation methodology:} Instead of relying on a single train-test split, Stratified 5-Fold Cross-Validation was implemented, which provides a more reliable and statistically meaningful estimate of model performance. In this approach, the dataset is divided into 5 non overlapping folds, and the model is trained and evaluated 5 times, each time using a different fold as the test set and the remaining 4 folds for training. The stratification ensures that the class distribution is preserved in each fold. This yielded a mean Top-1 accuracy of 63.9\% $\pm$ 4.5\% and a mean Top-5 accuracy of 86.5\% $\pm$ 2.0\% across the 5 folds. The use of Test-Time Augmentation (TTA) was explicitly avoided because it produces artificially inflated results that do not reflect the true performance of the model. \textit{Score: 10.}
+    \item \textbf{M3.2 --- Scalability testing:} Progressive training was performed across multiple WLASL subsets (30, 100, 300, 500, 700, 900, 1000, 1200, 1500 classes) to understand how the model degrades as the task complexity increases. This allowed the identification of instability points (above 700 classes for GRU+Attention) and the documentation of the limitations of the current approach. This type of progressive stress testing is an important safety practice because it establishes the boundaries within which the system can be considered reliable. \textit{Score: 10.}
+    \item \textbf{M3.3 --- Hand detection reliability:} The hand detection stage, based on YOLOv8n, achieved approximately 98\% mAP50 on the combined test set. This high detection rate is important for overall system safety, as a missed hand detection would prevent the recognition pipeline from even attempting classification. The detection model was validated on images from all four source datasets to ensure consistent performance across different visual contexts. \textit{Score: 10.}
+    \item \textbf{M3.4 --- Failure mode documentation:} Per class confusion matrices were documented and problematic word pairs that the model confuses were identified. However, a confidence threshold mechanism that would allow the system to abstain from prediction when uncertain has not been implemented yet. Such a mechanism would be important in a production deployment to avoid presenting unreliable predictions to the user, and it is considered as a future improvement. \textit{Score: 5.}
+\end{itemize}
+
+\subsection{Principle 4: Be Accountable to People}
+
+Accountability means that the system should be transparent in its operation and that users should have some level of understanding and control over its behavior.
+
+\begin{itemize}
+    \item \textbf{M4.1 --- Model interpretability:} The GRU + Temporal Attention architecture includes an attention mechanism that produces weights over the temporal sequence of input frames. These attention weights indicate which frames the model considers most relevant for making its prediction, which provides a degree of interpretability. Unlike a purely opaque model where the decision process is entirely hidden, the attention weights can be inspected and visualized to understand why a particular prediction was made. This is an advantage over architectures that do not include any form of explainability. \textit{Score: 10.}
+    \item \textbf{M4.2 --- Top-K predictions:} The system provides Top-5 predictions alongside Top-1, giving users multiple possible interpretations rather than a single definitive answer. At 30 classes, the Top-5 accuracy is 86.5\%, meaning that the correct word is almost always among the top 5 suggestions. This allows the end user to make the final decision from a shortlist, rather than being forced to accept or reject a single prediction. \textit{Score: 10.}
+    \item \textbf{M4.3 --- Reproducibility:} All experiments are documented in Jupyter notebooks with fixed random seeds, and the training configurations, hyperparameters and dataset splits are recorded. However, some WLASL videos come from YouTube and may become unavailable over time, which threatens long term reproducibility. Additionally, the YouTube videos used in WLASL were collected without explicit consent from the signers for use in machine learning research, which is an ethical concern regarding data provenance that affects the ability to share and reproduce the dataset freely. \textit{Score: 5.}
+\end{itemize}
+
+\subsection{Principle 5: Incorporate Privacy Design Principles}
+
+Privacy is an important consideration in any system that processes video data of people. Sign language recognition inherently requires capturing video of individuals performing gestures, which raises questions about data protection. This project involves multiple stages with different privacy characteristics: the hand detection training phase used real images of people, the word recognition training phase used abstract landmark representations, and the inference pipeline processes raw video frames sent from a mobile device.
+
+\begin{itemize}
+    \item \textbf{M5.1 --- Data minimization through landmarks (training phase):} One of the most significant privacy advantages of the word recognition approach is the use of MediaPipe landmarks instead of raw video. The landmark extraction process converts each video frame into 63 numerical values (21 keypoints $\times$ 3 coordinates), completely discarding the original visual information. Once landmarks are extracted, the original video is no longer needed for training or inference of the GRU/LSTM models. This means that the processed data cannot be used to reconstruct the person's face, body, or surroundings, which is a strong form of data minimization. \textit{Score: 10.}
+    \item \textbf{M5.2 --- Privacy in the hand detection phase:} The hand detection models were trained on datasets containing real photographs of people (EgoHands, Oxford/Kaggle, HaGRID, TV-Hand), totaling approximately 53,000 images. EgoHands in particular contains frames from video recordings of people in everyday situations (eating, playing, etc.). Similarly, the letter classification experiments used approximately 79,000 real hand images from Sign Language MNIST and the ASL Alphabet Dataset. These images were processed during training but are not stored or distributed as part of the final system. Nevertheless, the fact that real images of identifiable individuals were used in the training pipeline is a privacy consideration that should be acknowledged. These datasets are publicly available for research purposes, but no independent privacy audit was conducted on their provenance. \textit{Score: 5.}
+    \item \textbf{M5.3 --- Privacy in the inference pipeline:} The current server implementation (FastAPI) receives full video frames (416$\times$416 RGB) from the mobile application, processes them for hand detection, and stores both the raw frames and cropped hand regions as \texttt{.npy} and \texttt{.png} files in session directories on the server. This means that identifiable visual data travels over the network and is persisted on disk without encryption or automatic expiration. This is the weakest point of the system from a privacy perspective. In a production deployment, the landmark extraction should ideally be performed on the client device so that only abstract landmark data is transmitted to the server, or alternatively, the server should implement encryption and automatic session data deletion. \textit{Score: 0.}
+    \item \textbf{M5.4 --- K-Anonymity considerations:} K-Anonymity is a privacy model in which a dataset is considered k-anonymous if every combination of almost identifying attributes (such as age, gender, or location) corresponds to at least $k$ individuals, making it impossible to single out any one person \cite{sweeney2002kanonymity}. In this project, the WLASL dataset does not include identifying metadata about the signers (no names, ages, or locations are stored alongside the landmark data). Furthermore, the landmark representation itself acts as a form of generalization: the 63 dimensional feature vector cannot be easily traced back to a specific individual because different people performing the same sign produce similar landmark patterns. While a formal k-anonymity algorithm was not applied, the design of the landmark pipeline achieves a similar privacy preserving effect for the word recognition data. This does not apply, however, to the hand detection datasets or the server inference pipeline, where raw images are involved. \textit{Score: 5.}
+\end{itemize}
+
+\subsection{Principle 6: Uphold High Standards of Scientific Excellence}
+
+This principle evaluates whether the research and development process follows rigorous scientific methodology.
+
+\begin{itemize}
+    \item \textbf{M6.1 --- Systematic model comparison (word recognition):} A structured comparison of multiple architectures was conducted for the word recognition task: CNN+LSTM (pixel based), LSTM (landmark based), GRU with soft augmentation, GRU with enriched features, GRU with Temporal Attention, and a Transformer model. Each architecture was evaluated under the same conditions and datasets, allowing for a fair and controlled comparison. \textit{Score: 10.}
+    \item \textbf{M6.2 --- Systematic model comparison (hand detection):} For the hand detection stage, three different object detection architectures were trained and compared: YOLOv8n, SSDLite320-MobileNetV3, and EfficientDet-D0. These models were evaluated on the same combined dataset using standard object detection metrics (mAP50, mAP50-95, inference time), providing a rigorous comparison across different architecture families ranging from one stage to two stage detectors. \textit{Score: 10.}
+    \item \textbf{M6.3 --- Statistical validation:} The use of 5-Fold Stratified Cross-Validation with reported mean and standard deviation (63.9\% $\pm$ 4.5\%) provides a statistically meaningful evaluation. Additionally, Pearson correlation coefficients were computed to analyze the relationship between the number of classes and model performance during the scalability analysis, identifying quantitative trends in accuracy degradation. \textit{Score: 10.}
+    \item \textbf{M6.4 --- Literature grounding:} The state of the art chapter of this thesis covers the theoretical progression from CNNs to RNNs, LSTMs, and GRUs, situating the work within the broader research landscape. The architectures chosen (GRU+Attention, LSTM, Transformer) are well established in the temporal sequence modeling literature. The landmark based approach using MediaPipe is also grounded in recent work on pose estimation for sign language recognition. \textit{Score: 10.}
+    \item \textbf{M6.5 --- Honest reporting of limitations:} The thesis explicitly documents accuracy degradation at scale (from 63.9\% at 30 classes to 11.2\% at 1000 classes), MediaPipe detection failures ($\sim$69\% frame detection rate), and the instability observed above 700 classes. Negative results and limitations are reported alongside positive findings, which is consistent with the principle of scientific integrity. \textit{Score: 10.}
+\end{itemize}
+
+\subsection{Principle 7: Be Made Available for Uses That Accord with These Principles}
+
+This principle asks whether the intended uses of the technology align with the ethical framework and whether potential misuse has been considered.
+
+\begin{itemize}
+    \item \textbf{M7.1 --- Intended use clarity:} The system is designed specifically as a research tool for ASL word recognition. The thesis clearly defines the scope of the project, the target application (assistive technology for the deaf community), and the current limitations. There is no ambiguity about the intended use. \textit{Score: 10.}
+    \item \textbf{M7.2 --- Misuse potential assessment:} The landmark based approach for word recognition produces abstract numerical representations that have very limited potential for misuse. Unlike a system that processes raw video, the landmark features cannot be repurposed for surveillance, facial recognition, or tracking individuals. However, it should be noted that the hand detection component and the server inference pipeline do process real images, which could theoretically be repurposed if the server data were accessed by unauthorized parties. The current prototype does not implement access controls or data retention policies on the session storage, which is a gap that should be addressed before any deployment beyond the research context. \textit{Score: 5.}
+    \item \textbf{M7.3 --- Open research contribution:} The methodology, results, and analysis are documented in a university thesis and the code is developed in documented Jupyter notebooks. This contributes to the open research community working on sign language recognition. However, the trained models and datasets have not been published on a public repository at the time of writing. \textit{Score: 5.}
+\end{itemize}
+
+\section{Impact Scale of Ethical Aspects}
+
+Table \ref{tab:ethics_metrics} summarizes all the metrics defined for each of Google's AI Principles, along with their individual scores. The final column shows the average score per principle.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|c|l|l|c|c|}
+\hline
+\textbf{Principle} & \textbf{ID} & \textbf{Metric} & \textbf{Score} & \textbf{Avg.} \\
+\hline
+\multirow{3}{*}{\shortstack{P1: Socially\\Beneficial}} 
+    & M1.1 & Addresses a real societal need & 10 & \multirow{3}{*}{\textbf{8.3}} \\
+    & M1.2 & Effectiveness of the solution & 5 & \\
+    & M1.3 & Accessibility of the technology & 10 & \\
+\hline
+\multirow{4}{*}{\shortstack{P2: Avoid\\Unfair Bias}} 
+    & M2.1 & Dataset diversity (word recognition) & 5 & \multirow{4}{*}{\textbf{6.3}} \\
+    & M2.2 & Dataset diversity (detection \& letters) & 5 & \\
+    & M2.3 & Input representation fairness & 10 & \\
+    & M2.4 & Per class performance analysis & 5 & \\
+\hline
+\multirow{4}{*}{\shortstack{P3: Safety}} 
+    & M3.1 & Robust validation methodology & 10 & \multirow{4}{*}{\textbf{8.8}} \\
+    & M3.2 & Scalability testing & 10 & \\
+    & M3.3 & Hand detection reliability & 10 & \\
+    & M3.4 & Failure mode documentation & 5 & \\
+\hline
+\multirow{3}{*}{\shortstack{P4: Account-\\ability}} 
+    & M4.1 & Model interpretability & 10 & \multirow{3}{*}{\textbf{8.3}} \\
+    & M4.2 & Top-K predictions & 10 & \\
+    & M4.3 & Reproducibility & 5 & \\
+\hline
+\multirow{4}{*}{\shortstack{P5: Privacy}} 
+    & M5.1 & Data minimization (landmark training) & 10 & \multirow{4}{*}{\textbf{5.0}} \\
+    & M5.2 & Privacy in detection phase & 5 & \\
+    & M5.3 & Privacy in inference pipeline & 0 & \\
+    & M5.4 & K-Anonymity considerations & 5 & \\
+\hline
+\multirow{5}{*}{\shortstack{P6: Scientific\\Excellence}} 
+    & M6.1 & Model comparison (word recognition) & 10 & \multirow{5}{*}{\textbf{10.0}} \\
+    & M6.2 & Model comparison (hand detection) & 10 & \\
+    & M6.3 & Statistical validation & 10 & \\
+    & M6.4 & Literature grounding & 10 & \\
+    & M6.5 & Honest reporting of limitations & 10 & \\
+\hline
+\multirow{3}{*}{\shortstack{P7: Principled\\Availability}} 
+    & M7.1 & Intended use clarity & 10 & \multirow{3}{*}{\textbf{6.7}} \\
+    & M7.2 & Misuse potential assessment & 5 & \\
+    & M7.3 & Open research contribution & 5 & \\
+\hline
+\multicolumn{4}{|r|}{\textbf{Overall Average Score}} & \textbf{7.6} \\
+\hline
+\end{tabular}
+\caption{Ethical evaluation metrics based on Google's AI Principles \cite{googleaiprinciples2023}}
+\label{tab:ethics_metrics}
+\end{table}
+
+\section{Conclusions of the Ethical Analysis}
+
+The overall ethical evaluation of this project yields an average score of \textbf{7.6 out of 10} across all seven principles of Google's AI framework. This indicates that the project demonstrates a solid ethical foundation, with particularly strong results in scientific excellence (10.0/10) and safety (8.8/10), while also identifying clear areas for improvement, especially in privacy (5.0/10).
+
+The strongest aspect of the project from an ethical perspective is the choice of using MediaPipe hand landmarks as the input representation for word recognition. This single architectural decision has positive implications across multiple principles: it reduces appearance based bias (Principle 2), it acts as a data minimization mechanism that inherently protects privacy by discarding identifiable visual information (Principle 5), and it limits the potential for misuse since the numerical landmark data cannot be repurposed for surveillance or identification (Principle 7).
+
+However, the evaluation also reveals that the privacy advantages of the landmark approach do not extend to all stages of the project. The hand detection phase was trained on real photographs of people from multiple datasets, and more importantly, the current server inference pipeline receives and stores full video frames without encryption or automatic deletion. This represents the most significant ethical gap identified in the analysis, and it should be the primary focus of improvement before any deployment beyond the research context. A recommended mitigation would be to move the landmark extraction to the client device (the mobile phone), so that only abstract numerical data is sent to the server, eliminating the need to transmit or store identifiable images.
+
+The areas of bias avoidance (6.3/10) and principled availability (6.7/10) receive intermediate scores, reflecting the fact that while the project has inherent design choices that are positive for these dimensions, it lacks some formal processes. For bias, no demographic audit of the dataset signers was performed, and the hand detection datasets have limited or undocumented diversity. For availability, the absence of access controls and data retention policies on the server session storage is a gap that needs to be addressed.
+
+Finally, it is worth noting that the honest reporting of limitations throughout the thesis including the significant accuracy drops at larger vocabularies, the documented instability above 700 classes, and the privacy weaknesses of the inference pipeline identified in this very chapter is itself an ethical practice aligned with Principle 6 (scientific excellence). Overestimating the capabilities of an AI system can lead to inappropriate deployment and user trust issues, so transparency about what the system can and cannot do is fundamental to responsible AI development.

@@ -1,21 +1,8 @@
-# ============================================================================
-# Requirements for TFG Sign Language Recognition Server
-# ============================================================================
-
-# Web Framework
-fastapi>=0.104.0
-uvicorn[standard]>=0.24.0  # ASGI server for FastAPI
-pydantic>=2.0.0            # Data validation
-
-# Deep Learning & Computer Vision
-torch>=2.0.0               # PyTorch for deep learning
-torchvision>=0.15.0        # Vision utilities
-ultralytics>=8.0.0         # YOLO models (YOLOv8/YOLO11)
-
-# Image Processing
-pillow>=10.0.0             # PIL for image manipulation
-opencv-python>=4.8.0       # OpenCV for video processing
-numpy>=1.24.0              # Numerical operations
-
-# Utilities
-python-multipart>=0.0.6    # For file uploads (if needed)
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+python-multipart==0.0.9
+torch>=2.0.0
+mediapipe>=0.10.0
+opencv-python-headless>=4.8.0
+numpy>=1.24.0
+pydantic>=2.0.0
