@@ -155,16 +155,6 @@ kaggle.json
 .env
 *.env
 
-# ============================================================================
-# Local tool metadata (not part of the project)
-# ============================================================================
-.claude/
-.aider*
-.continue/
-.copilot/
-CLAUDE.md
-OpenCode.md
-
 # Internal development notes
 docs/devlog/
 docs/project_context.md

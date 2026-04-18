@@ -76,4 +76,4 @@ Los datasets se descargan automáticamente:
 - **EgoHands:** Descarga directa desde URL
 - **Kaggle Hand Dataset:** Necesitas `utils/kaggle.json` configurado
 
-Ver `DATASETS_REFERENCES.txt` en la raíz para más detalles.
+See `01_notebooks/dataset_preparation/dataset_references.md` for dataset source notes.

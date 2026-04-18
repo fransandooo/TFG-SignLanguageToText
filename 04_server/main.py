@@ -25,8 +25,9 @@ from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-BASE_DIR = Path(__file__).parent.parent
-HAND_LANDMARKER_TASK = BASE_DIR / "hand_landmarker.task"
+SERVER_DIR = Path(__file__).parent
+BASE_DIR = SERVER_DIR.parent
+HAND_LANDMARKER_TASK = SERVER_DIR / "hand_landmarker.task"
 DEBUG_OUTPUT_DIR = BASE_DIR / "05_experiments" / "continuous_debug"
 
 DEFAULT_MODEL_ID = "attention_30_prod"

@@ -55,7 +55,7 @@ pip install kagglehub numpy matplotlib pillow
 
 **Configuración necesaria:**
 - Archivo `utils/kaggle.json` con tus credenciales de Kaggle
-- Ver `DATASETS_REFERENCES.txt` en la raíz para obtener API key
+- See `dataset_references.md` for dataset source notes and Kaggle credential format.
 
 ---
 
@@ -123,7 +123,7 @@ Para descargar automáticamente los datasets necesitas:
    cp ~/Downloads/kaggle.json utils/kaggle.json
    ```
 
-Ver `DATASETS_REFERENCES.txt` en la raíz del proyecto para más detalles.
+See `dataset_references.md` for dataset source notes and Kaggle credential format.
 
 ---
 
@@ -131,4 +131,4 @@ Ver `DATASETS_REFERENCES.txt` en la raíz del proyecto para más detalles.
 
 - **Sign Language MNIST:** `datamunge/sign-language-mnist`
 - **ASL Alphabet:** `grassknoted/asl-alphabet`
-- Más info en: `DATASETS_REFERENCES.txt`
+- More details: `dataset_references.md`

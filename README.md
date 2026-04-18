@@ -98,7 +98,7 @@ Hand detection (YOLO, earlier phase):
 | [EgoHands](http://vision.soic.indiana.edu/projects/egohands/) | Hand detection | — | egocentric |
 | [Kaggle Hand Dataset](https://www.kaggle.com/datasets/shyambhu/hands-and-palm-images-dataset) | Hand detection | — | multi-view |
 
-Datasets are not included in the repository. See `DATASETS_REFERENCES.txt` for download instructions.
+Datasets are not included in the repository. See `01_notebooks/dataset_preparation/dataset_references.md` for dataset source notes.
 
 ---
 
