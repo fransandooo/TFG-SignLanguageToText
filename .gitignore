@@ -156,13 +156,13 @@ kaggle.json
 *.env
 
 # Internal development notes
-docs/devlog/
 docs/project_context.md
 docs/
 !docs/
 docs/*
 !docs/templates/
 !docs/templates/**
+docs/devlog/*
 
 # ============================================================================
 # Operating system

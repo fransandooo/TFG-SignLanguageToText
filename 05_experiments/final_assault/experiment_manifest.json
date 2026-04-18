@@ -57,7 +57,10 @@
     },
     "test": {
       "top1": 58.8235294117647,
-      "top5": 91.17647058823529
+      "top5": 91.17647058823529,
+      "macro_f1": 56.26666666666665,
+      "balanced_accuracy": 67.42424242424242,
+      "notes": "Macro F1 and balanced accuracy were recomputed from the saved test predictions; classes absent from the test split are not part of the balanced average."
     },
     "robust_reference": {
       "experiment_id": "kfold_wlasl100",
@@ -73,24 +76,30 @@
     "report": "05_experiments/final_assault/experiment_report.md",
     "checkpoint": "05_experiments/final_assault/best_model_attention.pt",
     "raw_results": "05_experiments/final_assault/final_results.json",
-    "confusion_matrix": null,
-    "per_class_accuracy": null,
+    "confusion_matrix": "05_experiments/final_assault/confusion_matrix_normalized_true.png",
+    "confusion_matrix_counts": "05_experiments/final_assault/confusion_matrix_counts.png",
+    "confusion_matrix_normalized_true_csv": "05_experiments/final_assault/confusion_matrix_normalized_true.csv",
+    "confusion_matrix_counts_csv": "05_experiments/final_assault/confusion_matrix_counts.csv",
+    "top_confusions": "05_experiments/final_assault/top_confusions.json",
+    "per_class_accuracy": "05_experiments/final_assault/per_class_metrics.csv",
+    "predictions": "05_experiments/final_assault/predictions.csv",
     "training_curves": null
   },
   "main_findings": [
     "GRU + Temporal Attention is the strongest individual model in the final_assault comparison.",
     "The model reaches 58.82% Top-1 and 91.18% Top-5 on the WLASL30 test split.",
+    "The largest supported test confusions are candy -> who and what -> book, each with 2/3 affected samples.",
     "The later five-fold evaluation provides a stronger reference result: 63.85% Top-1 mean and 86.46% Top-5 mean."
   ],
   "limitations": [
     "The single test split contains only 34 samples, so the reported test result has high variance.",
-    "Macro F1 and balanced accuracy were not computed for this run.",
+    "Several test classes have only one or two samples, so per-class conclusions must be treated as weak evidence.",
     "Detection-rate statistics were not saved in the original experiment artifacts.",
     "Only one hand is represented, which can miss two-hand and non-manual sign information."
   ],
   "next_actions": [
     "Use this manifest format for the 32/64/96 frame-length sweep.",
-    "Add normalized confusion matrices and per-class accuracy files for final models.",
+    "Use the normalized confusion matrices to choose robust demo classes and inspect recurrent confusions.",
     "Record detection-rate statistics in future landmark extraction and evaluation runs."
   ],
   "max_frames": 64,
@@ -106,8 +115,8 @@
   "interpolation_strategy": "Linear interpolation between valid frames with edge fill at sequence boundaries",
   "top1": 58.8235294117647,
   "top5": 91.17647058823529,
-  "macro_f1": null,
-  "balanced_accuracy": null,
-  "confusion_matrix_path": null,
-  "per_class_accuracy_path": null
+  "macro_f1": 56.26666666666665,
+  "balanced_accuracy": 67.42424242424242,
+  "confusion_matrix_path": "05_experiments/final_assault/confusion_matrix_normalized_true.png",
+  "per_class_accuracy_path": "05_experiments/final_assault/per_class_metrics.csv"
 }

@@ -66,8 +66,8 @@ Can a bidirectional GRU with temporal attention classify isolated WLASL30 signs 
 |---|---:|---:|---|
 | Top-1 accuracy | 64.29 | 58.82 | Single split |
 | Top-5 accuracy | 83.93 | 91.18 | Single split |
-| Macro F1 | n/a | n/a | Not computed in this run |
-| Balanced accuracy | n/a | n/a | Not computed in this run |
+| Macro F1 | n/a | 56.27 | Recomputed from saved test predictions |
+| Balanced accuracy | n/a | 67.42 | Recomputed from saved test predictions; absent test classes excluded |
 
 The stronger thesis reference is the later five-fold validation on WLASL100 filtered to the same 30 classes:
 
@@ -84,25 +84,32 @@ The stronger thesis reference is the later five-fold validation on WLASL100 filt
 | Report | `05_experiments/final_assault/experiment_report.md` |
 | Checkpoint | `05_experiments/final_assault/best_model_attention.pt` |
 | Raw results | `05_experiments/final_assault/final_results.json` |
-| Confusion matrix | n/a |
-| Per-class accuracy | n/a |
+| Confusion matrix counts | `05_experiments/final_assault/confusion_matrix_counts.png` |
+| Confusion matrix counts CSV | `05_experiments/final_assault/confusion_matrix_counts.csv` |
+| Confusion matrix normalized by true label | `05_experiments/final_assault/confusion_matrix_normalized_true.png` |
+| Confusion matrix normalized by true label CSV | `05_experiments/final_assault/confusion_matrix_normalized_true.csv` |
+| Top confusions | `05_experiments/final_assault/top_confusions.json` |
+| Per-class metrics | `05_experiments/final_assault/per_class_metrics.csv` |
+| Test predictions | `05_experiments/final_assault/predictions.csv` |
 | Training curves | n/a |
 
 ## Main Findings
 
 - GRU + Temporal Attention is the strongest individual model in the final assault comparison.
 - The model reaches 58.82% Top-1 and 91.18% Top-5 on the WLASL30 test split.
+- The largest supported test confusions are `candy` -> `who` and `what` -> `book`, each affecting 2 of 3 samples.
+- `thin` has 0 correct predictions on the test split, but support is only 2 samples.
 - The five-fold evaluation confirms that the architecture is a robust baseline for the 30-class setting, with 63.85% Top-1 mean accuracy.
 
 ## Limitations
 
 - The single test split contains only 34 samples, so the test result has high variance.
-- Macro F1 and balanced accuracy were not computed for this run.
+- Several classes have only one or two test samples, so per-class conclusions should not be treated as strong evidence.
 - Detection-rate statistics were not saved in the original experiment artifacts.
 - The representation uses one hand only, which can miss two-hand and non-manual sign information.
 
 ## Next Actions
 
 - Use this report and manifest structure for the 32/64/96 frame-length sweep.
-- Add normalized confusion matrices and per-class accuracy files for the final models.
+- Use the normalized confusion matrices to choose robust demo classes and inspect recurrent confusions.
 - Record detection-rate statistics in future landmark extraction and evaluation runs.
