@@ -43,7 +43,7 @@ __pypackages__/
 logs/
 
 # ============================================================================
-# Entornos virtuales
+# Virtual environments
 # ============================================================================
 .env
 .venv
@@ -58,18 +58,18 @@ serverTFG/
 models/
 
 # ============================================================================
-# Modelos y pesos (archivos grandes - se documentan en README)
+# Model files and weights (large files documented in README)
 # ============================================================================
 *.pt
 *.pth
 *.onnx
 *.tflite
-# Excepcion: modelos base pre-entrenados pequeños en 02_models/
+# Exception: small pretrained base models in 02_models/
 !02_models/yolov8n.pt
 !02_models/yolo11n.pt
 
 # ============================================================================
-# Datasets (grandes, se descargan con instrucciones del README)
+# Datasets (large files downloaded through README instructions)
 # ============================================================================
 06_datasets/
 Download/
@@ -81,7 +81,7 @@ Dataset/
 **/hand_dataset/
 
 # ============================================================================
-# Experimentos - solo conservar resultados, no modelos ni imagenes de train
+# Experiments - keep curated results, ignore model weights and generated training assets
 # ============================================================================
 05_experiments/**/*.pt
 05_experiments/**/*.pth
@@ -90,8 +90,9 @@ Dataset/
 05_experiments/**/weights/
 **/train_batch*.jpg
 **/train_batch*.png
+05_experiments/continuous_debug/
 
-# Runs de YOLO (regenerables)
+# YOLO runs (regenerable)
 runs/
 **/runs/detect/
 01_notebooks/hand_detection/hand_bbox_baseline/data/
@@ -99,7 +100,7 @@ runs/
 01_notebooks/hand_detection/hand_bbox_baseline/runs_torchvision/
 
 # ============================================================================
-# LaTeX - solo fuentes, no build artifacts
+# LaTeX - keep sources, ignore build artifacts
 # ============================================================================
 *.aux
 *.bbl
@@ -146,7 +147,7 @@ app.*.symbols
 app.*.map.json
 
 # ============================================================================
-# Credenciales (NUNCA subir a git)
+# Credentials (never commit)
 # ============================================================================
 utils/kaggle.json
 *.kaggle
@@ -155,7 +156,7 @@ kaggle.json
 *.env
 
 # ============================================================================
-# Archivos internos de herramientas AI (no pertenecen al repo)
+# Local tool metadata (not part of the project)
 # ============================================================================
 .claude/
 .aider*
@@ -164,12 +165,12 @@ kaggle.json
 CLAUDE.md
 OpenCode.md
 
-# Notas de desarrollo internas
+# Internal development notes
 docs/devlog/
 docs/project_context.md
 
 # ============================================================================
-# Sistema operativo
+# Operating system
 # ============================================================================
 .DS_Store
 .AppleDouble
@@ -194,7 +195,7 @@ $RECYCLE.BIN/
 [._]*.sw[a-p]
 
 # ============================================================================
-# Archivos temporales y backups
+# Temporary files and backups
 # ============================================================================
 *.zip
 *.tar.gz
