@@ -1,0 +1,17 @@
+base_config: ../base/gru_attention.yaml
+
+experiment_id: sweep_maxframes_wlasl30_32
+title: Sequence length sweep - 32 frames
+research_question: >
+  Does reducing sequence length from 64 to 32 frames affect
+  WLASL30 recognition accuracy under the same GRU+Attention architecture?
+
+dataset:
+  name: wlasl30
+  root: 06_datasets/wlasl/landmarks/wlasl100_filtered30
+  metadata: 06_datasets/wlasl/landmarks/wlasl100_filtered30/metadata.json
+  max_frames: 32
+  input_size: 63
+  split_strategy: train/val/test
+
+output_dir: 05_experiments/sequence_length_sweep/wlasl30_32

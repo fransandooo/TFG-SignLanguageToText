@@ -1,0 +1,8 @@
+training:
+  seed: 42
+  batch_size: 32
+  epochs: 150
+  lr: 1.0e-3
+  weight_decay: 5.0e-4
+  label_smoothing: 0.1
+  patience: 30

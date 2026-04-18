@@ -1,0 +1,17 @@
+base_config: ../base/gru_attention.yaml
+
+experiment_id: wlasl30_baseline
+title: GRU+Attention baseline on WLASL30 (parity check)
+research_question: >
+  Does the modular pipeline reproduce the original notebook result
+  (63.9% Top-1 K-Fold, 58.8% single-split test)?
+
+dataset:
+  name: wlasl30
+  root: 06_datasets/wlasl/landmarks/wlasl100_filtered30
+  metadata: 06_datasets/wlasl/landmarks/wlasl100_filtered30/metadata.json
+  max_frames: 64
+  input_size: 63
+  split_strategy: train/val/test
+
+output_dir: 05_experiments/wlasl30_baseline
