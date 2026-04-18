@@ -159,6 +159,10 @@ kaggle.json
 docs/devlog/
 docs/project_context.md
 docs/
+!docs/
+docs/*
+!docs/templates/
+!docs/templates/**
 
 # ============================================================================
 # Operating system

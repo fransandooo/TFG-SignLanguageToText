@@ -1,0 +1,113 @@
+{
+  "experiment_id": "attention_30_prod",
+  "title": "Production GRU Attention Baseline for WLASL30",
+  "date": "2026-02-10",
+  "owner": "Francisco Sandoval Hernandez",
+  "git_commit": "36de93f",
+  "research_question": "Can a bidirectional GRU with temporal attention classify isolated WLASL30 signs from one-hand MediaPipe landmarks with thesis-ready accuracy?",
+  "dataset": "WLASL30",
+  "dataset_version_or_path": "06_datasets/wlasl/landmarks/wlasl30/",
+  "split_strategy": "Standard train/validation/test split",
+  "num_classes": 30,
+  "num_samples_train": 242,
+  "num_samples_val": 56,
+  "num_samples_test": 34,
+  "input_representation": "MediaPipe hand landmarks flattened per frame",
+  "preprocessing": [
+    "Uniformly sample or pad each sequence to 64 frames",
+    "Extract one detected hand with 21 landmarks per frame",
+    "Fill missing detections with interpolation and edge values",
+    "Normalize each frame by wrist origin and wrist-to-middle-finger scale",
+    "Flatten 21 landmarks with 3 coordinates into 63 features per frame"
+  ],
+  "model_architecture": "PoseClassifierAttention (bidirectional GRU + temporal attention)",
+  "model_config": {
+    "max_frames": 64,
+    "input_size": 63,
+    "num_classes": 30,
+    "hidden_size": 256,
+    "num_layers": 2,
+    "dropout": 0.4,
+    "bidirectional": true
+  },
+  "training_config": {
+    "batch_size": 32,
+    "epochs": 150,
+    "optimizer": "AdamW",
+    "learning_rate": 0.001,
+    "weight_decay": 0.0005,
+    "label_smoothing": 0.1,
+    "scheduler": "CosineAnnealingLR",
+    "early_stopping_patience": 30
+  },
+  "seed": 42,
+  "hardware": {
+    "gpu": "NVIDIA RTX 3050 Ti",
+    "notes": "Local training workstation"
+  },
+  "runtime": {
+    "training_time_s": null,
+    "evaluation_time_s": null,
+    "notes": "Runtime was not recorded in final_assault/final_results.json"
+  },
+  "metrics": {
+    "validation": {
+      "top1": 64.28571428571429,
+      "top5": 83.92857142857143
+    },
+    "test": {
+      "top1": 58.8235294117647,
+      "top5": 91.17647058823529
+    },
+    "robust_reference": {
+      "experiment_id": "kfold_wlasl100",
+      "top1_mean": 63.85345997286297,
+      "top1_std": 4.499501065479561,
+      "top5_mean": 86.45861601085481,
+      "top5_std": 2.0411694222793,
+      "notes": "Five-fold validation on WLASL100 filtered to the same 30 classes is the stronger thesis reference."
+    }
+  },
+  "artifacts": {
+    "manifest": "05_experiments/final_assault/experiment_manifest.json",
+    "report": "05_experiments/final_assault/experiment_report.md",
+    "checkpoint": "05_experiments/final_assault/best_model_attention.pt",
+    "raw_results": "05_experiments/final_assault/final_results.json",
+    "confusion_matrix": null,
+    "per_class_accuracy": null,
+    "training_curves": null
+  },
+  "main_findings": [
+    "GRU + Temporal Attention is the strongest individual model in the final_assault comparison.",
+    "The model reaches 58.82% Top-1 and 91.18% Top-5 on the WLASL30 test split.",
+    "The later five-fold evaluation provides a stronger reference result: 63.85% Top-1 mean and 86.46% Top-5 mean."
+  ],
+  "limitations": [
+    "The single test split contains only 34 samples, so the reported test result has high variance.",
+    "Macro F1 and balanced accuracy were not computed for this run.",
+    "Detection-rate statistics were not saved in the original experiment artifacts.",
+    "Only one hand is represented, which can miss two-hand and non-manual sign information."
+  ],
+  "next_actions": [
+    "Use this manifest format for the 32/64/96 frame-length sweep.",
+    "Add normalized confusion matrices and per-class accuracy files for final models.",
+    "Record detection-rate statistics in future landmark extraction and evaluation runs."
+  ],
+  "max_frames": 64,
+  "num_hands": 1,
+  "landmark_features": 63,
+  "normalization_strategy": "Wrist-centered coordinates scaled by wrist-to-middle-finger distance",
+  "detection_rate_mean": null,
+  "detection_rate_by_split": {
+    "train": null,
+    "val": null,
+    "test": null
+  },
+  "interpolation_strategy": "Linear interpolation between valid frames with edge fill at sequence boundaries",
+  "top1": 58.8235294117647,
+  "top5": 91.17647058823529,
+  "macro_f1": null,
+  "balanced_accuracy": null,
+  "confusion_matrix_path": null,
+  "per_class_accuracy_path": null
+}

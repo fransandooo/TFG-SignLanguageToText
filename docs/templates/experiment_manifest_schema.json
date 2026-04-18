@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Experiment Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "experiment_id",
+    "title",
+    "date",
+    "owner",
+    "git_commit",
+    "research_question",
+    "dataset",
+    "dataset_version_or_path",
+    "split_strategy",
+    "num_classes",
+    "num_samples_train",
+    "num_samples_val",
+    "num_samples_test",
+    "input_representation",
+    "preprocessing",
+    "model_architecture",
+    "model_config",
+    "training_config",
+    "seed",
+    "hardware",
+    "runtime",
+    "metrics",
+    "artifacts",
+    "main_findings",
+    "limitations",
+    "next_actions",
+    "max_frames",
+    "num_hands",
+    "landmark_features",
+    "normalization_strategy",
+    "detection_rate_mean",
+    "detection_rate_by_split",
+    "interpolation_strategy",
+    "top1",
+    "top5",
+    "macro_f1",
+    "balanced_accuracy",
+    "confusion_matrix_path",
+    "per_class_accuracy_path"
+  ],
+  "properties": {
+    "experiment_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_\\-]*$"
+    },
+    "title": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string"
+    },
+    "owner": {
+      "type": "string"
+    },
+    "git_commit": {
+      "type": "string"
+    },
+    "research_question": {
+      "type": "string"
+    },
+    "dataset": {
+      "type": "string"
+    },
+    "dataset_version_or_path": {
+      "type": "string"
+    },
+    "split_strategy": {
+      "type": "string"
+    },
+    "num_classes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "num_samples_train": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "num_samples_val": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "num_samples_test": {
+      "type": ["integer", "null"],
+      "minimum": 0
+    },
+    "input_representation": {
+      "type": "string"
+    },
+    "preprocessing": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "model_architecture": {
+      "type": "string"
+    },
+    "model_config": {
+      "type": "object"
+    },
+    "training_config": {
+      "type": "object"
+    },
+    "seed": {
+      "type": ["integer", "null"]
+    },
+    "hardware": {
+      "type": "object"
+    },
+    "runtime": {
+      "type": "object"
+    },
+    "metrics": {
+      "type": "object"
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": ["string", "null"]
+      }
+    },
+    "main_findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "next_actions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "max_frames": {
+      "type": ["integer", "null"],
+      "minimum": 1
+    },
+    "num_hands": {
+      "type": ["integer", "null"],
+      "minimum": 1
+    },
+    "landmark_features": {
+      "type": ["integer", "null"],
+      "minimum": 1
+    },
+    "normalization_strategy": {
+      "type": ["string", "null"]
+    },
+    "detection_rate_mean": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "detection_rate_by_split": {
+      "type": "object",
+      "properties": {
+        "train": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "val": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 1
+        },
+        "test": {
+          "type": ["number", "null"],
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "interpolation_strategy": {
+      "type": ["string", "null"]
+    },
+    "top1": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "top5": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "macro_f1": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "balanced_accuracy": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "maximum": 100
+    },
+    "confusion_matrix_path": {
+      "type": ["string", "null"]
+    },
+    "per_class_accuracy_path": {
+      "type": ["string", "null"]
+    }
+  }
+}
