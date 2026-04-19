@@ -1,0 +1,20 @@
+base_config: ../../base/gru_attention.yaml
+
+experiment_id: wlasl30_seed42_frames64
+title: Sequence length sweep - 64 frames (seed 42)
+research_question: >
+  Baseline comparison point for the sequence length sweep.
+  64 frames is the current default. Run with seed 42 for multi-seed aggregation.
+
+dataset:
+  name: wlasl30
+  root: 06_datasets/wlasl/landmarks/wlasl100_filtered30
+  metadata: 06_datasets/wlasl/landmarks/wlasl100_filtered30/metadata.json
+  max_frames: 64
+  input_size: 63
+  split_strategy: train/val/test
+
+training:
+  seed: 42
+
+output_dir: 05_experiments/sequence_length_sweep/wlasl30_seed42_frames64
