@@ -67,6 +67,11 @@ models/
 # Exception: small pretrained base models in 02_models/
 !02_models/yolov8n.pt
 !02_models/yolo11n.pt
+# Model checkpoints (too heavy for git)
+05_experiments/**/*.pt
+
+# TensorBoard logs (reproducible from training_history.json)
+05_experiments/**/tensorboard/
 
 # ============================================================================
 # Datasets (large files downloaded through README instructions)
