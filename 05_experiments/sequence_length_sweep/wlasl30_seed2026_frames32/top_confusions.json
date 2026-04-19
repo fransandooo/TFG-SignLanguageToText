@@ -1,0 +1,86 @@
+[
+  {
+    "true_label": "book",
+    "pred_label": "what",
+    "count": 2,
+    "support": 2,
+    "normalized_true": 1.0
+  },
+  {
+    "true_label": "who",
+    "pred_label": "candy",
+    "count": 2,
+    "support": 3,
+    "normalized_true": 0.6666666666666666
+  },
+  {
+    "true_label": "black",
+    "pred_label": "thanksgiving",
+    "count": 1,
+    "support": 1,
+    "normalized_true": 1.0
+  },
+  {
+    "true_label": "thin",
+    "pred_label": "before",
+    "count": 1,
+    "support": 1,
+    "normalized_true": 1.0
+  },
+  {
+    "true_label": "woman",
+    "pred_label": "thin",
+    "count": 1,
+    "support": 1,
+    "normalized_true": 1.0
+  },
+  {
+    "true_label": "drink",
+    "pred_label": "cousin",
+    "count": 1,
+    "support": 2,
+    "normalized_true": 0.5
+  },
+  {
+    "true_label": "before",
+    "pred_label": "thin",
+    "count": 1,
+    "support": 3,
+    "normalized_true": 0.3333333333333333
+  },
+  {
+    "true_label": "computer",
+    "pred_label": "cool",
+    "count": 1,
+    "support": 3,
+    "normalized_true": 0.3333333333333333
+  },
+  {
+    "true_label": "computer",
+    "pred_label": "cousin",
+    "count": 1,
+    "support": 3,
+    "normalized_true": 0.3333333333333333
+  },
+  {
+    "true_label": "cool",
+    "pred_label": "what",
+    "count": 1,
+    "support": 3,
+    "normalized_true": 0.3333333333333333
+  },
+  {
+    "true_label": "cool",
+    "pred_label": "year",
+    "count": 1,
+    "support": 3,
+    "normalized_true": 0.3333333333333333
+  },
+  {
+    "true_label": "help",
+    "pred_label": "fine",
+    "count": 1,
+    "support": 3,
+    "normalized_true": 0.3333333333333333
+  }
+]

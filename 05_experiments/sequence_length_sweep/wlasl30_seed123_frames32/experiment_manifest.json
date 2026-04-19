@@ -1,0 +1,88 @@
+{
+  "experiment_id": "wlasl30_seed123_frames32",
+  "title": "Sequence length sweep - 32 frames (seed 123)",
+  "date": "2026-04-19T21:26:41.469207+00:00",
+  "owner": "Francisco Sandoval",
+  "git_commit": "16f9b14",
+  "research_question": "Does reducing sequence length from 64 to 32 frames affect WLASL30 recognition accuracy under the same GRU+Attention architecture? Run with seed 123 for multi-seed aggregation.\n",
+  "dataset": "wlasl30",
+  "dataset_version_or_path": "",
+  "split_strategy": "train/val/test",
+  "num_classes": 0,
+  "num_samples_train": 242,
+  "num_samples_val": 56,
+  "num_samples_test": 34,
+  "input_representation": "MediaPipe hand landmarks",
+  "preprocessing": [
+    "wrist-centered normalization",
+    "wrist-to-middle-finger scale",
+    "linear interpolation for missing frames",
+    "pad/truncate to 32 frames"
+  ],
+  "model_architecture": "gru_attention",
+  "model_config": {
+    "name": "gru_attention",
+    "hidden_size": 256,
+    "num_layers": 2,
+    "dropout": 0.4,
+    "bidirectional": true
+  },
+  "training_config": {
+    "seed": 123,
+    "batch_size": 32,
+    "epochs": 150,
+    "lr": 0.001,
+    "weight_decay": 0.0005,
+    "label_smoothing": 0.1,
+    "patience": 30
+  },
+  "seed": 123,
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 3050 Ti Laptop GPU",
+    "torch_version": "2.9.1+cu128",
+    "python_version": "3.10.14",
+    "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39"
+  },
+  "runtime": {
+    "training_time_s": 7.6,
+    "total_epochs": 59,
+    "best_epoch": 29
+  },
+  "max_frames": 32,
+  "num_hands": 1,
+  "landmark_features": 63,
+  "normalization_strategy": "wrist-centered, wrist-to-middle-finger scale",
+  "detection_rate_mean": null,
+  "detection_rate_by_split": {
+    "train": null,
+    "val": null,
+    "test": null
+  },
+  "interpolation_strategy": "linear interpolation with edge fill",
+  "top1": 50.0,
+  "top5": 85.29,
+  "macro_f1": 40.99,
+  "balanced_accuracy": 56.06,
+  "metrics": {
+    "val_top1": 64.28571428571429,
+    "top1_acc": 50.0,
+    "top5_acc": 85.29,
+    "macro_f1": 40.99,
+    "balanced_accuracy": 56.06,
+    "num_samples": 34,
+    "num_classes": 30
+  },
+  "artifacts": {
+    "checkpoint": "05_experiments/sequence_length_sweep/wlasl30_seed123_frames32/best_model.pt",
+    "training_curves": "05_experiments/sequence_length_sweep/wlasl30_seed123_frames32/training_curves.png",
+    "training_history": "05_experiments/sequence_length_sweep/wlasl30_seed123_frames32/training_history.json",
+    "confusion_matrix": "05_experiments/sequence_length_sweep/wlasl30_seed123_frames32/confusion_matrix_normalized_true.png",
+    "per_class_metrics": "05_experiments/sequence_length_sweep/wlasl30_seed123_frames32/per_class_metrics.csv",
+    "manifest": "05_experiments/sequence_length_sweep/wlasl30_seed123_frames32/experiment_manifest.json"
+  },
+  "confusion_matrix_path": "05_experiments/sequence_length_sweep/wlasl30_seed123_frames32/confusion_matrix_normalized_true.png",
+  "per_class_accuracy_path": "05_experiments/sequence_length_sweep/wlasl30_seed123_frames32/per_class_metrics.csv",
+  "main_findings": [],
+  "limitations": [],
+  "next_actions": []
+}

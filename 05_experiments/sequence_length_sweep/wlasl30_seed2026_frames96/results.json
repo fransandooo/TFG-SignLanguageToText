@@ -1,0 +1,8 @@
+{
+  "top1_acc": 55.88,
+  "top5_acc": 82.35,
+  "macro_f1": 51.43,
+  "balanced_accuracy": 65.15,
+  "num_samples": 34,
+  "num_classes": 30
+}

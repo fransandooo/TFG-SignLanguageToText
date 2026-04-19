@@ -1,0 +1,99 @@
+{
+  "experiment_id": "wlasl30_seed42_frames96",
+  "title": "Sequence length sweep - 96 frames",
+  "date": "2026-04-18T23:28:05.952953+00:00",
+  "owner": "Francisco Sandoval",
+  "git_commit": "8078f76",
+  "research_question": "Does increasing sequence length from 64 to 96 frames improve WLASL30 recognition accuracy under the same GRU+Attention architecture?\n",
+  "dataset": "wlasl30",
+  "dataset_version_or_path": "",
+  "split_strategy": "train/val/test",
+  "num_classes": 0,
+  "num_samples_train": 242,
+  "num_samples_val": 56,
+  "num_samples_test": 34,
+  "input_representation": "MediaPipe hand landmarks",
+  "preprocessing": [
+    "wrist-centered normalization",
+    "wrist-to-middle-finger scale",
+    "linear interpolation for missing frames",
+    "pad/truncate to 96 frames"
+  ],
+  "model_architecture": "gru_attention",
+  "model_config": {
+    "name": "gru_attention",
+    "hidden_size": 256,
+    "num_layers": 2,
+    "dropout": 0.4,
+    "bidirectional": true
+  },
+  "training_config": {
+    "seed": 42,
+    "batch_size": 32,
+    "epochs": 150,
+    "lr": 0.001,
+    "weight_decay": 0.0005,
+    "label_smoothing": 0.1,
+    "patience": 30
+  },
+  "seed": 42,
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 3050 Ti Laptop GPU",
+    "torch_version": "2.9.1+cu128",
+    "python_version": "3.10.14",
+    "platform": "Linux-6.17.0-20-generic-x86_64-with-glibc2.39"
+  },
+  "runtime": {
+    "training_time_s": 12.2,
+    "total_epochs": 59,
+    "best_epoch": 29
+  },
+  "max_frames": 96,
+  "num_hands": 1,
+  "landmark_features": 63,
+  "normalization_strategy": "wrist-centered, wrist-to-middle-finger scale",
+  "detection_rate_mean": null,
+  "detection_rate_by_split": {
+    "train": null,
+    "val": null,
+    "test": null
+  },
+  "interpolation_strategy": "linear interpolation with edge fill",
+  "top1": 58.82,
+  "top5": 85.29,
+  "macro_f1": 54.86,
+  "balanced_accuracy": 65.15,
+  "metrics": {
+    "val_top1": 67.85714285714286,
+    "top1_acc": 58.82,
+    "top5_acc": 85.29,
+    "macro_f1": 54.86,
+    "balanced_accuracy": 65.15,
+    "num_samples": 34,
+    "num_classes": 30
+  },
+  "artifacts": {
+    "checkpoint": "05_experiments/sequence_length_sweep/wlasl30_seed42_frames96/best_model.pt",
+    "training_curves": "05_experiments/sequence_length_sweep/wlasl30_seed42_frames96/training_curves.png",
+    "training_history": "05_experiments/sequence_length_sweep/wlasl30_seed42_frames96/training_history.json",
+    "confusion_matrix": "05_experiments/sequence_length_sweep/wlasl30_seed42_frames96/confusion_matrix_normalized_true.png",
+    "per_class_metrics": "05_experiments/sequence_length_sweep/wlasl30_seed42_frames96/per_class_metrics.csv",
+    "manifest": "05_experiments/sequence_length_sweep/wlasl30_seed42_frames96/experiment_manifest.json"
+  },
+  "confusion_matrix_path": "05_experiments/sequence_length_sweep/wlasl30_seed42_frames96/confusion_matrix_normalized_true.png",
+  "per_class_accuracy_path": "05_experiments/sequence_length_sweep/wlasl30_seed42_frames96/per_class_metrics.csv",
+  "main_findings": [
+    "Top-1 58.82% matches the notebook-11 reference number for the GRU+Attention WLASL30 run on the same split, and sits between the 32f (61.76%) and 64f (55.88%) seed=42 results.",
+    "Best epoch 29 (total 59) is the earliest of the three lengths, suggesting longer inputs either converge faster or overfit earlier with the current patience=30 setting.",
+    "Top-5 85.29% is close to the 32f run (88.24%) and well above the 64f baseline (73.53%), consistent with the Top-5 metric being less sensitive to individual test-sample swings."
+  ],
+  "limitations": [
+    "Single seed; cannot tell whether 96f's earlier convergence is a repeatable effect or a one-off artefact of this seed.",
+    "Test set has only 34 samples, so per-metric deltas below ~3 pp are within single-sample noise.",
+    "96-frame inputs inflate per-batch memory and compute without an obvious Top-1 benefit in this run, but that conclusion cannot be generalised from a single seed."
+  ],
+  "next_actions": [
+    "Re-run with seeds 123 and 2026 to confirm whether 96f consistently converges earlier and whether its Top-1 stays below 32f or crosses it.",
+    "If 96f stays on par with 64f after multi-seed aggregation, flag the extra frames as not justified by the memory and compute overhead for this dataset size."
+  ]
+}
