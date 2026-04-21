@@ -192,7 +192,7 @@ def interpolate_missing_frames(
 def extract_landmarks_from_video(
     video_path: str | Path,
     detector: Any | None = None,
-    max_frames: int = 64,
+    max_frames: int | None = None,
     min_detection_rate: float = 0.3,
     model_path: str | Path | None = None,
     num_hands: int = 2,
@@ -202,11 +202,13 @@ def extract_landmarks_from_video(
 ) -> tuple[np.ndarray | None, LandmarkExtractionStats]:
     """Extract normalized MediaPipe hand landmarks from a video.
 
-    Returns an array with shape ``(T, 21, 3)`` and the same normalization used
-    for the WLASL landmark files: missing frames are linearly interpolated,
-    edge gaps copy the nearest valid frame, and the sequence is wrist-centered
-    and scaled by the wrist-to-landmark-12 distance. If the detection rate is
-    below ``min_detection_rate``, returns ``None`` plus failure stats.
+    Returns an array with shape ``(T, 21, 3)``. By default ``T`` is the full
+    decoded video length; pass ``max_frames`` only for legacy extraction that
+    uniformly samples long videos before saving. Missing frames are linearly
+    interpolated, edge gaps copy the nearest valid frame, and the sequence is
+    wrist-centered and scaled by the wrist-to-landmark-12 distance. If the
+    detection rate is below ``min_detection_rate``, returns ``None`` plus
+    failure stats.
     """
     frames, _ = load_video_frames(video_path, max_frames=max_frames)
     if not frames:

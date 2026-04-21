@@ -8,7 +8,7 @@ Usage:
         --output-dir 06_datasets/MS-ASL/subsets/msasl50/landmarks \
         --num-hands 1 \
         --max-workers 4 \
-        --skip-existing
+        --overwrite
 """
 
 from __future__ import annotations
@@ -16,12 +16,14 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import shutil
 import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict
+from datetime import datetime
 from pathlib import Path
-from statistics import mean
+from statistics import mean, median, quantiles
 from typing import Any
 
 import numpy as np
@@ -57,11 +59,15 @@ def parse_args() -> argparse.Namespace:
                         help="MediaPipe max hands. WLASL extraction used 2 and saved the first detected hand.")
     parser.add_argument("--max-workers", type=int, default=4)
     parser.add_argument("--max-frames", type=int, default=64)
+    parser.add_argument("--force-max-frames", action="store_true",
+                        help="Legacy mode: uniformly sample videos to --max-frames before saving. Default saves full-length sequences and leaves padding/truncation to the Dataset.")
     parser.add_argument("--min-detection-rate", type=float, default=0.3)
     parser.add_argument("--min-hand-detection-confidence", type=float, default=0.3)
     parser.add_argument("--min-hand-presence-confidence", type=float, default=0.3)
     parser.add_argument("--min-tracking-confidence", type=float, default=0.3)
     parser.add_argument("--skip-existing", action="store_true")
+    parser.add_argument("--overwrite", action="store_true",
+                        help="Overwrite existing .npy files. Takes precedence over --skip-existing.")
     return parser.parse_args()
 
 
@@ -99,7 +105,10 @@ def process_sample(sample: dict[str, Any], args: argparse.Namespace) -> dict[str
     output_path = resolve_output_path(args.output_dir, sample)
     video_path = args.videos_dir / sample["video_path"]
 
-    if args.skip_existing and output_path.exists():
+    if args.overwrite and output_path.exists():
+        output_path.unlink()
+
+    if args.skip_existing and not args.overwrite and output_path.exists():
         return {
             **sample,
             "output_path": output_path.as_posix(),
@@ -122,7 +131,7 @@ def process_sample(sample: dict[str, Any], args: argparse.Namespace) -> dict[str
         landmarks, stats = extract_landmarks_from_video(
             video_path,
             detector=detector,
-            max_frames=args.max_frames,
+            max_frames=args.max_frames if args.force_max_frames else None,
             min_detection_rate=args.min_detection_rate,
         )
     finally:
@@ -166,7 +175,99 @@ def write_stats_csv(path: Path, rows: list[dict[str, Any]]) -> None:
             writer.writerow({key: row.get(key, "") for key in fieldnames})
 
 
-def write_report(path: Path, rows: list[dict[str, Any]], elapsed_s: float, args: argparse.Namespace) -> None:
+def compute_length_stats(output_dir: Path) -> dict[str, Any]:
+    paths = sorted(output_dir.glob("*/*/*.npy"))
+    lengths = [int(np.load(path, mmap_mode="r").shape[0]) for path in paths]
+    if not lengths:
+        return {
+            "n_files": 0,
+            "min": None,
+            "p25": None,
+            "median": None,
+            "p75": None,
+            "max": None,
+            "exact_64": 0,
+        }
+
+    if len(lengths) >= 4:
+        quartile_values = quantiles(lengths, n=4)
+        p25 = quartile_values[0]
+        p75 = quartile_values[2]
+    else:
+        p25 = min(lengths)
+        p75 = max(lengths)
+
+    return {
+        "n_files": len(paths),
+        "min": min(lengths),
+        "p25": p25,
+        "median": median(lengths),
+        "p75": p75,
+        "max": max(lengths),
+        "exact_64": sum(1 for length in lengths if length == 64),
+    }
+
+
+def sample_has_landmarks(sample: dict[str, Any], output_dir: Path) -> bool:
+    return resolve_output_path(output_dir, sample).exists()
+
+
+def filter_metadata_by_outputs(metadata_path: Path, metadata: dict[str, Any], output_dir: Path) -> dict[str, Any]:
+    backup_path = metadata_path.with_suffix(metadata_path.suffix + ".bak")
+    if not backup_path.exists():
+        shutil.copy2(metadata_path, backup_path)
+
+    original_counts = {
+        split: len(metadata.get("samples", {}).get(split, []))
+        for split in SPLITS
+    }
+    filtered_samples: dict[str, list[dict[str, Any]]] = {}
+    for split in SPLITS:
+        filtered_samples[split] = [
+            sample for sample in metadata.get("samples", {}).get(split, [])
+            if sample_has_landmarks(sample, output_dir)
+        ]
+
+    filtered = dict(metadata)
+    filtered["samples"] = filtered_samples
+    if isinstance(metadata.get("splits"), dict):
+        filtered["splits"] = {
+            split: [
+                sample for sample in metadata.get("splits", {}).get(split, [])
+                if sample_has_landmarks(sample, output_dir)
+            ]
+            for split in SPLITS
+        }
+
+    n_samples = {split: len(filtered_samples[split]) for split in SPLITS}
+    filtered["n_samples"] = n_samples
+    if isinstance(filtered.get("statistics"), dict):
+        statistics = dict(filtered["statistics"])
+        for split in SPLITS:
+            statistics[split] = n_samples[split]
+        statistics["total"] = sum(n_samples.values())
+        filtered["statistics"] = statistics
+
+    filtered["extraction_filter_applied"] = {
+        "timestamp": datetime.now().isoformat(timespec="seconds"),
+        "metadata_backup": backup_path.name,
+        "samples_before": original_counts,
+        "samples_after": n_samples,
+        "samples_filtered": sum(original_counts.values()) - sum(n_samples.values()),
+    }
+    metadata_path.write_text(json.dumps(filtered, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    return filtered
+
+
+def write_report(
+    path: Path,
+    rows: list[dict[str, Any]],
+    elapsed_s: float,
+    args: argparse.Namespace,
+    length_stats: dict[str, Any],
+    metadata_filter: dict[str, Any],
+    command: str,
+) -> None:
     processed_rows = [row for row in rows if not row.get("skipped")]
     successful_rows = [row for row in rows if row.get("success")]
     failed_rows = [row for row in rows if not row.get("success")]
@@ -195,7 +296,8 @@ def write_report(path: Path, rows: list[dict[str, Any]], elapsed_s: float, args:
         "## MediaPipe Parameters",
         "",
         f"- `num_hands`: {args.num_hands}",
-        f"- `max_frames`: {args.max_frames}",
+        f"- `force_max_frames`: {args.force_max_frames}",
+        f"- `max_frames`: {args.max_frames if args.force_max_frames else 'not applied at extraction time'}",
         f"- `min_detection_rate`: {args.min_detection_rate}",
         f"- `min_hand_detection_confidence`: {args.min_hand_detection_confidence}",
         f"- `min_hand_presence_confidence`: {args.min_hand_presence_confidence}",
@@ -248,6 +350,21 @@ def write_report(path: Path, rows: list[dict[str, Any]], elapsed_s: float, args:
     lines.extend(
         [
             "",
+            "## Format Update",
+            "",
+            "Saved `.npy` files are no longer forced to `max_frames` at extraction time. Sequences keep the decoded video length after per-frame detection, interpolation, edge-fill at missing-detection boundaries, and normalization. Padding or truncation is handled later by the Dataset.",
+            "",
+            f"- Regeneration command: `{command}`",
+            f"- Metadata backup: `{args.subset_metadata.with_suffix(args.subset_metadata.suffix + '.bak').name}`",
+            f"- Samples filtered from metadata: {metadata_filter.get('samples_filtered', 0)}",
+            f"- Landmark files: {length_stats['n_files']}",
+            f"- Length min: {length_stats['min']}",
+            f"- Length p25: {length_stats['p25']}",
+            f"- Length median: {length_stats['median']}",
+            f"- Length p75: {length_stats['p75']}",
+            f"- Length max: {length_stats['max']}",
+            f"- Files with exactly 64 frames: {length_stats['exact_64']}",
+            "",
             "## Format Validation",
             "",
             "Compare one generated `.npy` with one WLASL `.npy` after extraction:",
@@ -273,6 +390,8 @@ def main() -> None:
     args = parse_args()
     if args.max_workers <= 0:
         raise SystemExit("--max-workers must be positive")
+    if args.overwrite and args.skip_existing:
+        print("[warn] --overwrite and --skip-existing were both set; --overwrite takes precedence.")
 
     metadata = load_metadata(args.subset_metadata)
     samples = flatten_samples(metadata)
@@ -288,10 +407,34 @@ def main() -> None:
     rows.sort(key=lambda row: (row["split"], int(row["gloss_idx"]), row["clip_id"]))
     elapsed_s = time.time() - start
     write_stats_csv(args.output_dir.parent / "extraction_stats.csv", rows)
-    write_report(args.output_dir.parent / "extraction_report.md", rows, elapsed_s, args)
+    filtered_metadata = filter_metadata_by_outputs(args.subset_metadata, metadata, args.output_dir)
+    length_stats = compute_length_stats(args.output_dir)
+    metadata_filter = filtered_metadata.get("extraction_filter_applied", {})
+    command = " ".join(sys.argv)
+    write_report(
+        args.output_dir.parent / "extraction_report.md",
+        rows,
+        elapsed_s,
+        args,
+        length_stats,
+        metadata_filter,
+        command,
+    )
 
     failed = sum(1 for row in rows if not row.get("success"))
     print(f"[done] Processed {len(rows)} samples in {elapsed_s / 3600:.2f} hours")
+    print(
+        "[info] Lengths: "
+        f"min={length_stats['min']} p25={length_stats['p25']} median={length_stats['median']} "
+        f"p75={length_stats['p75']} max={length_stats['max']} exact64={length_stats['exact_64']}"
+    )
+    print(
+        "[info] Metadata samples: "
+        + ", ".join(f"{split}={filtered_metadata['n_samples'][split]}" for split in SPLITS)
+        + f", total={sum(filtered_metadata['n_samples'].values())}"
+    )
+    if length_stats["n_files"] != sum(filtered_metadata["n_samples"].values()):
+        print("[warn] Number of .npy files does not match filtered metadata sample count.")
     if failed:
         print(f"[warn] {failed} samples failed; see {args.output_dir.parent / 'extraction_report.md'}")
 
