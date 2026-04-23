@@ -1,0 +1,21 @@
+base_config: ../../base/gru_attention.yaml
+
+experiment_id: msasl50_baseline_seed42
+title: MS-ASL50 baseline (seed 42)
+research_question: >
+  Does the same GRU+Attention pipeline that achieves competitive results
+  on WLASL30 generalize to a second ASL dataset (MS-ASL) with 50 classes
+  and different video characteristics (multi-signer, YouTube-sourced)?
+
+dataset:
+  name: msasl50
+  subset_json: 06_datasets/MS-ASL/subsets/msasl50/metadata.json
+  landmarks_root: 06_datasets/MS-ASL/subsets/msasl50/landmarks
+  max_frames: 64
+  input_size: 63
+  split_strategy: train/val/test
+
+training:
+  seed: 42
+
+output_dir: 05_experiments/msasl50_baseline/seed42
