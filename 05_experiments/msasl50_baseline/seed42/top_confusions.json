@@ -1,0 +1,142 @@
+[
+  {
+    "true_label": "deaf",
+    "pred_label": "need",
+    "count": 4,
+    "support": 13,
+    "normalized_true": 0.3076923076923077
+  },
+  {
+    "true_label": "night",
+    "pred_label": "doctor",
+    "count": 3,
+    "support": 7,
+    "normalized_true": 0.42857142857142855
+  },
+  {
+    "true_label": "fish",
+    "pred_label": "lost",
+    "count": 3,
+    "support": 7,
+    "normalized_true": 0.42857142857142855
+  },
+  {
+    "true_label": "nice",
+    "pred_label": "school",
+    "count": 3,
+    "support": 10,
+    "normalized_true": 0.3
+  },
+  {
+    "true_label": "pencil",
+    "pred_label": "write",
+    "count": 2,
+    "support": 5,
+    "normalized_true": 0.4
+  },
+  {
+    "true_label": "france",
+    "pred_label": "cousin",
+    "count": 2,
+    "support": 7,
+    "normalized_true": 0.2857142857142857
+  },
+  {
+    "true_label": "how",
+    "pred_label": "tired",
+    "count": 2,
+    "support": 9,
+    "normalized_true": 0.2222222222222222
+  },
+  {
+    "true_label": "book",
+    "pred_label": "here",
+    "count": 2,
+    "support": 11,
+    "normalized_true": 0.18181818181818182
+  },
+  {
+    "true_label": "book",
+    "pred_label": "want",
+    "count": 2,
+    "support": 11,
+    "normalized_true": 0.18181818181818182
+  },
+  {
+    "true_label": "man",
+    "pred_label": "beautiful",
+    "count": 1,
+    "support": 1,
+    "normalized_true": 1.0
+  },
+  {
+    "true_label": "mother",
+    "pred_label": "woman",
+    "count": 1,
+    "support": 2,
+    "normalized_true": 0.5
+  },
+  {
+    "true_label": "woman",
+    "pred_label": "bird",
+    "count": 1,
+    "support": 2,
+    "normalized_true": 0.5
+  },
+  {
+    "true_label": "woman",
+    "pred_label": "father",
+    "count": 1,
+    "support": 2,
+    "normalized_true": 0.5
+  },
+  {
+    "true_label": "father",
+    "pred_label": "cousin",
+    "count": 1,
+    "support": 3,
+    "normalized_true": 0.3333333333333333
+  },
+  {
+    "true_label": "father",
+    "pred_label": "man",
+    "count": 1,
+    "support": 3,
+    "normalized_true": 0.3333333333333333
+  },
+  {
+    "true_label": "father",
+    "pred_label": "woman",
+    "count": 1,
+    "support": 3,
+    "normalized_true": 0.3333333333333333
+  },
+  {
+    "true_label": "here",
+    "pred_label": "want",
+    "count": 1,
+    "support": 3,
+    "normalized_true": 0.3333333333333333
+  },
+  {
+    "true_label": "here",
+    "pred_label": "sit",
+    "count": 1,
+    "support": 3,
+    "normalized_true": 0.3333333333333333
+  },
+  {
+    "true_label": "here",
+    "pred_label": "day",
+    "count": 1,
+    "support": 3,
+    "normalized_true": 0.3333333333333333
+  },
+  {
+    "true_label": "lost",
+    "pred_label": "spring",
+    "count": 1,
+    "support": 3,
+    "normalized_true": 0.3333333333333333
+  }
+]

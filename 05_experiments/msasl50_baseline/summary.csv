@@ -1,0 +1,4 @@
+run_id,seed,experiment_id,top1,top5,macro_f1,balanced_accuracy,val_top1,best_epoch,total_epochs,training_time_s
+seed42,42,msasl50_baseline_seed42,66.95,89.83,64.22,66.34,70.58823529411765,55,85,165.5
+seed123,123,msasl50_baseline_seed123,72.46,90.25,70.81,72.75,71.89542483660131,120,150,291.6
+seed2026,2026,msasl50_baseline_seed2026,71.19,91.53,69.21,71.58,73.20261437908496,92,122,237.4

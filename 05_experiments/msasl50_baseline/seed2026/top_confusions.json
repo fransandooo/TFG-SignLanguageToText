@@ -1,0 +1,142 @@
+[
+  {
+    "true_label": "deaf",
+    "pred_label": "need",
+    "count": 4,
+    "support": 14,
+    "normalized_true": 0.2857142857142857
+  },
+  {
+    "true_label": "pencil",
+    "pred_label": "write",
+    "count": 3,
+    "support": 5,
+    "normalized_true": 0.6
+  },
+  {
+    "true_label": "fish",
+    "pred_label": "lost",
+    "count": 3,
+    "support": 5,
+    "normalized_true": 0.6
+  },
+  {
+    "true_label": "nurse",
+    "pred_label": "sit",
+    "count": 3,
+    "support": 6,
+    "normalized_true": 0.5
+  },
+  {
+    "true_label": "mother",
+    "pred_label": "woman",
+    "count": 2,
+    "support": 4,
+    "normalized_true": 0.5
+  },
+  {
+    "true_label": "girl",
+    "pred_label": "doctor",
+    "count": 2,
+    "support": 4,
+    "normalized_true": 0.5
+  },
+  {
+    "true_label": "school",
+    "pred_label": "paper",
+    "count": 2,
+    "support": 5,
+    "normalized_true": 0.4
+  },
+  {
+    "true_label": "book",
+    "pred_label": "here",
+    "count": 2,
+    "support": 11,
+    "normalized_true": 0.18181818181818182
+  },
+  {
+    "true_label": "woman",
+    "pred_label": "table",
+    "count": 1,
+    "support": 1,
+    "normalized_true": 1.0
+  },
+  {
+    "true_label": "here",
+    "pred_label": "lost",
+    "count": 1,
+    "support": 2,
+    "normalized_true": 0.5
+  },
+  {
+    "true_label": "here",
+    "pred_label": "want",
+    "count": 1,
+    "support": 2,
+    "normalized_true": 0.5
+  },
+  {
+    "true_label": "lost",
+    "pred_label": "spring",
+    "count": 1,
+    "support": 3,
+    "normalized_true": 0.3333333333333333
+  },
+  {
+    "true_label": "write",
+    "pred_label": "learn",
+    "count": 1,
+    "support": 3,
+    "normalized_true": 0.3333333333333333
+  },
+  {
+    "true_label": "boy",
+    "pred_label": "cousin",
+    "count": 1,
+    "support": 3,
+    "normalized_true": 0.3333333333333333
+  },
+  {
+    "true_label": "finish",
+    "pred_label": "spring",
+    "count": 1,
+    "support": 4,
+    "normalized_true": 0.25
+  },
+  {
+    "true_label": "cousin",
+    "pred_label": "father",
+    "count": 1,
+    "support": 4,
+    "normalized_true": 0.25
+  },
+  {
+    "true_label": "night",
+    "pred_label": "good",
+    "count": 1,
+    "support": 4,
+    "normalized_true": 0.25
+  },
+  {
+    "true_label": "day",
+    "pred_label": "table",
+    "count": 1,
+    "support": 4,
+    "normalized_true": 0.25
+  },
+  {
+    "true_label": "day",
+    "pred_label": "boy",
+    "count": 1,
+    "support": 4,
+    "normalized_true": 0.25
+  },
+  {
+    "true_label": "bird",
+    "pred_label": "need",
+    "count": 1,
+    "support": 5,
+    "normalized_true": 0.2
+  }
+]
