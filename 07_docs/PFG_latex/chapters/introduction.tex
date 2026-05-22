@@ -1,12 +1,40 @@
 \chapter{Introduction}
 \setcounter{section}{0}
 
-\lipsum[1-2]
 
 \section{Problem description}
 
-\lipsum[1-5]
+Sign language recognition is located at the intersection of accessibility, computer vision, and sequence modelling. Sign languages are natural languages with their own visual-spatial structure, not simple gesture codes or direct encodings of spoken languages. Their meaning is expressed through hand shape, movement, orientation, location, timing, and, in many cases, non-manual cues such as facial expression or body posture. For this reason, automatic recognition from video is a demanding problem: the same sign may vary across signers, camera viewpoints, execution speeds, lighting conditions, and recording devices.
+
+This Final Degree Project studies American Sign Language (ASL) recognition as an accessibility-oriented research problem. The objective is not to replace professional interpreters or to deliver a production-ready translator, but to evaluate whether a compact visual representation combined with temporal neural modelling can support feasible isolated-word recognition under reproducible experimental conditions. Isolated word-level recognition is therefore treated as a realistic intermediate step between static alphabet classification and full continuous sign language translation. It preserves the temporal nature of signs while keeping the scope appropriate for a research-oriented undergraduate project.
+
+The central research question of the thesis is whether hand-landmark sequences can provide enough information for a temporal model to classify short ASL video clips into word glosses. The final pipeline uses MediaPipe Hands to extract 21 three-dimensional hand landmarks per detected hand and frame \cite{zhang2020mediapipehands}. These landmark sequences are normalised and then processed by a bidirectional GRU with a Temporal Attention mechanism. This design reduces the dimensionality of the video input, limits the dependence on background appearance and clothing, and offers a more privacy-preserving representation than storing or processing full RGB frames. At the same time, the approach has clear limitations: it depends on the reliability of hand detection and does not capture all linguistic information present in non-manual markers.
+
+The technical direction of the project evolved during development. Initial experiments explored YOLO-based hand detection and static ASL letter recognition. These experiments were useful for understanding the visual recognition pipeline, but they also showed that hand localisation and static classification did not address the main difficulty of word-level signing: temporal representation. The project therefore pivoted towards landmark-based sequence modelling, with the experimental work centred on public ASL datasets, mainly WLASL \cite{li2020wlasl} and MS-ASL \cite{joze2019msasl}.
+
+The thesis is situated between research and engineering. It includes data preparation, model comparison, sequence-length analysis, WLASL validation, MS-ASL50 cross-dataset validation, vocabulary scaling, limitations analysis, and an ethical and social-impact discussion. A mobile and server-based runtime prototype is also developed as a proof of concept, but the main scientific contribution is the experimental evaluation of the landmark-based recognition approach rather than the deployment of an assistive product.
 
 \section{Outline}
 
-\lipsum[1-5]
+The remainder of the thesis is organised as follows:
+
+\begin{itemize}
+    \item Chapter 2 presents the State of the Art, covering the computer vision and deep learning background required for the project, including convolutional neural networks, pose estimation, MediaPipe Hands, recurrent networks, GRUs, attention mechanisms, and previous work in sign language recognition.
+
+    \item Chapter 3 defines the main objective, the specific objectives, and the validation methods used to determine whether each objective has been achieved.
+
+    \item Chapter 4 describes the methodology and work plan. It explains the iterative experiment-driven process, the main project phases, the methodological pivot from static letter recognition to landmark-based word recognition, and the resources and constraints that shaped the project.
+
+    \item Chapter 5 presents the Technical Development of the system. It details the data preparation pipeline, the training and evaluation pipeline, the selected model architecture, the reproducibility mechanisms, and the runtime proof of concept based on a mobile client and FastAPI server.
+
+    \item Chapter 6 reports the experimental evaluation. It includes architecture comparison, sequence-length analysis, WLASL30 validation, MS-ASL50 cross-dataset validation, vocabulary scaling, qualitative validation design, and the main limitations observed during experimentation.
+
+    \item Chapter 7 analyses the ethical implications and social impact of the project, with attention to accessibility, privacy, bias, reproducibility, responsible deployment, and the social value of assistive technologies.
+
+    \item Chapter 8 reflects on the academic journey at Universidad Francisco de Vitoria and relates the project to the competences developed during the degree.
+
+    \item Chapter 9 presents the conclusions and future work, summarising the main findings, the limitations of the current prototype, and possible directions for extending the research.
+
+    \item The bibliography lists the academic and technical sources used throughout the thesis.
+\end{itemize}
+

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><project name="WorkPlanTFG" company="FSH" webLink="http://" view-date="2025-12-28" view-index="0" gantt-divider-location="534" resource-divider-location="300" version="3.3.3322" locale="en_US">
+    <description/>
+    <view zooming-state="default:7" id="gantt-chart">
+        <field id="tpd3" name="Name" width="296" order="0"/>
+        <field id="tpd4" name="Begin date" width="111" order="1"/>
+        <field id="tpd5" name="End date" width="111" order="2"/>
+        <field id="tpd15" name="Notes" width="20" order="3"/>
+        <option id="filter.completedTasks" value="false"/>
+        <option id="filter.dueTodayTasks" value="false"/>
+        <option id="filter.overdueTasks" value="false"/>
+        <option id="filter.inProgressTodayTasks" value="false"/>
+    </view>
+    <view id="resource-table">
+        <field id="0" name="Name" width="210" order="0"/>
+        <field id="1" name="Default role" width="86" order="1"/>
+    </view>
+    <!-- -->
+    <calendars>
+        <day-types>
+            <day-type id="0"/>
+            <day-type id="1"/>
+            <default-week id="1" name="default" sun="1" mon="0" tue="0" wed="0" thu="0" fri="0" sat="1"/>
+            <only-show-weekends value="false"/>
+            <overriden-day-types/>
+            <days/>
+        </day-types>
+    </calendars>
+    <tasks empty-milestones="true">
+        <taskproperties>
+            <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+            <taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+            <taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+            <taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+            <taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+            <taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+            <taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+            <taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+            <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+            <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+        </taskproperties>
+        <task id="1" uid="b7c865ab703a454db2cd7cc0f8dcfda9" name="A. Project framing and proposal" color="#4e79a7" meeting="false" start="2026-01-05" duration="10" complete="100" expand="true">
+            <task id="2" uid="57d8aaf8f9a04360adb0299007e227b6" name="Previous research and scope definition" color="#4e79a7" meeting="false" start="2026-01-05" duration="5" complete="100" expand="true"/>
+            <task id="3" uid="2bb9f42c289e4e13a73405638147e8e0" name="Initial architecture and project proposal" color="#4e79a7" meeting="false" start="2026-01-12" duration="5" complete="100" expand="true"/>
+            <task id="4" uid="414954d0ddc84fe2a51e46a28dfaf20f" name="Proposal submitted" color="#4e79a7" meeting="true" start="2026-01-16" duration="0" complete="100" expand="true"/>
+        </task>
+        <task id="5" uid="d56e3aecf2044ac082bc4aa1b79474b3" name="B. Hand detection and letter recognition" color="#59a14f" meeting="false" start="2026-01-12" duration="7" complete="100" expand="true">
+            <task id="6" uid="ba3a29df95014aad8e237f57af070040" name="YOLOv8n hand detector with EgoHands and Kaggle" color="#59a14f" meeting="false" start="2026-01-12" duration="4" complete="100" expand="true"/>
+            <task id="7" uid="b2dd6182583f4054a4f8a0a77f866276" name="Static ASL letter classifier" color="#59a14f" meeting="false" start="2026-01-16" duration="3" complete="100" expand="true"/>
+            <task id="8" uid="4c5654a6d0a94f85bd4831cfce1965b2" name="Technical bottleneck identified" color="#59a14f" meeting="true" start="2026-01-20" duration="0" complete="100" expand="true"/>
+        </task>
+        <task id="9" uid="da23271c90aa4e0681b275ea7e3c89c1" name="Methodological pivot: landmarks and word-level recognition" color="#e15759" meeting="true" start="2026-01-21" duration="0" complete="100" expand="true"/>
+        <task id="10" uid="c08880bb09784f7d866697a5a38b12f7" name="C. Landmark pivot and WLASL30 baseline" color="#f28e2b" meeting="false" start="2026-01-21" duration="22" complete="100" expand="true">
+            <task id="11" uid="dccac70b54a94562b278be35b9129f43" name="WLASL30 subset and MediaPipe pipeline" color="#f28e2b" meeting="false" start="2026-01-21" duration="5" complete="100" expand="true"/>
+            <task id="12" uid="34f6ea7fb0bd44ddbe62f58fe79cb44f" name="CNN-LSTM baseline and augmentation" color="#f28e2b" meeting="false" start="2026-01-28" duration="5" complete="100" expand="true"/>
+            <task id="13" uid="4067664903b748e59af6d7835b6b9392" name="GRU plus temporal attention breakthrough" color="#f28e2b" meeting="true" start="2026-02-03" duration="0" complete="100" expand="true"/>
+            <task id="14" uid="bda47d5d1b324427916b027ee6d21689" name="K-Fold validation after TTA removal" color="#f28e2b" meeting="false" start="2026-02-04" duration="5" complete="100" expand="true"/>
+            <task id="15" uid="ab24a89318a649b8a06da9dcc909ab2f" name="WLASL2000 audit and landmark extraction setup" color="#f28e2b" meeting="false" start="2026-02-11" duration="7" complete="100" expand="true"/>
+        </task>
+        <task id="16" uid="407b2542f6f547729ee387cd97e92d9a" name="D. Vocabulary scaling and ethics framework" color="#b07aa1" meeting="false" start="2026-02-19" duration="37" complete="100" expand="true">
+            <task id="17" uid="a474030f3f63491e9e56a226fce17ee9" name="Progressive WLASL subset preparation" color="#b07aa1" meeting="false" start="2026-02-19" duration="12" complete="100" expand="true"/>
+            <task id="18" uid="cb7ef906666246c695addb30bccdc81a" name="WLASL100 to WLASL1500 scaling experiments" color="#b07aa1" meeting="false" start="2026-03-09" duration="15" complete="100" expand="true"/>
+            <task id="19" uid="083faa6236fe4787ae04e6d4661e560b" name="State of the art and ethical evaluation" color="#b07aa1" meeting="false" start="2026-03-20" duration="16" complete="100" expand="true"/>
+        </task>
+        <task id="20" uid="e9d33a6ab3aa4797ab5767b3d93954a9" name="E. Mobile prototype features" color="#76b7b2" meeting="false" start="2026-04-13" duration="6" complete="100" expand="true">
+            <task id="21" uid="94cc9e33a3ae43889c474fee097f3955" name="Expo client, FastAPI server and TTS" color="#76b7b2" meeting="false" start="2026-04-13" duration="2" complete="100" expand="true"/>
+            <task id="22" uid="8d6521b3a7c549048c69b264c6c08585" name="Continuous prediction heuristic" color="#76b7b2" meeting="false" start="2026-04-15" duration="2" complete="100" expand="true"/>
+            <task id="23" uid="68a7185fb10d4b0980695ffdd5d8fde9" name="Dynamic model selector and confusion matrices" color="#76b7b2" meeting="false" start="2026-04-17" duration="2" complete="100" expand="true"/>
+        </task>
+        <task id="24" uid="8275e746a48f44a79701fe1eb74897c6" name="F. Modular refactor, multi-seed protocol and MS-ASL" color="#edc948" meeting="false" start="2026-04-20" duration="4" complete="100" expand="true">
+            <task id="25" uid="ebc6f0f24a34459b8768bd1f96513e4b" name="Notebook inventory and src/slr refactor" color="#edc948" meeting="false" start="2026-04-20" duration="1" complete="100" expand="true"/>
+            <task id="26" uid="e47bbfca2d1c4d19adaf968a16759e23" name="Sequence-length sweep and multi-seed setup" color="#edc948" meeting="false" start="2026-04-20" duration="4" complete="100" expand="true"/>
+            <task id="27" uid="2a22cf5e37d14e97a86dd62fed148185" name="MS-ASL audit, MS-ASL50 subset and 3-seed training" color="#edc948" meeting="false" start="2026-04-20" duration="4" complete="100" expand="true"/>
+            <task id="28" uid="21229442d60847a5b0d80574ca9d2290" name="Cross-dataset summary closed" color="#edc948" meeting="true" start="2026-04-23" duration="0" complete="100" expand="true"/>
+        </task>
+        <task id="29" uid="48f99a1e22f54c2e86208258a31e0723" name="G. Documentation, qualitative protocol and final polish" color="#9c755f" meeting="false" start="2026-04-24" duration="21" complete="44" expand="true">
+            <task id="30" uid="caa81c2ae1e64b49ab98d10fcd15f6f6" name="Write methodology, development and experiments chapters" color="#9c755f" meeting="false" start="2026-04-24" duration="11" complete="80" expand="true"/>
+            <task id="31" uid="ede4a2eb2d874742a26f15f33908910e" name="Qualitative validation protocol and Google Form" color="#9c755f" meeting="false" start="2026-05-04" duration="10" complete="30" expand="true"/>
+            <task id="32" uid="7812765f5149465dbe4e645499636725" name="Final memory polish, figures and annexes" color="#9c755f" meeting="false" start="2026-05-11" duration="10" complete="20" expand="true"/>
+            <task id="33" uid="29db8b4e55df47658a17394698deae86" name="Final submission package" color="#9c755f" meeting="true" start="2026-05-25" duration="0" complete="0" expand="true"/>
+        </task>
+        <task id="34" uid="4553066b37af460c9f07c695e1453974" name="Weekly tutor supervision and decision checkpoints" color="#bab0ac" meeting="false" start="2026-01-05" duration="101" complete="90" expand="true"/>
+    </tasks>
+    <resources>
+        <resource id="1" name="Francisco Sandoval Hernandez" function="Default:0" contacts="" phone=""/>
+        <resource id="2" name="Moisés Martínez Muñoz" function="Default:1" contacts="" phone=""/>
+    </resources>
+    <allocations>
+        <allocation task-id="1" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="5" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="10" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="16" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="20" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="24" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="29" resource-id="1" function="Default:0" responsible="true" load="100.0"/>
+        <allocation task-id="34" resource-id="2" function="Default:1" responsible="true" load="10.0"/>
+    </allocations>
+    <vacations/>
+    <previous/>
+    <roles roleset-name="Default"/>
+</project>

@@ -1,0 +1,561 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{lecun2015deeplearning}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=6a1aa6b7eab12b931ca7c7e3f927231d}{%
+           family={LeCun},
+           familyi={L\bibinitperiod},
+           given={Yann},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=40a8e4774982146adc2688546f54efb2}{%
+           family={Bengio},
+           familyi={B\bibinitperiod},
+           given={Yoshua},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=9a8750ccdb2a4cf14d2655face1ce016}{%
+           family={Hinton},
+           familyi={H\bibinitperiod},
+           given={Geoffrey},
+           giveni={G\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Nature Publishing Group}%
+      }
+      \strng{namehash}{9e4c6012409dc8dd9b2aa198a2059804}
+      \strng{fullhash}{c6c75bd00ce5a488e91a749d8383b3df}
+      \strng{fullhashraw}{c6c75bd00ce5a488e91a749d8383b3df}
+      \strng{bibnamehash}{c6c75bd00ce5a488e91a749d8383b3df}
+      \strng{authorbibnamehash}{c6c75bd00ce5a488e91a749d8383b3df}
+      \strng{authornamehash}{9e4c6012409dc8dd9b2aa198a2059804}
+      \strng{authorfullhash}{c6c75bd00ce5a488e91a749d8383b3df}
+      \strng{authorfullhashraw}{c6c75bd00ce5a488e91a749d8383b3df}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Nature}
+      \field{number}{7553}
+      \field{title}{Deep Learning}
+      \field{volume}{521}
+      \field{year}{2015}
+      \field{pages}{436\bibrangedash 444}
+      \range{pages}{9}
+    \endentry
+    \entry{krizhevsky2012imagenet}{inproceedings}{}{}
+      \name{author}{3}{}{%
+        {{hash=c5e3a676e2ac1164b3afcd539c131fc9}{%
+           family={Krizhevsky},
+           familyi={K\bibinitperiod},
+           given={Alex},
+           giveni={A\bibinitperiod}}}%
+        {{hash=8d569d1d5b8b5a7836017a98b430f959}{%
+           family={Sutskever},
+           familyi={S\bibinitperiod},
+           given={Ilya},
+           giveni={I\bibinitperiod}}}%
+        {{hash=813bd95fe553e6079cd53a567b238287}{%
+           family={Hinton},
+           familyi={H\bibinitperiod},
+           given={Geoffrey\bibnamedelima E.},
+           giveni={G\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+      }
+      \strng{namehash}{dd291871bfa8ee64447232f1cca429aa}
+      \strng{fullhash}{1a23c09aa65b3c2ade45ed18d8127375}
+      \strng{fullhashraw}{1a23c09aa65b3c2ade45ed18d8127375}
+      \strng{bibnamehash}{1a23c09aa65b3c2ade45ed18d8127375}
+      \strng{authorbibnamehash}{1a23c09aa65b3c2ade45ed18d8127375}
+      \strng{authornamehash}{dd291871bfa8ee64447232f1cca429aa}
+      \strng{authorfullhash}{1a23c09aa65b3c2ade45ed18d8127375}
+      \strng{authorfullhashraw}{1a23c09aa65b3c2ade45ed18d8127375}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Advances in Neural Information Processing Systems (NeurIPS)}
+      \field{title}{ImageNet Classification with Deep Convolutional Neural Networks}
+      \field{volume}{25}
+      \field{year}{2012}
+      \field{pages}{1097\bibrangedash 1105}
+      \range{pages}{9}
+    \endentry
+    \entry{koller2020signlanguage}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=e9cc1ce4669c6943c2f72c91d0cc3ee2}{%
+           family={Koller},
+           familyi={K\bibinitperiod},
+           given={Oscar},
+           giveni={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{e9cc1ce4669c6943c2f72c91d0cc3ee2}
+      \strng{fullhash}{e9cc1ce4669c6943c2f72c91d0cc3ee2}
+      \strng{fullhashraw}{e9cc1ce4669c6943c2f72c91d0cc3ee2}
+      \strng{bibnamehash}{e9cc1ce4669c6943c2f72c91d0cc3ee2}
+      \strng{authorbibnamehash}{e9cc1ce4669c6943c2f72c91d0cc3ee2}
+      \strng{authornamehash}{e9cc1ce4669c6943c2f72c91d0cc3ee2}
+      \strng{authorfullhash}{e9cc1ce4669c6943c2f72c91d0cc3ee2}
+      \strng{authorfullhashraw}{e9cc1ce4669c6943c2f72c91d0cc3ee2}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:2008.09918}
+      \field{title}{Quantitative Survey of the State of the Art in Sign Language Recognition}
+      \field{year}{2020}
+    \endentry
+    \entry{zhang2020mediapipehands}{inproceedings}{}{}
+      \name{author}{7}{}{%
+        {{hash=ae021641a8f85fd2607152ab99ed115b}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Fan},
+           giveni={F\bibinitperiod}}}%
+        {{hash=dfb2aa3f22269786162c9a57cea77fe8}{%
+           family={Bazarevsky},
+           familyi={B\bibinitperiod},
+           given={Valentin},
+           giveni={V\bibinitperiod}}}%
+        {{hash=1dd0e6dedc8fc6459e7f328d6a50f578}{%
+           family={Vakunov},
+           familyi={V\bibinitperiod},
+           given={Andrey},
+           giveni={A\bibinitperiod}}}%
+        {{hash=d03e634b401026233ad6899d8b0aad1b}{%
+           family={Tkachenka},
+           familyi={T\bibinitperiod},
+           given={Andrei},
+           giveni={A\bibinitperiod}}}%
+        {{hash=8bd9f1a06fcb0e0569720484293239c4}{%
+           family={Sung},
+           familyi={S\bibinitperiod},
+           given={George},
+           giveni={G\bibinitperiod}}}%
+        {{hash=727b85c404664f592588b31cac135ad2}{%
+           family={Chang},
+           familyi={C\bibinitperiod},
+           given={Chuan-Ling},
+           giveni={C\bibinithyphendelim L\bibinitperiod}}}%
+        {{hash=bc9b23f96eed985127659775e2b92e3e}{%
+           family={Grundmann},
+           familyi={G\bibinitperiod},
+           given={Matthias},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{b34ec7ee85af98aed1e55ed4599fbd0e}
+      \strng{fullhash}{de1ccdd2556e836fd82fced7dbf4da33}
+      \strng{fullhashraw}{de1ccdd2556e836fd82fced7dbf4da33}
+      \strng{bibnamehash}{de1ccdd2556e836fd82fced7dbf4da33}
+      \strng{authorbibnamehash}{de1ccdd2556e836fd82fced7dbf4da33}
+      \strng{authornamehash}{b34ec7ee85af98aed1e55ed4599fbd0e}
+      \strng{authorfullhash}{de1ccdd2556e836fd82fced7dbf4da33}
+      \strng{authorfullhashraw}{de1ccdd2556e836fd82fced7dbf4da33}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{CVPR Workshop on Computer Vision for Augmented and Virtual Reality}
+      \field{title}{MediaPipe Hands: On-device Real-time Hand Tracking}
+      \field{year}{2020}
+      \verb{urlraw}
+      \verb https://arxiv.org/abs/2006.10214
+      \endverb
+      \verb{url}
+      \verb https://arxiv.org/abs/2006.10214
+      \endverb
+    \endentry
+    \entry{hochreiter1997lstm}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=41b31e29fb2bdbf9f5c9c1b0d5b3e815}{%
+           family={Hochreiter},
+           familyi={H\bibinitperiod},
+           given={Sepp},
+           giveni={S\bibinitperiod}}}%
+        {{hash=288bdbcfe1b91ad7484d7a24f74f99ed}{%
+           family={Schmidhuber},
+           familyi={S\bibinitperiod},
+           given={Jürgen},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{4c2e1e2e1ac91e1df9d4f7b85ebe39b4}
+      \strng{fullhash}{4c2e1e2e1ac91e1df9d4f7b85ebe39b4}
+      \strng{fullhashraw}{4c2e1e2e1ac91e1df9d4f7b85ebe39b4}
+      \strng{bibnamehash}{4c2e1e2e1ac91e1df9d4f7b85ebe39b4}
+      \strng{authorbibnamehash}{4c2e1e2e1ac91e1df9d4f7b85ebe39b4}
+      \strng{authornamehash}{4c2e1e2e1ac91e1df9d4f7b85ebe39b4}
+      \strng{authorfullhash}{4c2e1e2e1ac91e1df9d4f7b85ebe39b4}
+      \strng{authorfullhashraw}{4c2e1e2e1ac91e1df9d4f7b85ebe39b4}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Neural Computation}
+      \field{number}{8}
+      \field{title}{Long Short-Term Memory}
+      \field{volume}{9}
+      \field{year}{1997}
+      \field{pages}{1735\bibrangedash 1780}
+      \range{pages}{46}
+    \endentry
+    \entry{chung2014gru}{inproceedings}{}{}
+      \name{author}{4}{}{%
+        {{hash=7a79e6bb4ca772c9b3b38f4e9f45b83c}{%
+           family={Chung},
+           familyi={C\bibinitperiod},
+           given={Junyoung},
+           giveni={J\bibinitperiod}}}%
+        {{hash=2adc0c92c308f233c731321d55efe58f}{%
+           family={Gulcehre},
+           familyi={G\bibinitperiod},
+           given={Caglar},
+           giveni={C\bibinitperiod}}}%
+        {{hash=f8dfca934ead3a7cab6b2382a1baaaa1}{%
+           family={Cho},
+           familyi={C\bibinitperiod},
+           given={KyungHyun},
+           giveni={K\bibinitperiod}}}%
+        {{hash=40a8e4774982146adc2688546f54efb2}{%
+           family={Bengio},
+           familyi={B\bibinitperiod},
+           given={Yoshua},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{2000d0778084bb56905b1654d519f50f}
+      \strng{fullhash}{7f2d21710b1589de5a0a24526a0e0f03}
+      \strng{fullhashraw}{7f2d21710b1589de5a0a24526a0e0f03}
+      \strng{bibnamehash}{7f2d21710b1589de5a0a24526a0e0f03}
+      \strng{authorbibnamehash}{7f2d21710b1589de5a0a24526a0e0f03}
+      \strng{authornamehash}{2000d0778084bb56905b1654d519f50f}
+      \strng{authorfullhash}{7f2d21710b1589de5a0a24526a0e0f03}
+      \strng{authorfullhashraw}{7f2d21710b1589de5a0a24526a0e0f03}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{NIPS 2014 Deep Learning Workshop}
+      \field{title}{Empirical Evaluation of Gated Recurrent Neural Networks on Sequence Modeling}
+      \field{year}{2014}
+    \endentry
+    \entry{bahdanau2014neural}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=6d80adec79a13a33e73215c5f46f1605}{%
+           family={Bahdanau},
+           familyi={B\bibinitperiod},
+           given={Dzmitry},
+           giveni={D\bibinitperiod}}}%
+        {{hash=f8dfca934ead3a7cab6b2382a1baaaa1}{%
+           family={Cho},
+           familyi={C\bibinitperiod},
+           given={KyungHyun},
+           giveni={K\bibinitperiod}}}%
+        {{hash=40a8e4774982146adc2688546f54efb2}{%
+           family={Bengio},
+           familyi={B\bibinitperiod},
+           given={Yoshua},
+           giveni={Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{a19bd16ae98706ae8eced6dfd6ca3a14}
+      \strng{fullhash}{46040dc329355c2380b0144ebe78dcf0}
+      \strng{fullhashraw}{46040dc329355c2380b0144ebe78dcf0}
+      \strng{bibnamehash}{46040dc329355c2380b0144ebe78dcf0}
+      \strng{authorbibnamehash}{46040dc329355c2380b0144ebe78dcf0}
+      \strng{authornamehash}{a19bd16ae98706ae8eced6dfd6ca3a14}
+      \strng{authorfullhash}{46040dc329355c2380b0144ebe78dcf0}
+      \strng{authorfullhashraw}{46040dc329355c2380b0144ebe78dcf0}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{arXiv preprint arXiv:1409.0473}
+      \field{title}{Neural Machine Translation by Jointly Learning to Align and Translate}
+      \field{year}{2014}
+    \endentry
+    \entry{bambach2015egohands}{inproceedings}{}{}
+      \name{author}{4}{}{%
+        {{hash=c8f4bdd8b0d2946a5d571b78ab5f240e}{%
+           family={Bambach},
+           familyi={B\bibinitperiod},
+           given={Sven},
+           giveni={S\bibinitperiod}}}%
+        {{hash=571d2d1449f75b0c538caca8aa9bf4b6}{%
+           family={Lee},
+           familyi={L\bibinitperiod},
+           given={Stefan},
+           giveni={S\bibinitperiod}}}%
+        {{hash=711a2f7c261a07216e1fa1355b411a84}{%
+           family={Crandall},
+           familyi={C\bibinitperiod},
+           given={David\bibnamedelima J.},
+           giveni={D\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=6ade6b4972bf4967d1d436a3086c47e1}{%
+           family={Yu},
+           familyi={Y\bibinitperiod},
+           given={Chen},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{8887df9bc663828536a8db989132c387}
+      \strng{fullhash}{fa310f4d18e1d58da0d6d1cdea5ea5ac}
+      \strng{fullhashraw}{fa310f4d18e1d58da0d6d1cdea5ea5ac}
+      \strng{bibnamehash}{fa310f4d18e1d58da0d6d1cdea5ea5ac}
+      \strng{authorbibnamehash}{fa310f4d18e1d58da0d6d1cdea5ea5ac}
+      \strng{authornamehash}{8887df9bc663828536a8db989132c387}
+      \strng{authorfullhash}{fa310f4d18e1d58da0d6d1cdea5ea5ac}
+      \strng{authorfullhashraw}{fa310f4d18e1d58da0d6d1cdea5ea5ac}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the IEEE International Conference on Computer Vision (ICCV)}
+      \field{title}{Lending A Hand: Detecting Hands and Recognizing Activities in Complex Egocentric Interactions}
+      \field{year}{2015}
+      \field{pages}{1949\bibrangedash 1957}
+      \range{pages}{9}
+    \endentry
+    \entry{kagglehands2023}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=ced02f0de82ce4815eb87c37556b8d31}{%
+           family={Nikkhah},
+           familyi={N\bibinitperiod},
+           given={Arman},
+           giveni={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{ced02f0de82ce4815eb87c37556b8d31}
+      \strng{fullhash}{ced02f0de82ce4815eb87c37556b8d31}
+      \strng{fullhashraw}{ced02f0de82ce4815eb87c37556b8d31}
+      \strng{bibnamehash}{ced02f0de82ce4815eb87c37556b8d31}
+      \strng{authorbibnamehash}{ced02f0de82ce4815eb87c37556b8d31}
+      \strng{authornamehash}{ced02f0de82ce4815eb87c37556b8d31}
+      \strng{authorfullhash}{ced02f0de82ce4815eb87c37556b8d31}
+      \strng{authorfullhashraw}{ced02f0de82ce4815eb87c37556b8d31}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://www.kaggle.com/datasets/armannikkhah/hand-dataset}}
+      \field{note}{Accessed: 2025}
+      \field{title}{Hand Dataset}
+      \field{year}{2023}
+    \endentry
+    \entry{signlanguagemnist}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=c8117886d335ebf26ad4c5671f08d7e0}{%
+           family={TechnicianLP},
+           familyi={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{c8117886d335ebf26ad4c5671f08d7e0}
+      \strng{fullhash}{c8117886d335ebf26ad4c5671f08d7e0}
+      \strng{fullhashraw}{c8117886d335ebf26ad4c5671f08d7e0}
+      \strng{bibnamehash}{c8117886d335ebf26ad4c5671f08d7e0}
+      \strng{authorbibnamehash}{c8117886d335ebf26ad4c5671f08d7e0}
+      \strng{authornamehash}{c8117886d335ebf26ad4c5671f08d7e0}
+      \strng{authorfullhash}{c8117886d335ebf26ad4c5671f08d7e0}
+      \strng{authorfullhashraw}{c8117886d335ebf26ad4c5671f08d7e0}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://www.kaggle.com/datamunge/sign-language-mnist}}
+      \field{note}{Accessed: 2025}
+      \field{title}{Sign Language MNIST Dataset}
+      \field{year}{2017}
+    \endentry
+    \entry{aslalphabet}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=9e24ff27867e729a42986a3358234332}{%
+           family={Akash},
+           familyi={A\bibinitperiod}}}%
+      }
+      \strng{namehash}{9e24ff27867e729a42986a3358234332}
+      \strng{fullhash}{9e24ff27867e729a42986a3358234332}
+      \strng{fullhashraw}{9e24ff27867e729a42986a3358234332}
+      \strng{bibnamehash}{9e24ff27867e729a42986a3358234332}
+      \strng{authorbibnamehash}{9e24ff27867e729a42986a3358234332}
+      \strng{authornamehash}{9e24ff27867e729a42986a3358234332}
+      \strng{authorfullhash}{9e24ff27867e729a42986a3358234332}
+      \strng{authorfullhashraw}{9e24ff27867e729a42986a3358234332}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://www.kaggle.com/grassknoted/asl-alphabet}}
+      \field{note}{Accessed: 2025}
+      \field{title}{ASL Alphabet Dataset}
+      \field{year}{2018}
+    \endentry
+    \entry{li2020wlasl}{inproceedings}{}{}
+      \name{author}{4}{}{%
+        {{hash=cfb6f977c40fc5578819476518c7a6b9}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Dongxu},
+           giveni={D\bibinitperiod}}}%
+        {{hash=63ac8fee0b471c53d75231586678c3ff}{%
+           family={Rodriguez},
+           familyi={R\bibinitperiod},
+           given={Cristian},
+           giveni={C\bibinitperiod}}}%
+        {{hash=838f9c53f4bf8c96b81ccf60d07ab8c7}{%
+           family={Yu},
+           familyi={Y\bibinitperiod},
+           given={Xin},
+           giveni={X\bibinitperiod}}}%
+        {{hash=bfb71cf26620b3b038faaa059c3341f7}{%
+           family={Li},
+           familyi={L\bibinitperiod},
+           given={Hongdong},
+           giveni={H\bibinitperiod}}}%
+      }
+      \strng{namehash}{d96cf516eaa40a2c3c17bce35d206676}
+      \strng{fullhash}{19532f51cd522ad2b161581972a1e928}
+      \strng{fullhashraw}{19532f51cd522ad2b161581972a1e928}
+      \strng{bibnamehash}{19532f51cd522ad2b161581972a1e928}
+      \strng{authorbibnamehash}{19532f51cd522ad2b161581972a1e928}
+      \strng{authornamehash}{d96cf516eaa40a2c3c17bce35d206676}
+      \strng{authorfullhash}{19532f51cd522ad2b161581972a1e928}
+      \strng{authorfullhashraw}{19532f51cd522ad2b161581972a1e928}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{Proceedings of the IEEE/CVF Winter Conference on Applications of Computer Vision (WACV)}
+      \field{title}{Word-Level Deep Sign Language Recognition from Video: A New Large-scale Dataset and Methods Comparison}
+      \field{year}{2020}
+      \field{pages}{1459\bibrangedash 1469}
+      \range{pages}{11}
+    \endentry
+    \entry{joze2019msasl}{inproceedings}{}{}
+      \name{author}{2}{}{%
+        {{hash=67ceeb45188c8c15246a7efce9379294}{%
+           family={Joze},
+           familyi={J\bibinitperiod},
+           given={Hamid\bibnamedelimb Reza\bibnamedelima Vaezi},
+           giveni={H\bibinitperiod\bibinitdelim R\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{hash=e9cc1ce4669c6943c2f72c91d0cc3ee2}{%
+           family={Koller},
+           familyi={K\bibinitperiod},
+           given={Oscar},
+           giveni={O\bibinitperiod}}}%
+      }
+      \strng{namehash}{7ea6286c77b153b59005724d5be5e391}
+      \strng{fullhash}{7ea6286c77b153b59005724d5be5e391}
+      \strng{fullhashraw}{7ea6286c77b153b59005724d5be5e391}
+      \strng{bibnamehash}{7ea6286c77b153b59005724d5be5e391}
+      \strng{authorbibnamehash}{7ea6286c77b153b59005724d5be5e391}
+      \strng{authornamehash}{7ea6286c77b153b59005724d5be5e391}
+      \strng{authorfullhash}{7ea6286c77b153b59005724d5be5e391}
+      \strng{authorfullhashraw}{7ea6286c77b153b59005724d5be5e391}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{British Machine Vision Conference (BMVC)}
+      \field{title}{MS-ASL: A Large-Scale Data Set and Benchmark for Understanding American Sign Language}
+      \field{year}{2019}
+    \endentry
+    \entry{googleaiprinciples2018}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=b0361c7c801f2c2503275338dc86d206}{%
+           family={Pichai},
+           familyi={P\bibinitperiod},
+           given={Sundar},
+           giveni={S\bibinitperiod}}}%
+      }
+      \strng{namehash}{b0361c7c801f2c2503275338dc86d206}
+      \strng{fullhash}{b0361c7c801f2c2503275338dc86d206}
+      \strng{fullhashraw}{b0361c7c801f2c2503275338dc86d206}
+      \strng{bibnamehash}{b0361c7c801f2c2503275338dc86d206}
+      \strng{authorbibnamehash}{b0361c7c801f2c2503275338dc86d206}
+      \strng{authornamehash}{b0361c7c801f2c2503275338dc86d206}
+      \strng{authorfullhash}{b0361c7c801f2c2503275338dc86d206}
+      \strng{authorfullhashraw}{b0361c7c801f2c2503275338dc86d206}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://blog.google/technology/ai/ai-principles/}}
+      \field{note}{Published June 7, 2018. Accessed: 2026}
+      \field{title}{AI at Google: Our Principles}
+      \field{year}{2018}
+    \endentry
+    \entry{googleaiprinciples2023}{report}{}{}
+      \name{author}{1}{}{%
+        {{hash=8b36e9207c24c76e6719268e49201d94}{%
+           family={{Google}},
+           familyi={G\bibinitperiod}}}%
+      }
+      \list{institution}{1}{%
+        {Google}%
+      }
+      \strng{namehash}{8b36e9207c24c76e6719268e49201d94}
+      \strng{fullhash}{8b36e9207c24c76e6719268e49201d94}
+      \strng{fullhashraw}{8b36e9207c24c76e6719268e49201d94}
+      \strng{bibnamehash}{8b36e9207c24c76e6719268e49201d94}
+      \strng{authorbibnamehash}{8b36e9207c24c76e6719268e49201d94}
+      \strng{authornamehash}{8b36e9207c24c76e6719268e49201d94}
+      \strng{authorfullhash}{8b36e9207c24c76e6719268e49201d94}
+      \strng{authorfullhashraw}{8b36e9207c24c76e6719268e49201d94}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{howpublished}{\url{https://ai.google/static/documents/ai-principles-2023-progress-update.pdf}}
+      \field{note}{5th edition of Google's annual AI Principles progress report. Accessed: 2026}
+      \field{title}{AI Principles Progress Update 2023}
+      \field{type}{techreport}
+      \field{year}{2023}
+    \endentry
+    \entry{sweeney2002kanonymity}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=4b70cbf7a64d719bc32e412248e3ff64}{%
+           family={Sweeney},
+           familyi={S\bibinitperiod},
+           given={Latanya},
+           giveni={L\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {World Scientific}%
+      }
+      \strng{namehash}{4b70cbf7a64d719bc32e412248e3ff64}
+      \strng{fullhash}{4b70cbf7a64d719bc32e412248e3ff64}
+      \strng{fullhashraw}{4b70cbf7a64d719bc32e412248e3ff64}
+      \strng{bibnamehash}{4b70cbf7a64d719bc32e412248e3ff64}
+      \strng{authorbibnamehash}{4b70cbf7a64d719bc32e412248e3ff64}
+      \strng{authornamehash}{4b70cbf7a64d719bc32e412248e3ff64}
+      \strng{authorfullhash}{4b70cbf7a64d719bc32e412248e3ff64}
+      \strng{authorfullhashraw}{4b70cbf7a64d719bc32e412248e3ff64}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal of Uncertainty, Fuzziness and Knowledge-Based Systems}
+      \field{number}{5}
+      \field{title}{k-Anonymity: A Model for Protecting Privacy}
+      \field{volume}{10}
+      \field{year}{2002}
+      \field{pages}{557\bibrangedash 570}
+      \range{pages}{14}
+      \verb{doi}
+      \verb 10.1142/S0218488502001648
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

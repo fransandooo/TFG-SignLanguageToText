@@ -1,7 +1,11 @@
 \chapter*{Resumen}
 
-\lipsum[1-2]
+El reconocimiento autom{\'a}tico de lengua de signos constituye un reto relevante para mejorar la accesibilidad y reducir barreras de comunicaci{\'o}n entre personas sordas o con discapacidad auditiva y usuarios que no conocen la lengua de signos. Este Proyecto Fin de Grado desarrolla y eval{\'u}a un prototipo de
+investigaci{\'o}n para el reconocimiento de palabras en American Sign Language a partir de v{\'i}deos breves. La soluci{\'o}n final utiliza MediaPipe Hands para extraer 21 puntos tridimensionales de la mano por fotograma, normaliza las secuencias obtenidas y las clasifica mediante una red GRU bidireccional con un mecanismo
+de Atenci{\'o}n Temporal. El trabajo recoge tambi{\'e}n la evoluci{\'o}n metodol{\'o}gica desde una primera fase basada en detecci{\'o}n de manos con YOLO y reconocimiento est{\'a}tico de letras hacia un enfoque centrado en la representaci{\'o}n temporal del signo. La validaci{\'o}n se realiza sobre WLASL y MS-ASL, incluyendo comparaci{\'o}n de
+modelos, an{\'a}lisis de longitud de secuencia, evaluaci{\'o}n cruzada y escalado de vocabulario. Los resultados son prometedores en vocabularios reducidos, aunque muestran limitaciones al aumentar el n{\'u}mero de clases. La representaci{\'o}n mediante landmarks aporta ventajas de privacidad, pero el sistema debe entenderse
+como prototipo experimental, no como traductor listo para producci{\'o}n.
 
-\begin{keywords}{Palabras claves}
+\begin{keywords}{Palabras clave}
   \mykeywordses{}
 \end{keywords}

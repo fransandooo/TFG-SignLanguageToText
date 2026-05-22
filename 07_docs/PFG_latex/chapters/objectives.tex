@@ -1,16 +1,71 @@
 \chapter{Objectives}
 \setcounter{section}{0}
 
-\lipsum[1-2]
+This chapter defines the purpose of the project, decomposes it into specific and verifiable objectives, and states how each objective is validated in the remainder of the thesis. The objectives describe the research and project outcomes pursued by the work. They are therefore different from the software requirements presented in Section~\ref{sec:requirements}, which specify the functional and non-functional behaviour expected from the implemented system.
+
 
 \section{Main objective}
 
-\lipsum[1-3]
+The main objective of this Final Degree Project is to design, implement, and experimentally validate a research prototype for word-level American Sign Language (ASL) recognition from short video clips, using hand-landmark representations and temporal neural models. The purpose is not to build a production-ready translator, but to study whether a compact geometric representation of hand motion can support feasible and reproducible isolated-word sign recognition.
+
+The project also has an accessibility motivation. By exploring automatic recognition of ASL glosses, the work studies how computer vision and deep learning techniques can contribute to assistive communication technologies. The technical system is therefore a means to evaluate a recognition approach, its limitations, and its ethical implications, rather than an end product intended for direct deployment.
 
 \section{Specific objectives}
 
-\lipsum[1-5]
+The main objective is decomposed into six specific objectives. Each one is defined as a measurable project outcome and is later mapped to a validation method in Section~\ref{sec:objective_validation}.
+
+\begin{itemize}
+    \item \textbf{SO1: Analyse the technical and scientific background of sign language recognition.} This objective covers the relevant foundations of computer vision, pose estimation, MediaPipe Hands, sequence modelling, recurrent neural networks, GRUs, and attention mechanisms, with emphasis on their applicability to word-level sign language recognition.
+
+    \item \textbf{SO2: Define a landmark-based data representation for ASL video clips.} This objective focuses on transforming raw ASL video clips into normalised sequences of three-dimensional hand landmarks suitable for temporal modelling, while documenting the datasets, preprocessing decisions, and limitations introduced by landmark extraction.
+
+    \item \textbf{SO3: Design and compare candidate temporal models for word-level ASL recognition.} This objective evaluates alternative temporal architectures under a controlled WLASL30 benchmark and identifies the model most suitable for the available data regime.
+
+    \item \textbf{SO4: Validate the selected recognition pipeline through reproducible experimental protocols.} This objective evaluates the selected model using standard classification metrics and protocols that reduce dependence on a single random seed or split, including multi-seed evaluation and stratified cross-validation.
+
+    \item \textbf{SO5: Assess the generalisation and scalability of the recognition pipeline.} This objective tests whether the selected approach transfers to an independent ASL dataset and analyses how performance changes as the WLASL vocabulary size increases.
+
+    \item \textbf{SO6: Contextualise the technical contribution through a runtime proof of concept and ethical analysis.} This objective integrates the recognition pipeline into an end-to-end mobile/server prototype as a proof of concept and analyses the accessibility, privacy, bias, reproducibility, and responsible-deployment implications of the approach.
+\end{itemize}
 
 \section{Validation methods}
+\label{sec:objective_validation}
 
-\lipsum[1-5]
+Table~\ref{tab:objective_validation} maps each specific objective to the method used to validate it and to the thesis evidence where the committee can verify the result. Detailed numerical results are intentionally left to the Experiments chapter; this section only defines how objective achievement is assessed.
+
+\begin{table}[H]
+\centering
+\small
+\renewcommand{\arraystretch}{1.25}
+\caption{Validation mapping for the specific objectives.}
+\label{tab:objective_validation}
+\begin{tabular}{@{}p{1.4cm} p{6.2cm} p{6.0cm}@{}}
+\toprule
+\textbf{Objective} & \textbf{Validation method} & \textbf{Evidence in the thesis} \\
+\midrule
+\textbf{SO1} &
+The objective is validated by presenting a structured review of the main techniques needed to understand the proposed system, including convolutional models, pose estimation, MediaPipe Hands, recurrent models, GRUs, and attention mechanisms. &
+State of the Art chapter (Chapter~\ref{ch:sota}) and the cited literature used to justify the methodological choices. \\
+\addlinespace
+\textbf{SO2} &
+The objective is validated by documenting the pipeline that converts ASL videos into normalised landmark sequences and by describing the datasets, extraction process, preprocessing steps, and data-quality constraints. &
+System design and dataset description in Section~\ref{sec:system_design} and Section~\ref{sec:datasets}; methodological pivot in Section~\ref{sec:exp_phase1}. \\
+\addlinespace
+\textbf{SO3} &
+The objective is validated by comparing candidate temporal architectures on the same WLASL30 benchmark using Top-1, Top-5, Macro-F1, and Balanced Accuracy, and by selecting the strongest model under the controlled comparison. &
+Architecture selection in Section~\ref{sec:exp_phase2} and Table~\ref{tab:exp_arch_comparison}. \\
+\addlinespace
+\textbf{SO4} &
+The objective is validated through the multi-seed protocol, the sequence-length sweep, stratified 5-Fold Cross-Validation, and the reporting of standard metrics across repeated runs. &
+Experimental methodology in Section~\ref{sec:exp_methodology}; sequence-length sweep in Table~\ref{tab:exp_seqlen_sweep}; WLASL30 validation in Section~\ref{sec:exp_wlasl30} and Table~\ref{tab:exp_wlasl30_seeds}. \\
+\addlinespace
+\textbf{SO5} &
+The objective is validated by retraining and evaluating the same pipeline on MS-ASL50 without architectural changes and by measuring performance degradation across progressively larger WLASL vocabularies. &
+Cross-dataset validation in Section~\ref{sec:exp_msasl}, Table~\ref{tab:exp_cross_dataset}, and Table~\ref{tab:exp_msasl_seeds}; vocabulary scaling in Section~\ref{sec:exp_scaling} and Table~\ref{tab:exp_scaling}. \\
+\addlinespace
+\textbf{SO6} &
+The objective is validated by describing the runtime prototype architecture, defining a qualitative validation protocol for live use, and evaluating the ethical and social implications of the system as a research prototype. &
+Runtime architecture in Section~\ref{sec:system_design}; qualitative protocol in Section~\ref{sec:exp_qualitative}; ethical and social-impact analysis in Chapter~7. \\
+\bottomrule
+\end{tabular}
+\end{table}

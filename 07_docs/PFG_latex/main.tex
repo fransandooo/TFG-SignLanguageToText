@@ -79,7 +79,7 @@
 \begin{figure}[H]
 \centering
 \includegraphics[width=#2\linewidth,height=0.45\textheight,keepaspectratio]{./images/#1}
-\caption{#3.}
+\caption{#3}
 \label{#4}
 \end{figure}
 }
@@ -114,6 +114,7 @@
 }
 
 \sloppy
+\raggedbottom
 \addtocontents{toc}{\protect\thispagestyle{empty}}
 
 % Custom command to add keywords
@@ -154,9 +155,9 @@
 \newcommand{\myname}{Francisco Sandoval Hern{\'a}ndez}
 \newcommand{\tutor}{Mois{\'e}s Mart{\'i}nez Muñ{\'o}z}
 \newcommand{\subject}{Final Degree Project (FDP)}
-\newcommand{\mykeywords}{sign language recognition, hand detection, deep learning, YOLO, object detection, computer vision, ASL}
-\newcommand{\mykeywordses}{reconocimiento de lengua de signos, detecci{\'o}n de manos, aprendizaje profundo, YOLO, detecci{\'o}n de objetos, visi{\'o}n por computador, ASL}
-\newcommand{\mytitle}{Sign Lenguage Recognition System: Hand Detection and Word Classification using Deep Learning}
+\newcommand{\mykeywords}{Sign Language Recognition, American Sign Language, Hand Landmarks, MediaPipe, GRU, Temporal Attention}
+\newcommand{\mykeywordses}{reconocimiento de lengua de signos, American Sign Language, landmarks de mano, MediaPipe, GRU, atenci{\'o}n temporal}
+\newcommand{\mytitle}{Word-Level American Sign Language Recognition using Hand Landmarks and Attention-based Recurrent Networks}
 
 \hypersetup{pdfauthor={\myname{}},%
             pdftitle={\mytitle{}},%
@@ -184,8 +185,8 @@
 \pagestyle{empty}
 
 \input{./sections/acknowledgements}
-\input{./sections/resumen}
 \input{./sections/abstract}
+\input{./sections/resumen}
 
 \tableofcontents{}
 \listoffigures{}
