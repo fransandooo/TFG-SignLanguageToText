@@ -1,20 +1,22 @@
 \chapter*{Abstract}
 
-Sign language recognition is an important accessibility challenge, it serves to mitigate
-communication barriers between deaf or hard-of-hearing signers and non-signing people. This Final
-Degree Project develops and evaluates a research prototype for word-level American Sign Language
-recognition from short video clips. The final approach extracts 21 three-dimensional hand landmarks
-per frame with MediaPipe Hands, normalises the resulting sequences, and classifies ASL glosses
-using a bidirectional GRU with a Temporal Attention mechanism. The work also documents the
-methodological evolution from YOLO-based hand detection and static letter recognition toward
-landmark-based temporal modelling, where the main challenge lies in representing sign motion rather
-than localising hands. The system was validated through experiments on WLASL and MS-ASL, including
-architecture comparison, sequence-length analysis, cross-dataset evaluation, and vocabulary
-scaling. Results indicate promising performance for reduced vocabularies and reproducible behaviour
-across datasets, but also clear limitations as the number of classes increases. The landmark
-representation provides a privacy-friendly abstraction, although the prototype remains a research
-system rather than a production-ready translator.
+Sign language recognition serves to mitigate communication barriers between deaf or hard-of-hearing
+signers and non-signing people. This Final Degree Project develops and evaluates a research
+prototype for word-level American Sign Language (ASL) recognition from short video clips. The work
+first reviews the accessibility problem, the computer vision methods used for recognition and the
+technical requirements of the system. It then follows the methodological evolution of the project,
+from initial approaches based on hand detection and static letter recognition towards a
+sequence-based model that represents the movement of signs across frames. The final system uses
+MediaPipe Hands to extract 21 3D hand landmarks per frame, normalises the resulting sequences and
+classifies each clip with a bidirectional Gated Recurrent Unit (GRU) with a temporal attention
+mechanism. The experiments evaluate architecture choices, sequence length, cross-dataset evaluation
+and vocabulary size using the Word-Level American Sign Language (WLASL) and Microsoft American Sign
+Language (MS-ASL) datasets. The results show consistent performance for reduced vocabularies and
+across datasets, but accuracy decreases as the number of classes increases. The landmark
+representation also abstracts away identifying visual information, offering a privacy-conscious
+alternative to raw video, although the prototype remains a research system rather than a
+production-ready translator.
 
 \begin{keywords}{Keywords}
-	\mykeywords{}
+    \mykeywords{}
 \end{keywords}
