@@ -5,6 +5,10 @@
     },
     "workspaceMount": "source=${localWorkspaceFolder}/../..,target=/workspaces/tfg-sign-language-recognition,type=bind",
     "workspaceFolder": "/workspaces/tfg-sign-language-recognition",
+    "mounts": [
+        "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/root/.ssh,type=bind,consistency=cached"
+    ],
+    "postCreateCommand": "bash 07_docs/PFG_latex/.devcontainer/setup-git.sh",
     "customizations": {
         "vscode": {
             "settings": {
