@@ -98,6 +98,7 @@ the resulting context vector for classification. Throughout the document, this f
 referred to as the GRU+Attention model.
 
 \subsection{Recognition Pipeline}
+\label{subsec:recognition_pipeline}
 
 The implemented recognition pipeline has four stages:
 
@@ -227,19 +228,17 @@ experiment artefacts and supervision notes.
 \label{sec:plan_workplan}
 % =============================================================================
 
-The executed work plan was reconstructed from the original proposal, recorded development notes,
-experiment artefacts and supervision notes. The plan is organised into seven phases (A--G). The
-first two phases correspond closely to the proposal-era plan, while the remaining phases reflect
-the methodological pivot from static, pixel-based recognition to landmark-based word-level ASL
-recognition.
+The executed work plan was reconstructed from the original proposal, development notes, experiment
+artefacts and supervision notes. It is organised into seven phases (A--G): the first two correspond
+closely to the proposal-era plan, while the remaining phases reflect the methodological pivot from
+static, pixel-based recognition to landmark-based word-level ASL recognition.
 
 The original work plan from the project proposal (January 2026) followed a sequential structure
 with separate phases for hand detection, static handshape recognition, dynamic sign recognition,
 temporal fusion, language generation, mobile prototype, integration and validation. The executed
-plan diverged from this structure after the methodological pivot described in
-Section~\ref{sec:exp_phase1}, which replaced the static letter recognition route with
-landmark-based word recognition and folded the temporal fusion stage into the selected sequence
-model.
+plan diverged after the methodological pivot described in Section~\ref{sec:exp_phase1}, which
+replaced the static letter recognition route with landmark-based word recognition and folded the
+temporal fusion stage into the selected sequence model.
 
 Figure~\ref{fig:work_plan_timeline} summarises the executed work plan at the start of the section.
 The chart shows the start and end of each phase and makes the main deviation from the initial
