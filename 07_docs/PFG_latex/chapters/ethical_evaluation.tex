@@ -2,11 +2,23 @@
 \setcounter{section}{0}
 
 \section{AI Based Systems Ethical Impact}
-An ethical analysis in Artificial Intelligence examines the implications, concerns and challenges associated with the development and deployment of these systems. As AI integrates into increasingly critical applications, technical evaluation must be paired with an explicit ethics review. This review rests on four general pillars: \textbf{Human Rights and Fairness} (preventing bias and discrimination), \textbf{Accountability} (clarifying who is responsible for the system's decisions), \textbf{Privacy and Security} (protecting user data and confidentiality), and \textbf{Transparency} (avoiding opaque black-box behaviour).
+An ethical analysis in Artificial Intelligence examines the implications, concerns and challenges
+associated with the development and deployment of these systems. As AI integrates into increasingly
+critical applications, technical evaluation must be paired with an explicit ethics review. This
+review rests on four general pillars: \textbf{Human Rights and Fairness} (preventing bias and
+discrimination), \textbf{Accountability} (clarifying who is responsible for the system's
+decisions), \textbf{Privacy and Security} (protecting user data and confidentiality), and
+\textbf{Transparency} (avoiding opaque black-box behaviour).
 
 \section{Ethical Evaluation Framework: Google's AI Principles}
 
-The framework adopted for this evaluation is \textbf{Google's AI Principles} \cite{googleaiprinciples2018}, originally published in 2018 and refined annually; the primary reference for this analysis is the \textbf{2023 Progress Update} \cite{googleaiprinciples2023}. The framework was chosen because its seven principles are formulated as concrete objectives that map cleanly onto the design decisions of a research project, and because Google's annual progress reports demonstrate how the principles apply to systems that share characteristics with this work (computer vision and on-device inference). The seven principles are:
+The framework adopted for this evaluation is \textbf{Google's AI Principles}
+\cite{googleaiprinciples2018}, originally published in 2018 and refined annually; the primary
+reference for this analysis is the \textbf{2023 Progress Update} \cite{googleaiprinciples2023}. The
+framework was chosen because its seven principles are formulated as concrete objectives that map
+cleanly onto the design decisions of a research project, and because Google's annual progress
+reports demonstrate how the principles apply to systems that share characteristics with this work
+(computer vision and on-device inference). The seven principles are:
 
 \begin{enumerate}
     \item \textbf{Be socially beneficial:} address a real societal need and do so effectively.
@@ -18,13 +30,20 @@ The framework adopted for this evaluation is \textbf{Google's AI Principles} \ci
     \item \textbf{Be made available for uses that accord with these principles:} prevent misuse and align deployment with the framework.
 \end{enumerate}
 
-The remainder of the chapter evaluates the project against each principle through quantitative metrics. Each metric is scored on a simplified \{0, 5, 10\} scale (not addressed, partially addressed, fully addressed). Some metrics derive from experimental results; others reflect design decisions or documentation practices. The summary table at the end of the chapter aggregates the metrics into per-principle averages and a global score.
+The remainder of the chapter evaluates the project against each principle through quantitative
+metrics. Each metric is scored on a simplified \{0, 5, 10\} scale (not addressed, partially
+addressed, fully addressed). Some metrics derive from experimental results; others reflect design
+decisions or documentation practices. The summary table at the end of the chapter aggregates the
+metrics into per-principle averages and a global score.
 
 \section{Project Analysis Against Google's AI Principles}
 
 \subsection{Principle 1: Be Socially Beneficial}
 
-Sign language is the primary means of communication for millions of deaf and hard-of-hearing individuals, yet a substantial communication barrier persists with the hearing population. An automatic ASL recognition system can act as a bridge in educational, medical, and everyday contexts.
+Sign language is the primary means of communication for millions of deaf and hard-of-hearing
+individuals, yet a substantial communication barrier persists with the hearing population. An
+automatic ASL recognition system can act as a bridge in educational, medical, and everyday
+contexts.
 
 \begin{itemize}
     \item \textbf{M1.1: Real societal need.} The World Health Organization estimates over 430 million people worldwide have disabling hearing loss; the project targets a clear accessibility problem. \textit{Score: 10.}
@@ -34,7 +53,9 @@ Sign language is the primary means of communication for millions of deaf and har
 
 \subsection{Principle 2: Avoid Creating or Reinforcing Unfair Bias}
 
-Sign language recognition is particularly bias-sensitive: signers vary in hand size, skin tone, signing speed, and style. Bias arises both at the perception layer (hand detection / landmark extraction operating on raw images) and at the recognition layer.
+Sign language recognition is particularly bias-sensitive: signers vary in hand size, skin tone,
+signing speed, and style. Bias arises both at the perception layer (hand detection / landmark
+extraction operating on raw images) and at the recognition layer.
 
 \begin{itemize}
     \item \textbf{M2.1: Dataset diversity (word recognition).} WLASL aggregates videos from multiple online sources, providing implicit signer variation, but lacks demographic annotations (skin tone, age, hand morphology), so diversity cannot be quantified formally. \textit{Score: 5.}
@@ -45,7 +66,8 @@ Sign language recognition is particularly bias-sensitive: signers vary in hand s
 
 \subsection{Principle 3: Be Built and Tested for Safety}
 
-In this context, safety means producing reliable predictions and avoiding misleading outputs that could cause misunderstandings in sensitive domains.
+In this context, safety means producing reliable predictions and avoiding misleading outputs that
+could cause misunderstandings in sensitive domains.
 
 \begin{itemize}
     \item \textbf{M3.1: Robust validation methodology.} Evaluation uses Stratified 5-Fold Cross-Validation (mean Top-1 \textbf{63.85\% $\pm$ 4.50\%}, mean Top-5 \textbf{86.46\% $\pm$ 2.04\%}), corroborated by a 3-seed multi-seed sweep on the same dataset (58.82\% $\pm$ 2.94\% Top-1) under the refactored pipeline. Test-Time Augmentation was deliberately avoided because it inflates reported accuracy without reflecting true generalisation. \textit{Score: 10.}
@@ -56,7 +78,8 @@ In this context, safety means producing reliable predictions and avoiding mislea
 
 \subsection{Principle 4: Be Accountable to People}
 
-Accountability requires that the system is interpretable to its users and gives them meaningful control over its outputs.
+Accountability requires that the system is interpretable to its users and gives them meaningful
+control over its outputs.
 
 \begin{itemize}
     \item \textbf{M4.1: Model interpretability.} The Temporal Attention layer produces per-frame weights that can be inspected to understand which frames drove a prediction. This provides a degree of post-hoc interpretability that fully opaque architectures lack. \textit{Score: 10.}
@@ -66,7 +89,9 @@ Accountability requires that the system is interpretable to its users and gives 
 
 \subsection{Principle 5: Incorporate Privacy Design Principles}
 
-Privacy applies to three distinct stages of the project: training the hand detector on real photographs, training the word recognition model on landmark abstractions, and serving inference from a mobile client.
+Privacy applies to three distinct stages of the project: training the hand detector on real
+photographs, training the word recognition model on landmark abstractions, and serving inference
+from a mobile client.
 
 \begin{itemize}
     \item \textbf{M5.1: Data minimisation through landmarks (training).} Each video frame is reduced to 63 numerical values that discard the original visual content. Once landmarks are extracted, the original video is no longer needed and the processed data cannot reconstruct the signer's face, body, or background. \textit{Score: 10.}
@@ -95,66 +120,83 @@ Privacy applies to three distinct stages of the project: training the hand detec
 
 \section{Impact Scale of Ethical Aspects}
 
-Table~\ref{tab:ethics_metrics} consolidates all metrics, their individual scores, and the per-principle average.
+Table~\ref{tab:ethics_metrics} consolidates all metrics, their individual scores, and the
+per-principle average.
 
 \begin{table}[H]
-\centering
-\small
-\begin{tabular}{|c|l|l|c|c|}
-\hline
-\textbf{Principle} & \textbf{ID} & \textbf{Metric} & \textbf{Score} & \textbf{Avg.} \\
-\hline
-\multirow{3}{*}{\shortstack{P1: Socially\\Beneficial}}
-    & M1.1 & Addresses a real societal need & 10 & \multirow{3}{*}{\textbf{8.3}} \\
-    & M1.2 & Effectiveness of the solution & 5 & \\
-    & M1.3 & Accessibility of the technology & 10 & \\
-\hline
-\multirow{4}{*}{\shortstack{P2: Avoid\\Unfair Bias}}
-    & M2.1 & Dataset diversity (word recognition) & 5 & \multirow{4}{*}{\textbf{6.3}} \\
-    & M2.2 & Dataset diversity (detection \& letters) & 5 & \\
-    & M2.3 & Input representation fairness & 10 & \\
-    & M2.4 & Per-class performance analysis & 5 & \\
-\hline
-\multirow{4}{*}{\shortstack{P3: Safety}}
-    & M3.1 & Robust validation methodology & 10 & \multirow{4}{*}{\textbf{8.8}} \\
-    & M3.2 & Scalability testing & 10 & \\
-    & M3.3 & Hand detection reliability & 10 & \\
-    & M3.4 & Failure mode documentation & 5 & \\
-\hline
-\multirow{3}{*}{\shortstack{P4: Account-\\ability}}
-    & M4.1 & Model interpretability & 10 & \multirow{3}{*}{\textbf{8.3}} \\
-    & M4.2 & Top-K predictions & 10 & \\
-    & M4.3 & Reproducibility & 5 & \\
-\hline
-\multirow{4}{*}{\shortstack{P5: Privacy}}
-    & M5.1 & Data minimisation (landmark training) & 10 & \multirow{4}{*}{\textbf{5.0}} \\
-    & M5.2 & Privacy in detection phase & 5 & \\
-    & M5.3 & Privacy in inference pipeline & 0 & \\
-    & M5.4 & K-anonymity considerations & 5 & \\
-\hline
-\multirow{5}{*}{\shortstack{P6: Scientific\\Excellence}}
-    & M6.1 & Model comparison (word recognition) & 10 & \multirow{5}{*}{\textbf{10.0}} \\
-    & M6.2 & Model comparison (hand detection) & 10 & \\
-    & M6.3 & Statistical validation & 10 & \\
-    & M6.4 & Literature grounding & 10 & \\
-    & M6.5 & Honest reporting of limitations & 10 & \\
-\hline
-\multirow{3}{*}{\shortstack{P7: Principled\\Availability}}
-    & M7.1 & Intended use clarity & 10 & \multirow{3}{*}{\textbf{6.7}} \\
-    & M7.2 & Misuse potential assessment & 5 & \\
-    & M7.3 & Open research contribution & 5 & \\
-\hline
-\multicolumn{4}{|r|}{\textbf{Overall Average Score}} & \textbf{7.6} \\
-\hline
-\end{tabular}
-\caption{Ethical evaluation metrics based on Google's AI Principles \cite{googleaiprinciples2023}}
-\label{tab:ethics_metrics}
+    \centering
+    \small
+    \begin{tabular}{|c|l|l|c|c|}
+        \hline
+        \textbf{Principle}                                   & \textbf{ID}  & \textbf{Metric}                          & \textbf{Score} & \textbf{Avg.}                  \\
+        \hline
+        \multirow{3}{*}{\shortstack{P1: Socially                                                                                                                         \\Beneficial}}
+                                                             & M1.1         & Addresses a real societal need           & 10             & \multirow{3}{*}{\textbf{8.3}}  \\
+                                                             & M1.2         & Effectiveness of the solution            & 5              &                                \\
+                                                             & M1.3         & Accessibility of the technology          & 10             &                                \\
+        \hline
+        \multirow{4}{*}{\shortstack{P2: Avoid                                                                                                                            \\Unfair Bias}}
+                                                             & M2.1         & Dataset diversity (word recognition)     & 5              & \multirow{4}{*}{\textbf{6.3}}  \\
+                                                             & M2.2         & Dataset diversity (detection \& letters) & 5              &                                \\
+                                                             & M2.3         & Input representation fairness            & 10             &                                \\
+                                                             & M2.4         & Per-class performance analysis           & 5              &                                \\
+        \hline
+        \multirow{4}{*}{\shortstack{P3: Safety}}
+                                                             & M3.1         & Robust validation methodology            & 10             & \multirow{4}{*}{\textbf{8.8}}  \\
+                                                             & M3.2         & Scalability testing                      & 10             &                                \\
+                                                             & M3.3         & Hand detection reliability               & 10             &                                \\
+                                                             & M3.4         & Failure mode documentation               & 5              &                                \\
+        \hline
+        \multirow{3}{*}{\shortstack{P4: Account-                                                                                                                         \\ability}}
+                                                             & M4.1         & Model interpretability                   & 10             & \multirow{3}{*}{\textbf{8.3}}  \\
+                                                             & M4.2         & Top-K predictions                        & 10             &                                \\
+                                                             & M4.3         & Reproducibility                          & 5              &                                \\
+        \hline
+        \multirow{4}{*}{\shortstack{P5: Privacy}}
+                                                             & M5.1         & Data minimisation (landmark training)    & 10             & \multirow{4}{*}{\textbf{5.0}}  \\
+                                                             & M5.2         & Privacy in detection phase               & 5              &                                \\
+                                                             & M5.3         & Privacy in inference pipeline            & 0              &                                \\
+                                                             & M5.4         & K-anonymity considerations               & 5              &                                \\
+        \hline
+        \multirow{5}{*}{\shortstack{P6: Scientific                                                                                                                       \\Excellence}}
+                                                             & M6.1         & Model comparison (word recognition)      & 10             & \multirow{5}{*}{\textbf{10.0}} \\
+                                                             & M6.2         & Model comparison (hand detection)        & 10             &                                \\
+                                                             & M6.3         & Statistical validation                   & 10             &                                \\
+                                                             & M6.4         & Literature grounding                     & 10             &                                \\
+                                                             & M6.5         & Honest reporting of limitations          & 10             &                                \\
+        \hline
+        \multirow{3}{*}{\shortstack{P7: Principled                                                                                                                       \\Availability}}
+                                                             & M7.1         & Intended use clarity                     & 10             & \multirow{3}{*}{\textbf{6.7}}  \\
+                                                             & M7.2         & Misuse potential assessment              & 5              &                                \\
+                                                             & M7.3         & Open research contribution               & 5              &                                \\
+        \hline
+        \multicolumn{4}{|r|}{\textbf{Overall Average Score}} & \textbf{7.6}                                                                                              \\
+        \hline
+    \end{tabular}
+    \caption{Ethical evaluation metrics based on Google's AI Principles \cite{googleaiprinciples2023}}
+    \label{tab:ethics_metrics}
 \end{table}
 
 \section{Conclusions of the Ethical Analysis}
 
-The ethical evaluation yields an overall score of \textbf{7.6 out of 10}. The strongest pillars are scientific excellence (10.0/10) and safety (8.8/10); the weakest is privacy (5.0/10), driven entirely by the inference pipeline.
+The ethical evaluation yields an overall score of \textbf{7.6 out of 10}. The strongest pillars are
+scientific excellence (10.0/10) and safety (8.8/10); the weakest is privacy (5.0/10), driven
+entirely by the inference pipeline.
 
-One architectural decision, the use of MediaPipe hand landmarks as input, propagates positive effects across multiple principles: it reduces appearance-based bias (P2), it implements data minimisation that protects identity by construction (P5), and it limits misuse potential because abstract landmarks cannot be repurposed for surveillance (P7). The same advantage, however, does not extend to the upstream stages that operate on raw images. The current FastAPI server receives, processes, and persists full RGB frames without encryption or automatic deletion, and the hand detector was trained on photographs of identifiable individuals. The most actionable mitigation is to relocate landmark extraction to the client device, so that only the 63-dimensional vector ever leaves the phone.
+One architectural decision, the use of MediaPipe hand landmarks as input, propagates positive
+effects across multiple principles: it reduces appearance-based bias (P2), it implements data
+minimisation that protects identity by construction (P5), and it limits misuse potential because
+abstract landmarks cannot be repurposed for surveillance (P7). The same advantage, however, does
+not extend to the upstream stages that operate on raw images. The current FastAPI server receives,
+processes, and persists full RGB frames without encryption or automatic deletion, and the hand
+detector was trained on photographs of identifiable individuals. The most actionable mitigation is
+to relocate landmark extraction to the client device, so that only the 63-dimensional vector ever
+leaves the phone.
 
-The intermediate scores in bias avoidance (6.3/10) and principled availability (6.7/10) reflect missing formal processes rather than poor design choices: no demographic audit of signers was conducted, the auxiliary detection datasets lack diversity metadata, and the server prototype has no access controls or retention policies. Honest reporting of these gaps, including the privacy weakness of the inference pipeline identified in this chapter and the documented accuracy collapse at large vocabularies, is itself an ethical practice aligned with Principle 6 and is a prerequisite for any responsible deployment of the system.
+The intermediate scores in bias avoidance (6.3/10) and principled availability (6.7/10) reflect
+missing formal processes rather than poor design choices: no demographic audit of signers was
+conducted, the auxiliary detection datasets lack diversity metadata, and the server prototype has
+no access controls or retention policies. Honest reporting of these gaps, including the privacy
+weakness of the inference pipeline identified in this chapter and the documented accuracy collapse
+at large vocabularies, is itself an ethical practice aligned with Principle 6 and is a prerequisite
+for any responsible deployment of the system.

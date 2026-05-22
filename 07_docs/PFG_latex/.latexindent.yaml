@@ -1,0 +1,15 @@
+modifyLineBreaks:
+  textWrapOptions:
+    columns: 100
+    when: after
+  environments:
+    BeginExclude:
+      environments:
+        - tabular
+        - tabularx
+        - longtable
+        - table
+        - figure
+        - equation
+        - align
+        - alignat

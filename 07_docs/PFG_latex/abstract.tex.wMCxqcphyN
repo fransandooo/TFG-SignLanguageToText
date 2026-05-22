@@ -1,0 +1,20 @@
+\chapter*{Abstract}
+
+Sign language recognition is an important accessibility challenge, it serves to mitigate
+communication barriers between deaf or hard-of-hearing signers and non-signing people. This Final
+Degree Project develops and evaluates a research prototype for word-level American Sign Language
+recognition from short video clips. The final approach extracts 21 three-dimensional hand landmarks
+per frame with MediaPipe Hands, normalises the resulting sequences, and classifies ASL glosses
+using a bidirectional GRU with a Temporal Attention mechanism. The work also documents the
+methodological evolution from YOLO-based hand detection and static letter recognition toward
+landmark-based temporal modelling, where the main challenge lies in representing sign motion rather
+than localising hands. The system was validated through experiments on WLASL and MS-ASL, including
+architecture comparison, sequence-length analysis, cross-dataset evaluation, and vocabulary
+scaling. Results indicate promising performance for reduced vocabularies and reproducible behaviour
+across datasets, but also clear limitations as the number of classes increases. The landmark
+representation provides a privacy-friendly abstraction, although the prototype remains a research
+system rather than a production-ready translator.
+
+\begin{keywords}{Keywords}
+    \mykeywords{}
+\end{keywords}

@@ -1,18 +1,66 @@
 {
+    "name": "PFG LaTeX",
     "build": {
         "dockerfile": "../Dockerfile"
     },
+    "workspaceMount": "source=${localWorkspaceFolder}/../..,target=/workspaces/tfg-sign-language-recognition,type=bind",
+    "workspaceFolder": "/workspaces/tfg-sign-language-recognition",
     "customizations": {
         "vscode": {
+            "settings": {
+                "latex-workshop.latex.rootFile": "07_docs/PFG_latex/main.tex",
+                "latex-workshop.latex.tools": [
+                    {
+                        "name": "pdflatex",
+                        "command": "pdflatex",
+                        "args": [
+                            "-synctex=1",
+                            "-interaction=nonstopmode",
+                            "-file-line-error",
+                            "%DOC%"
+                        ]
+                    },
+                    {
+                        "name": "biber",
+                        "command": "biber",
+                        "args": ["%DOCFILE%"]
+                    }
+                ],
+                "latex-workshop.latex.recipes": [
+                    {
+                        "name": "pdflatex -> biber -> pdflatex x2",
+                        "tools": ["pdflatex", "biber", "pdflatex", "pdflatex"]
+                    }
+                ],
+                "latex-workshop.latex.recipe.default": "pdflatex -> biber -> pdflatex x2",
+                "latex-workshop.latex.autoBuild.run": "onSave",
+                "latex-workshop.formatting.latex": "latexindent",
+                "latex-workshop.formatting.latexindent.path": "latexindent",
+                "latex-workshop.formatting.latexindent.args": [
+                    "-c",
+                    "%DIR%/",
+                    "-m",
+                    "-l=%WORKSPACE_FOLDER%/07_docs/PFG_latex/.latexindent.yaml",
+                    "%TMPFILE%",
+                    "-y=defaultIndent: '    '"
+                ],
+                "[latex]": {
+                    "editor.defaultFormatter": "James-Yu.latex-workshop",
+                    "editor.formatOnSave": true
+                },
+                "[bibtex]": {
+                    "editor.defaultFormatter": "James-Yu.latex-workshop",
+                    "editor.formatOnSave": true
+                },
+                "latex-workshop.bibtex-format.sort.enabled": false
+            },
             "extensions": [
                 "james-yu.latex-workshop",   // Comprehensive LaTeX support
-                "nickfode.latex-formatter", // Automatic formatting for LaTeX
                 "mathematic.vscode-latex",  // Math-focused LaTeX utilities
                 "ms-azuretools.vscode-docker", // Docker tools
                 "meezilla.json",            // JSON utilities for configs
                 "valentjn.vscode-ltex"      // Grammar and style checking
             ]
         }
-    },
-    "postCreateCommand": "sed -i 's/\r$//' .devcontainer/misc/*.sh; sh .devcontainer/misc/initialize.sh"
+    }
 }

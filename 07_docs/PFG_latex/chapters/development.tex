@@ -1,12 +1,19 @@
 \chapter{Technical Development}
 \setcounter{section}{0}
 
-This chapter describes the engineering side of the project: how the recognition system is structured into independent stages, which functional capabilities each stage provides, in which environment the system runs, and which requirements drove the design. The datasets that feed the pipeline are described in their own section at the end of the chapter.
+This chapter describes the engineering side of the project: how the recognition system is
+structured into independent stages, which functional capabilities each stage provides, in which
+environment the system runs, and which requirements drove the design. The datasets that feed the
+pipeline are described in their own section at the end of the chapter.
 
 \section{System design}
 \label{sec:system_design}
 
-The system is structured as a modular three-tier architecture covering data preparation, model training and evaluation, and runtime inference. The three tiers are physically separated (different processes, different machines in the production scenario) but share a single source of truth for data formats and trained model artifacts, so a checkpoint produced in tier two can be served unchanged in tier three. Figure~\ref{fig:system_overview} shows the overall data flow.
+The system is structured as a modular three-tier architecture covering data preparation, model
+training and evaluation, and runtime inference. The three tiers are physically separated (different
+processes, different machines in the production scenario) but share a single source of truth for
+data formats and trained model artifacts, so a checkpoint produced in tier two can be served
+unchanged in tier three. Figure~\ref{fig:system_overview} shows the overall data flow.
 
 % TODO[fig]: System architecture diagram showing the three tiers
 % (data preparation, training/evaluation, runtime inference) with arrows
@@ -16,16 +23,50 @@ The system is structured as a modular three-tier architecture covering data prep
 % image is ready.
 \image{architecture/system_overview.png}{0.85}{System architecture: data preparation, training and evaluation, and runtime inference tiers.}{fig:system_overview}
 
-\paragraph{Tier 1: Data preparation pipeline.} Raw video material is acquired from the two ASL benchmarks used in the project: WLASL is downloaded directly from the dataset distribution, while MS-ASL is reconstructed by retrieving the original YouTube clips referenced by the dataset annotations and trimming each one with the per-instance \texttt{(start\_time, end\_time)} pair. OpenCV decodes each clip frame by frame, and MediaPipe Hands extracts 21 three-dimensional keypoints per frame. The keypoints are then wrist-centred (the wrist is subtracted from every joint) and length-normalised by the wrist-to-middle-finger distance, so that absolute hand size and frame position no longer carry signal. Frames where MediaPipe fails to detect a hand are linearly interpolated from neighbouring valid frames; clips whose detection rate falls below 0.3 are discarded. Each surviving clip is serialised as a per-clip \texttt{.npy} array of shape $(T, 21, 3)$ alongside a \texttt{metadata.json} recording the dataset name, gloss vocabulary, split assignments, and the source-video identifiers. This stage is implemented in \texttt{src/slr/data/} and exposed through the \texttt{scripts/extract\_landmarks\_*.py} entry points.
+\paragraph{Tier 1: Data preparation pipeline.} Raw video material is acquired from the two ASL benchmarks used in the project: WLASL is downloaded
+directly from the dataset distribution, while MS-ASL is reconstructed by retrieving the original
+YouTube clips referenced by the dataset annotations and trimming each one with the per-instance
+\texttt{(start\_time, end\_time)} pair. OpenCV decodes each clip frame by frame, and MediaPipe
+Hands extracts 21 three-dimensional keypoints per frame. The keypoints are then wrist-centred (the
+wrist is subtracted from every joint) and length-normalised by the wrist-to-middle-finger distance,
+so that absolute hand size and frame position no longer carry signal. Frames where MediaPipe fails
+to detect a hand are linearly interpolated from neighbouring valid frames; clips whose detection
+rate falls below 0.3 are discarded. Each surviving clip is serialised as a per-clip \texttt{.npy}
+array of shape $(T, 21, 3)$ alongside a \texttt{metadata.json} recording the dataset name, gloss
+vocabulary, split assignments, and the source-video identifiers. This stage is implemented in
+\texttt{src/slr/data/} and exposed through the \texttt{scripts/extract\_landmarks\_*.py} entry
+points.
 
-\paragraph{Tier 2: Training and evaluation.} The Python package \texttt{src/slr/} owns the model definitions (\texttt{models/} contains \texttt{gru\_baseline}, \texttt{gru\_attention}, and \texttt{transformer}; a registry resolves the name from a configuration field), the training loop (\texttt{training/trainer.py}), the evaluator (\texttt{evaluation/}), and the experiment-tracking machinery (\texttt{tracking/manifest.py}, \texttt{tracking/git\_utils.py}). All hyperparameters and dataset paths live in YAML files under \texttt{configs/}, never in code; a base configuration (\texttt{configs/base/gru\_attention.yaml}) declares the defaults shared across experiments, and each experiment YAML overrides only the fields it needs. Every run produces a self-contained directory containing the best checkpoint (by validation Top-1), the training history, confusion matrices (raw and row-normalised), per-class metrics, and an \texttt{experiment\_manifest.json} that captures git commit, hardware, runtime, hyperparameters, and final metrics. The same trainer supports the multi-seed protocol used to report mean and standard deviation in the experiments chapter.
+\paragraph{Tier 2: Training and evaluation.} The Python package \texttt{src/slr/} owns the model definitions (\texttt{models/} contains
+\texttt{gru\_baseline}, \texttt{gru\_attention}, and \texttt{transformer}; a registry resolves the
+name from a configuration field), the training loop (\texttt{training/trainer.py}), the evaluator
+(\texttt{evaluation/}), and the experiment-tracking machinery (\texttt{tracking/manifest.py},
+\texttt{tracking/git\_utils.py}). All hyperparameters and dataset paths live in YAML files under
+\texttt{configs/}, never in code; a base configuration (\texttt{configs/base/gru\_attention.yaml})
+declares the defaults shared across experiments, and each experiment YAML overrides only the fields
+it needs. Every run produces a self-contained directory containing the best checkpoint (by
+validation Top-1), the training history, confusion matrices (raw and row-normalised), per-class
+metrics, and an \texttt{experiment\_manifest.json} that captures git commit, hardware, runtime,
+hyperparameters, and final metrics. The same trainer supports the multi-seed protocol used to
+report mean and standard deviation in the experiments chapter.
 
-\paragraph{Tier 3: Runtime inference (prototype).} The mobile client lives in \texttt{03\_app/signtotext-expo/} and is built with React Native and Expo; it captures a short video clip with the device camera and posts it to the inference server through a thin REST client (\texttt{services/api.ts}). The server lives in \texttt{04\_server/main.py}, is implemented with FastAPI, and exposes two endpoints: \texttt{POST /predict} for isolated-word inference and \texttt{POST /predict-sequence} for a heuristic continuous-sequence variant. On reception, the server runs the same MediaPipe extraction used in tier one, loads the requested model from a curated registry, returns the Top-K predictions with confidence scores, and optionally hands the Top-1 label to a text-to-speech service on the client (\texttt{services/tts.ts}). The server reuses the \texttt{src/slr/} package directly, so the inference code path is identical to the evaluation code path and no model surgery is needed at deployment time.
+\paragraph{Tier 3: Runtime inference (prototype).} The mobile client lives in \texttt{03\_app/signtotext-expo/} and is built with React Native and
+Expo; it captures a short video clip with the device camera and posts it to the inference server
+through a thin REST client (\texttt{services/api.ts}). The server lives in
+\texttt{04\_server/main.py}, is implemented with FastAPI, and exposes two endpoints: \texttt{POST
+/predict} for isolated-word inference and \texttt{POST /predict-sequence} for a heuristic
+continuous-sequence variant. On reception, the server runs the same MediaPipe extraction used in
+tier one, loads the requested model from a curated registry, returns the Top-K predictions with
+confidence scores, and optionally hands the Top-1 label to a text-to-speech service on the client
+(\texttt{services/tts.ts}). The server reuses the \texttt{src/slr/} package directly, so the
+inference code path is identical to the evaluation code path and no model surgery is needed at
+deployment time.
 
 \subsection{Description of functional features}
 \label{sec:functional_features}
 
-The system exposes six high-level capabilities. Each one is justified by the technical decision it embodies, so this list doubles as a record of why the architecture took its current shape.
+The system exposes six high-level capabilities. Each one is justified by the technical decision it
+embodies, so this list doubles as a record of why the architecture took its current shape.
 
 \begin{itemize}
     \item \textbf{F1: Landmark-based input pipeline.} Each frame is reduced from a $224 \times 224$ RGB tensor to 63 floating-point landmark coordinates, a roughly 2{,}389$\times$ dimensionality reduction. The choice removes background and skin-tone signal at source, which both shrinks the model and disconnects recognition accuracy from appearance bias.
@@ -39,83 +80,95 @@ The system exposes six high-level capabilities. Each one is justified by the tec
 \subsection{Operational Environment}
 \label{sec:operational_environment}
 
-Training and landmark extraction were performed on the local development workstation; the runtime prototype was tested with a paired mobile client and an HTTP server. Table~\ref{tab:operational_environment} lists the components of the operational environment and the version constraints under which the results in this thesis were produced.
+Training and landmark extraction were performed on the local development workstation; the runtime
+prototype was tested with a paired mobile client and an HTTP server.
+Table~\ref{tab:operational_environment} lists the components of the operational environment and the
+version constraints under which the results in this thesis were produced.
 
 \begin{table}[H]
-\centering
-\small
-\renewcommand{\arraystretch}{1.25}
-\caption{Operational environment for training, landmark extraction, and runtime inference.}
-\label{tab:operational_environment}
-\begin{tabular}{@{}p{4.2cm} p{9.0cm}@{}}
-\toprule
-\textbf{Component} & \textbf{Specification} \\
-\midrule
-Operating system          & Ubuntu 24.04 LTS (training and server); cross-platform (mobile client). \\
-CPU                       & Multi-core x86\_64 (local laptop). \\
-GPU                       & NVIDIA RTX 3050 Ti Laptop, 4\,GB VRAM, CUDA 12.x. \\
-Python                    & 3.10 (project); 3.11 supported via \texttt{requires-python = ">=3.10"}. \\
-Deep learning framework   & PyTorch 2.x with CUDA support. \\
-Pose estimation           & MediaPipe Hands 0.10+ (\texttt{HandLandmarker}). \\
-Video processing          & OpenCV 4.8+. \\
-Mobile client framework   & React Native + Expo. \\
-Backend                   & FastAPI 0.111 with Uvicorn 0.29. \\
-Persistence               & JSON manifests, \texttt{.npy} landmark files, \texttt{.pt} PyTorch checkpoints. \\
-Version control           & Git. \\
-\bottomrule
-\end{tabular}
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.25}
+    \caption{Operational environment for training, landmark extraction, and runtime inference.}
+    \label{tab:operational_environment}
+    \begin{tabular}{@{}p{4.2cm} p{9.0cm}@{}}
+        \toprule
+        \textbf{Component}      & \textbf{Specification}                                                          \\
+        \midrule
+        Operating system        & Ubuntu 24.04 LTS (training and server); cross-platform (mobile client).         \\
+        CPU                     & Multi-core x86\_64 (local laptop).                                              \\
+        GPU                     & NVIDIA RTX 3050 Ti Laptop, 4\,GB VRAM, CUDA 12.x.                               \\
+        Python                  & 3.10 (project); 3.11 supported via \texttt{requires-python = ">=3.10"}.         \\
+        Deep learning framework & PyTorch 2.x with CUDA support.                                                  \\
+        Pose estimation         & MediaPipe Hands 0.10+ (\texttt{HandLandmarker}).                                \\
+        Video processing        & OpenCV 4.8+.                                                                    \\
+        Mobile client framework & React Native + Expo.                                                            \\
+        Backend                 & FastAPI 0.111 with Uvicorn 0.29.                                                \\
+        Persistence             & JSON manifests, \texttt{.npy} landmark files, \texttt{.pt} PyTorch checkpoints. \\
+        Version control         & Git.                                                                            \\
+        \bottomrule
+    \end{tabular}
 \end{table}
 
-The development environment is reproducible through the package metadata declared in \texttt{pyproject.toml} (editable install with \texttt{pip install -e .[landmarks]}) and the dedicated server requirements declared in \texttt{04\_server/requirements.txt}. The end-to-end reproduction procedure for the headline experiments, including environment setup, dataset preparation, training commands, and evaluation, is documented in \texttt{docs/reproducibility\_guide.md}.
+The development environment is reproducible through the package metadata declared in
+\texttt{pyproject.toml} (editable install with \texttt{pip install -e .[landmarks]}) and the
+dedicated server requirements declared in \texttt{04\_server/requirements.txt}. The end-to-end
+reproduction procedure for the headline experiments, including environment setup, dataset
+preparation, training commands, and evaluation, is documented in
+\texttt{docs/reproducibility\_guide.md}.
 
 \section{Requirements}
 \label{sec:requirements}
 
 \subsection{Description of requirement attributes}
 
-For the textual description of the different identified requirements, a set of attributes has been selected to describe each requirement. Below is a description of the meaning of each attribute used:
+For the textual description of the different identified requirements, a set of attributes has been
+selected to describe each requirement. Below is a description of the meaning of each attribute
+used:
 
 \begin{itemize}
     \item \textbf{Code}: A unique abbreviated identifier for the requirement. It is constructed using the requirement type code followed by a hyphen and three digits. Requirements are divided into functional and non-functional requirements. The codes used are \textbf{FR} for Functional Requirements and \textbf{NFR} for Non-Functional Requirements. For example: \texttt{FR-001}.
-    
+
     \item \textbf{Name}: Extended identification of the requirement.
-    
+
     \item \textbf{Description}: A basic description of the identified requirement.
-    
+
     \item \textbf{Source}: Indicates the source through which the requirement was identified. This value usually corresponds to one or more use case codes.
-    
+
     \item \textbf{Necessity}: Determines the degree of implementation required for the requirement. The possible values are:
-    \begin{itemize}
-        \item \textbf{Essential}: The requirement must be implemented.
-        \item \textbf{Desirable}: It is preferable to implement the requirement, but it is not mandatory.
-        \item \textbf{Optional}: The requirement may be implemented, but it is neither important nor mandatory.
-    \end{itemize}
-    
+          \begin{itemize}
+              \item \textbf{Essential}: The requirement must be implemented.
+              \item \textbf{Desirable}: It is preferable to implement the requirement, but it is not mandatory.
+              \item \textbf{Optional}: The requirement may be implemented, but it is neither important nor mandatory.
+          \end{itemize}
+
     \item \textbf{Priority}: Defines the importance of the requirement, allowing the order in which requirements are included in the design and implementation process to be established. The possible values are:
-    \begin{itemize}
-        \item \textbf{High}: The requirement must be implemented in the early stages of development.
-        \item \textbf{Medium}: The requirement should be implemented once high-priority requirements have been completed.
-        \item \textbf{Low}: The requirement should be implemented in the final stages of development. These requirements do not affect the correct functioning of the system.
-    \end{itemize}
-    
+          \begin{itemize}
+              \item \textbf{High}: The requirement must be implemented in the early stages of development.
+              \item \textbf{Medium}: The requirement should be implemented once high-priority requirements have been completed.
+              \item \textbf{Low}: The requirement should be implemented in the final stages of development. These requirements do not affect the correct functioning of the system.
+          \end{itemize}
+
     \item \textbf{Stability}: Defines the stability of the requirement throughout the software life cycle. This indicates whether the requirement may be modified during the life cycle. The possible values are:
-    \begin{itemize}
-        \item \textbf{Stable}: The requirement will not change during the system life cycle.
-        \item \textbf{Unstable}: The requirement may change during the system life cycle.
-    \end{itemize}
-    
+          \begin{itemize}
+              \item \textbf{Stable}: The requirement will not change during the system life cycle.
+              \item \textbf{Unstable}: The requirement may change during the system life cycle.
+          \end{itemize}
+
     \item \textbf{Verifiability}: Defines the degree to which a requirement can be verified, that is, the extent to which it is possible to confirm that the requirement has been implemented in the developed system. The possible values are:
-    \begin{itemize}
-        \item \textbf{High}: It is possible to verify that the requirement has been implemented. These requirements usually correspond to core system functionalities.
-        \item \textbf{Medium}: It is possible to verify that the requirement has been implemented, but it requires complex testing or inspection of the source code.
-        \item \textbf{Low}: It is difficult, or in some cases impossible, to verify whether the requirement has been implemented.
-    \end{itemize}
+          \begin{itemize}
+              \item \textbf{High}: It is possible to verify that the requirement has been implemented. These requirements usually correspond to core system functionalities.
+              \item \textbf{Medium}: It is possible to verify that the requirement has been implemented, but it requires complex testing or inspection of the source code.
+              \item \textbf{Low}: It is difficult, or in some cases impossible, to verify whether the requirement has been implemented.
+          \end{itemize}
 \end{itemize}
 
 \subsection{Functional Requirements}
 \label{sec:functional_requirements}
 
-The system specifies four functional requirements covering the core recognition pipeline (FR-001, FR-002), the experiment-tracking infrastructure (FR-003), and statistical validation through multi-seed training (FR-004).
+The system specifies four functional requirements covering the core recognition pipeline (FR-001,
+FR-002), the experiment-tracking infrastructure (FR-003), and statistical validation through
+multi-seed training (FR-004).
 
 \requirement{./tables/requirement_FR_001}{FR-001: Landmark extraction from video clips}{tab:requirement_FR_001}
 \requirement{./tables/requirement_FR_002}{FR-002: Word-level sign classification}{tab:requirement_FR_002}
@@ -126,7 +179,9 @@ The system specifies four functional requirements covering the core recognition 
 \subsection{Non-functional Requirements}
 \label{sec:non_functional_requirements}
 
-Three non-functional requirements characterise quality attributes of the system: runtime performance (NFR-001), code quality and modularity (NFR-002), and documentation completeness (NFR-003).
+Three non-functional requirements characterise quality attributes of the system: runtime
+performance (NFR-001), code quality and modularity (NFR-002), and documentation completeness
+(NFR-003).
 
 \requirement{./tables/requirement_NFR_001}{NFR-001: Inference latency}{tab:requirement_NFR_001}
 \requirement{./tables/requirement_NFR_002}{NFR-002: Modular code architecture}{tab:requirement_NFR_002}
@@ -138,13 +193,20 @@ Three non-functional requirements characterise quality attributes of the system:
 \label{sec:datasets}
 % =============================================================================
 
-This project spans two recognition tasks with fundamentally different data requirements: hand localization from still images, and word-level sign language recognition from video. As a consequence, six distinct datasets are employed across the full experimental pipeline. This section formalizes the properties of each dataset by first defining a common set of descriptive attributes, then presenting a unified comparative table, and finally providing individual descriptions of each dataset in context.
+This project spans two recognition tasks with fundamentally different data requirements: hand
+localization from still images, and word-level sign language recognition from video. As a
+consequence, six distinct datasets are employed across the full experimental pipeline. This section
+formalizes the properties of each dataset by first defining a common set of descriptive attributes,
+then presenting a unified comparative table, and finally providing individual descriptions of each
+dataset in context.
 
 % 3.X.1 Attribute Definitions
 \subsection{Dataset Attribute Definitions}
 \label{subsec:dataset_attributes}
 
-To ensure a consistent and unambiguous characterization of every dataset, the following attributes are used in Table~\ref{tab:datasets_comparison}. Each attribute captures a distinct dimension relevant to dataset selection, reproducibility, and the interpretation of experimental results:
+To ensure a consistent and unambiguous characterization of every dataset, the following attributes
+are used in Table~\ref{tab:datasets_comparison}. Each attribute captures a distinct dimension
+relevant to dataset selection, reproducibility, and the interpretation of experimental results:
 
 \begin{itemize}
 
@@ -155,11 +217,11 @@ To ensure a consistent and unambiguous characterization of every dataset, the fo
     \item \textbf{Year}: The year of original publication or first public release. This contextualizes the dataset within the chronological development of the field and helps evaluate whether it reflects the current state of the art in data collection methodology.
 
     \item \textbf{Task}: The specific sub-task for which the dataset was designed. Three task categories appear in this project:
-    \begin{itemize}
-        \item \textbf{Hand Detection}: the dataset provides annotated bounding boxes or segmentation masks marking the location of hands in images.
-        \item \textbf{Letter Recognition}: the dataset provides labeled static images of individual American Sign Language (ASL) letter signs.
-        \item \textbf{Word Recognition}: the dataset provides labeled video clips of complete ASL word signs, requiring temporal modeling.
-    \end{itemize}
+          \begin{itemize}
+              \item \textbf{Hand Detection}: the dataset provides annotated bounding boxes or segmentation masks marking the location of hands in images.
+              \item \textbf{Letter Recognition}: the dataset provides labeled static images of individual American Sign Language (ASL) letter signs.
+              \item \textbf{Word Recognition}: the dataset provides labeled video clips of complete ASL word signs, requiring temporal modeling.
+          \end{itemize}
 
     \item \textbf{Samples}: The total number of annotated data instances. For image datasets, this equals the number of images; for video datasets, it equals the number of individual video clips. Where a subset of the full dataset was used in this project, this is noted in the individual descriptions.
 
@@ -175,55 +237,111 @@ To ensure a consistent and unambiguous characterization of every dataset, the fo
 \subsection{Comparative Overview}
 \label{subsec:dataset_overview}
 
-Table~\ref{tab:datasets_comparison} provides a high-level comparison of the six datasets used in this project. Datasets DS-01 and DS-02 support the hand localization pipeline described in later experimental sections. Datasets DS-03 and DS-04 were used in the initial letter-level classification phase of the project, which was subsequently superseded by the word recognition approach. Datasets DS-05 (WLASL) and DS-06 (MS-ASL) are the primary benchmarks for word-level recognition. WLASL is the dataset on which the architecture was tuned; MS-ASL was added in a later phase to validate that the same pipeline transfers to an independent ASL corpus with a different signer distribution.
+Table~\ref{tab:datasets_comparison} provides a high-level comparison of the six datasets used in
+this project. Datasets DS-01 and DS-02 support the hand localization pipeline described in later
+experimental sections. Datasets DS-03 and DS-04 were used in the initial letter-level
+classification phase of the project, which was subsequently superseded by the word recognition
+approach. Datasets DS-05 (WLASL) and DS-06 (MS-ASL) are the primary benchmarks for word-level
+recognition. WLASL is the dataset on which the architecture was tuned; MS-ASL was added in a later
+phase to validate that the same pipeline transfers to an independent ASL corpus with a different
+signer distribution.
 
 \begin{table}[H]
-\centering
-\small
-\renewcommand{\arraystretch}{1.35}
-\caption{Comparative overview of all datasets used in this project.}
-\label{tab:datasets_comparison}
-\begin{tabular}{@{}p{1.1cm} p{3.6cm} p{0.7cm} p{2.6cm} r r p{2.8cm}@{}}
-\toprule
-\textbf{ID} & \textbf{Name} & \textbf{Year} & \textbf{Task} & \textbf{Samples} & \textbf{Classes} & \textbf{Format} \\
-\midrule
-DS-01 & EgoHands              & 2015 & Hand Detection   & 4,800      & 1     & Images + Seg.\ Masks \\
-DS-02 & Kaggle Hand Dataset   & 2023 & Hand Detection   & $\sim$4,200 & 1    & Images + BBox (XML)  \\
-DS-03 & Sign Language MNIST   & 2017 & Letter Recog.    & 34,627     & 24    & 28$\times$28 Grayscale CSV \\
-DS-04 & ASL Alphabet          & 2018 & Letter Recog.    & 87,000     & 29    & 200$\times$200 RGB JPG \\
-DS-05 & WLASL                 & 2020 & Word Recog.      & 21,083     & 2,000 & Video Clips (RGB)    \\
-DS-06 & MS-ASL                & 2018 & Word Recog.      & 25,513     & 1,000 & Video Clips (RGB, YouTube) \\
-\bottomrule
-\end{tabular}
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.35}
+    \caption{Comparative overview of all datasets used in this project.}
+    \label{tab:datasets_comparison}
+    \begin{tabular}{@{}p{1.1cm} p{3.6cm} p{0.7cm} p{2.6cm} r r p{2.8cm}@{}}
+        \toprule
+        \textbf{ID} & \textbf{Name}       & \textbf{Year} & \textbf{Task}  & \textbf{Samples} & \textbf{Classes} & \textbf{Format}            \\
+        \midrule
+        DS-01       & EgoHands            & 2015          & Hand Detection & 4,800            & 1                & Images + Seg.\ Masks       \\
+        DS-02       & Kaggle Hand Dataset & 2023          & Hand Detection & $\sim$4,200      & 1                & Images + BBox (XML)        \\
+        DS-03       & Sign Language MNIST & 2017          & Letter Recog.  & 34,627           & 24               & 28$\times$28 Grayscale CSV \\
+        DS-04       & ASL Alphabet        & 2018          & Letter Recog.  & 87,000           & 29               & 200$\times$200 RGB JPG     \\
+        DS-05       & WLASL               & 2020          & Word Recog.    & 21,083           & 2,000            & Video Clips (RGB)          \\
+        DS-06       & MS-ASL              & 2018          & Word Recog.    & 25,513           & 1,000            & Video Clips (RGB, YouTube) \\
+        \bottomrule
+    \end{tabular}
 \end{table}
 
 % 3.X.3 Hand Detection Datasets
 \subsection{Hand Detection Datasets}
 \label{subsec:datasets_hd}
 
-Datasets DS-01 and DS-02 are used jointly to train the hand localization module based on YOLOv8. A central design motivation for combining two datasets is improved generalization: a detector trained exclusively on egocentric footage tends to fail when the camera is positioned at eye level or beyond arm's reach, while a detector trained only on third-person images may struggle with first-person perspectives. By merging the two sources, the training corpus covers a significantly wider range of viewpoints, backgrounds, and hand appearances. After merging, duplicate removal, and a stratified train/validation/test split, the combined training set comprises approximately 5,223 annotated images.
+Datasets DS-01 and DS-02 are used jointly to train the hand localization module based on YOLOv8. A
+central design motivation for combining two datasets is improved generalization: a detector trained
+exclusively on egocentric footage tends to fail when the camera is positioned at eye level or
+beyond arm's reach, while a detector trained only on third-person images may struggle with
+first-person perspectives. By merging the two sources, the training corpus covers a significantly
+wider range of viewpoints, backgrounds, and hand appearances. After merging, duplicate removal, and
+a stratified train/validation/test split, the combined training set comprises approximately 5,223
+annotated images.
 
 \subsubsection*{DS-01: EgoHands \cite{bambach2015egohands}}
 
-EgoHands is an egocentric hand detection dataset published by Indiana University in 2015 as part of research on activity recognition in close-proximity social interactions. It consists of approximately 4,800 labeled frames extracted from 48 video recordings captured from a GoPro camera mounted on the chest of an observer watching another person. Ground-truth annotations are stored as pixel-level segmentation polygons in MATLAB \texttt{.mat} files; during preprocessing, these polygons were converted to axis-aligned bounding boxes in YOLO format. The dataset covers diverse interaction scenarios, including card games, chess, and jigsaw puzzles, with two hands simultaneously visible in most frames, providing challenging overlap and occlusion cases. Because all images are taken from a first-person perspective, the visual distribution of EgoHands is inherently biased toward the observer's own hand. This limitation motivates the inclusion of DS-02 to extend viewpoint diversity. The input representation is pixel-based: models consume raw RGB crops.
+EgoHands is an egocentric hand detection dataset published by Indiana University in 2015 as part of
+research on activity recognition in close-proximity social interactions. It consists of
+approximately 4,800 labeled frames extracted from 48 video recordings captured from a GoPro camera
+mounted on the chest of an observer watching another person. Ground-truth annotations are stored as
+pixel-level segmentation polygons in MATLAB \texttt{.mat} files; during preprocessing, these
+polygons were converted to axis-aligned bounding boxes in YOLO format. The dataset covers diverse
+interaction scenarios, including card games, chess, and jigsaw puzzles, with two hands
+simultaneously visible in most frames, providing challenging overlap and occlusion cases. Because
+all images are taken from a first-person perspective, the visual distribution of EgoHands is
+inherently biased toward the observer's own hand. This limitation motivates the inclusion of DS-02
+to extend viewpoint diversity. The input representation is pixel-based: models consume raw RGB
+crops.
 
 \subsubsection*{DS-02: Kaggle Hand Dataset \cite{kagglehands2023}}
 
-The Kaggle Hand Dataset is a collection of annotated hand images published on the Kaggle platform, providing multi-viewpoint coverage that is complementary to the egocentric nature of DS-01. Images depict hands in third-person perspectives with diverse backgrounds, lighting conditions, skin tones, and partial occlusions. Ground-truth bounding boxes are provided in Pascal VOC XML format; during preprocessing, coordinates were normalized to the YOLO format used by the detection pipeline. The dataset contains approximately 4,200 labeled images. The joint training corpus formed by DS-01 and DS-02 yielded a YOLOv8n model achieving approximately 98\% mAP50 and 87\% Mean IoU on the held-out test split, demonstrating the effectiveness of the multi-source approach. The input representation is pixel-based.
+The Kaggle Hand Dataset is a collection of annotated hand images published on the Kaggle platform,
+providing multi-viewpoint coverage that is complementary to the egocentric nature of DS-01. Images
+depict hands in third-person perspectives with diverse backgrounds, lighting conditions, skin
+tones, and partial occlusions. Ground-truth bounding boxes are provided in Pascal VOC XML format;
+during preprocessing, coordinates were normalized to the YOLO format used by the detection
+pipeline. The dataset contains approximately 4,200 labeled images. The joint training corpus formed
+by DS-01 and DS-02 yielded a YOLOv8n model achieving approximately 98\% mAP50 and 87\% Mean IoU on
+the held-out test split, demonstrating the effectiveness of the multi-source approach. The input
+representation is pixel-based.
 
 % 3.X.4 Letter Recognition Datasets
 \subsection{Letter Recognition Datasets}
 \label{subsec:datasets_lr}
 
-Datasets DS-03 and DS-04 were used during the initial phase of the project, when the recognition target was the static letter-level ASL alphabet. Both datasets cover 24 of the 26 ASL letters; the letters \textit{J} and \textit{Z} are excluded in both cases because they require hand motion and cannot be represented by a single static image. The two sources were merged and unified into a single training corpus for letter classification experiments. Although this phase was later superseded by the more ambitious word-level recognition approach, these datasets remain relevant because they established the viability of data-driven letter classification and informed the design of the preprocessing pipeline. The input representation for both datasets is pixel-based.
+Datasets DS-03 and DS-04 were used during the initial phase of the project, when the recognition
+target was the static letter-level ASL alphabet. Both datasets cover 24 of the 26 ASL letters; the
+letters \textit{J} and \textit{Z} are excluded in both cases because they require hand motion and
+cannot be represented by a single static image. The two sources were merged and unified into a
+single training corpus for letter classification experiments. Although this phase was later
+superseded by the more ambitious word-level recognition approach, these datasets remain relevant
+because they established the viability of data-driven letter classification and informed the design
+of the preprocessing pipeline. The input representation for both datasets is pixel-based.
 
 \subsubsection*{DS-03: Sign Language MNIST \cite{signlanguagemnist}}
 
-Sign Language MNIST mirrors the format of the canonical MNIST handwritten digit benchmark. It contains 27,455 training images and 7,172 test images, for a total of 34,627 samples, each representing one of 24 static ASL letters as a $28 \times 28$ grayscale image. Data is distributed in CSV format, with one row per image where each column corresponds to a pixel intensity value in the range $[0, 255]$, plus a label column. The low resolution and grayscale format make this dataset extremely lightweight and straightforward to preprocess, but inherently limit the discriminative information available to the model, as fine-grained finger articulation details are largely lost. The dataset was originally constructed from ASL alphabet photographs rescaled and converted to the MNIST-style format, and is hosted on Kaggle.
+Sign Language MNIST mirrors the format of the canonical MNIST handwritten digit benchmark. It
+contains 27,455 training images and 7,172 test images, for a total of 34,627 samples, each
+representing one of 24 static ASL letters as a $28 \times 28$ grayscale image. Data is distributed
+in CSV format, with one row per image where each column corresponds to a pixel intensity value in
+the range $[0, 255]$, plus a label column. The low resolution and grayscale format make this
+dataset extremely lightweight and straightforward to preprocess, but inherently limit the
+discriminative information available to the model, as fine-grained finger articulation details are
+largely lost. The dataset was originally constructed from ASL alphabet photographs rescaled and
+converted to the MNIST-style format, and is hosted on Kaggle.
 
 \subsubsection*{DS-04: ASL Alphabet \cite{aslalphabet}}
 
-The ASL Alphabet dataset provides a substantially richer visual input than DS-03. It contains approximately 87,000 images organized into 29 classes: the 24 static ASL letters, the letter \textit{space}, and two additional non-letter classes (\textit{del}, \textit{nothing}). Each class is represented by exactly 3,000 training images captured in a controlled environment at a resolution of $200 \times 200$ pixels in full RGB color. The higher resolution and color information enable more discriminative feature learning, particularly for hand texture and illumination cues. For integration with DS-03 into a unified corpus, images were converted to grayscale and resized to a common format, yielding a combined training set of approximately 79,000 images and 7,000 test images covering the 24 shared letter classes.
+The ASL Alphabet dataset provides a substantially richer visual input than DS-03. It contains
+approximately 87,000 images organized into 29 classes: the 24 static ASL letters, the letter
+\textit{space}, and two additional non-letter classes (\textit{del}, \textit{nothing}). Each class
+is represented by exactly 3,000 training images captured in a controlled environment at a
+resolution of $200 \times 200$ pixels in full RGB color. The higher resolution and color
+information enable more discriminative feature learning, particularly for hand texture and
+illumination cues. For integration with DS-03 into a unified corpus, images were converted to
+grayscale and resized to a common format, yielding a combined training set of approximately 79,000
+images and 7,000 test images covering the 24 shared letter classes.
 
 % 3.X.5 Word Recognition Dataset
 \subsection{Word Recognition Dataset}
@@ -231,11 +349,31 @@ The ASL Alphabet dataset provides a substantially richer visual input than DS-03
 
 \subsubsection*{DS-05: WLASL \cite{li2020wlasl}}
 
-The Word-Level American Sign Language (WLASL) dataset, published by Li et al. in 2020, is the primary data resource for all word-level recognition experiments in this thesis and one of the largest publicly available ASL word recognition benchmarks to date. WLASL contains 21,083 video instances covering 2,000 ASL glosses (words). Videos were collected from multiple online platforms, including YouTube channels maintained by ASL educators, online courses, and signing dictionaries, and manually verified by qualified ASL experts to ensure correctness of sign production. Each clip shows a single signer performing one complete sign, typically against a plain or low-clutter background, with durations ranging from approximately one to four seconds.
+The Word-Level American Sign Language (WLASL) dataset, published by Li et al. in 2020, is the
+primary data resource for all word-level recognition experiments in this thesis and one of the
+largest publicly available ASL word recognition benchmarks to date. WLASL contains 21,083 video
+instances covering 2,000 ASL glosses (words). Videos were collected from multiple online platforms,
+including YouTube channels maintained by ASL educators, online courses, and signing dictionaries,
+and manually verified by qualified ASL experts to ensure correctness of sign production. Each clip
+shows a single signer performing one complete sign, typically against a plain or low-clutter
+background, with durations ranging from approximately one to four seconds.
 
-The dataset is partitioned into four progressively larger evaluation subsets: WLASL100 (100 glosses), WLASL300 (300 glosses), WLASL1000 (1,000 glosses), and WLASL2000 (the full 2,000 glosses). This structure enables systematic benchmarking of how model performance scales with vocabulary size. A practical challenge is that WLASL relies on external video URLs; a fraction of clips have become unavailable over time due to deletion or access restriction, so only successfully downloaded videos can be used.
+The dataset is partitioned into four progressively larger evaluation subsets: WLASL100 (100
+glosses), WLASL300 (300 glosses), WLASL1000 (1,000 glosses), and WLASL2000 (the full 2,000
+glosses). This structure enables systematic benchmarking of how model performance scales with
+vocabulary size. A practical challenge is that WLASL relies on external video URLs; a fraction of
+clips have become unavailable over time due to deletion or access restriction, so only successfully
+downloaded videos can be used.
 
-In this project, raw RGB frames are not used as model input. Instead, MediaPipe Hands \cite{zhang2020mediapipehands} is applied to each frame to extract 21 three-dimensional hand keypoints, yielding a compact landmark vector of 63 scalar features per frame (21 joints $\times$ 3 coordinates). This representation reduces input dimensionality by a factor of approximately 2,389 compared to raw $224 \times 224$ RGB frames, removes background and appearance noise, and provides geometric invariance to signer appearance. The effective detection rate of MediaPipe on WLASL clips is approximately 69\%; frames where no hand is detected are linearly interpolated from adjacent detected frames to maintain sequence continuity. Each video is resampled to a fixed sequence length of 64 frames before being fed to the model.
+In this project, raw RGB frames are not used as model input. Instead, MediaPipe Hands
+\cite{zhang2020mediapipehands} is applied to each frame to extract 21 three-dimensional hand
+keypoints, yielding a compact landmark vector of 63 scalar features per frame (21 joints $\times$ 3
+coordinates). This representation reduces input dimensionality by a factor of approximately 2,389
+compared to raw $224 \times 224$ RGB frames, removes background and appearance noise, and provides
+geometric invariance to signer appearance. The effective detection rate of MediaPipe on WLASL clips
+is approximately 69\%; frames where no hand is detected are linearly interpolated from adjacent
+detected frames to maintain sequence continuity. Each video is resampled to a fixed sequence length
+of 64 frames before being fed to the model.
 
 For the experiments described in this thesis, the following WLASL subsets were extracted and used:
 
@@ -247,8 +385,33 @@ For the experiments described in this thesis, the following WLASL subsets were e
 
 \subsubsection*{DS-06: MS-ASL \cite{joze2019msasl}}
 
-The Microsoft American Sign Language (MS-ASL) dataset, published by Vaezi Joze and Koller in 2018, is a second large-scale ASL benchmark used in this project to validate that the recognition pipeline tuned on WLASL transfers to an independent corpus with a different signer distribution. The original release defines 25,513 video instances over 1,000 glosses, split into 16,054 train / 5,287 validation / 4,172 test samples. Clips are not distributed directly: the dataset ships only annotation JSONs and relies on per-instance YouTube URLs plus \texttt{(start\_time, end\_time)} timestamps and a normalized signer bounding box. The vocabulary is organized into four cumulative subsets (MS-ASL100/200/500/1000) obtained by filtering on the integer label.
+The Microsoft American Sign Language (MS-ASL) dataset, published by Vaezi Joze and Koller in 2018,
+is a second large-scale ASL benchmark used in this project to validate that the recognition
+pipeline tuned on WLASL transfers to an independent corpus with a different signer distribution.
+The original release defines 25,513 video instances over 1,000 glosses, split into 16,054 train /
+5,287 validation / 4,172 test samples. Clips are not distributed directly: the dataset ships only
+annotation JSONs and relies on per-instance YouTube URLs plus \texttt{(start\_time, end\_time)}
+timestamps and a normalized signer bounding box. The vocabulary is organized into four cumulative
+subsets (MS-ASL100/200/500/1000) obtained by filtering on the integer label.
 
-Acquiring the raw clips is therefore a non-trivial preprocessing step. Of the 25,513 declared instances, \textbf{16,816 were successfully downloaded (65.9\% coverage)}, with split-level coverage of 74.0\% / 47.5\% / 58.0\% (train / val / test). The shortfall is caused by YouTube videos being removed or made private over time and is the dominant constraint on which subsets can be reproduced today. A disk-level audit then graded every downloaded clip by integrity and by training viability. Only \textbf{6} of the top-30 classes met the strict MS-ASL30 threshold of 30 train / 5 val / 5 test surviving samples; \textbf{17} met the MS-ASL50 threshold of 20 / 5 / 5; and \textbf{57} met the MS-ASL100 threshold of 20 / 3 / 3. The strict MS-ASL30 cut would discard 24 of the 30 nominal classes, so an MS-ASL30 reproduction was not viable. The chosen alternative is \textbf{MS-ASL50}, defined as the 50 classes with the largest train counts that satisfy the 20 / 3 / 3 threshold; this preserves the size-of-vocabulary objective while keeping every class statistically defensible.
+Acquiring the raw clips is therefore a non-trivial preprocessing step. Of the 25,513 declared
+instances, \textbf{16,816 were successfully downloaded (65.9\% coverage)}, with split-level
+coverage of 74.0\% / 47.5\% / 58.0\% (train / val / test). The shortfall is caused by YouTube
+videos being removed or made private over time and is the dominant constraint on which subsets can
+be reproduced today. A disk-level audit then graded every downloaded clip by integrity and by
+training viability. Only \textbf{6} of the top-30 classes met the strict MS-ASL30 threshold of 30
+train / 5 val / 5 test surviving samples; \textbf{17} met the MS-ASL50 threshold of 20 / 5 / 5; and
+\textbf{57} met the MS-ASL100 threshold of 20 / 3 / 3. The strict MS-ASL30 cut would discard 24 of
+the 30 nominal classes, so an MS-ASL30 reproduction was not viable. The chosen alternative is
+\textbf{MS-ASL50}, defined as the 50 classes with the largest train counts that satisfy the 20 / 3
+/ 3 threshold; this preserves the size-of-vocabulary objective while keeping every class
+statistically defensible.
 
-The MS-ASL50 subset was processed with the same MediaPipe pipeline used for WLASL: each frame is reduced to 21 three-dimensional hand keypoints (63 features) and stored as a per-clip \texttt{.npy} array. After extraction, the final per-split counts are \textbf{1,410 train / 306 val / 236 test (1,952 total)}, with 31 source clips dropped because their mean detection rate fell below the 0.3 floor. The mean detection rate across the surviving clips is \textbf{83.9\%}, substantially above the WLASL figure, consistent with MS-ASL clips being longer and shot under more controlled conditions. Apart from the change of dataset, the GRU + Temporal Attention model consumes the splits without any architectural modification.
+The MS-ASL50 subset was processed with the same MediaPipe pipeline used for WLASL: each frame is
+reduced to 21 three-dimensional hand keypoints (63 features) and stored as a per-clip \texttt{.npy}
+array. After extraction, the final per-split counts are \textbf{1,410 train / 306 val / 236 test
+(1,952 total)}, with 31 source clips dropped because their mean detection rate fell below the 0.3
+floor. The mean detection rate across the surviving clips is \textbf{83.9\%}, substantially above
+the WLASL figure, consistent with MS-ASL clips being longer and shot under more controlled
+conditions. Apart from the change of dataset, the GRU + Temporal Attention model consumes the
+splits without any architectural modification.
