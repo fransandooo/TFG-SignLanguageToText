@@ -1,66 +1,81 @@
 \chapter{Ethical Implications and Social Impact}
 \setcounter{section}{0}
 
-\section{AI Based Systems Ethical Impact}
-An ethical analysis in Artificial Intelligence examines the implications, concerns and challenges
-associated with the development and deployment of these systems. As AI integrates into increasingly
-critical applications, technical evaluation must be paired with an explicit ethics review. This
-review rests on four general pillars: \textbf{Human Rights and Fairness} (preventing bias and
-discrimination), \textbf{Accountability} (clarifying who is responsible for the system's
-decisions), \textbf{Privacy and Security} (protecting user data and confidentiality), and
-\textbf{Transparency} (avoiding opaque black-box behaviour).
+\section{Ethical Impact of AI-Based Systems}
+An ethical analysis in AI examines the implications, concerns and challenges associated with the
+development and deployment of these systems. As AI is applied to increasingly sensitive contexts,
+technical evaluation must be paired with an explicit ethics review that assesses effects on users,
+data subjects and wider social contexts. This introductory review uses four technical dimensions
+commonly identified across AI ethics frameworks: \textbf{Human Rights and Fairness} (preventing
+bias and discrimination), \textbf{Accountability} (clarifying who is responsible for the system's
+decisions), \textbf{Privacy and Security} (protecting user data and confidentiality) and
+\textbf{Transparency} (avoiding opaque black-box behaviour). These dimensions are operationalised
+in Section~\ref{sec:google_ai_principles} through the seven principles of Google's AI framework,
+which is the specific framework chosen for the project evaluation.
 
 \section{Ethical Evaluation Framework: Google's AI Principles}
+\label{sec:google_ai_principles}
 
-The framework adopted for this evaluation is \textbf{Google's AI Principles}
+The framework \textbf{chosen} for this evaluation is \textbf{Google's AI Principles}
 \cite{googleaiprinciples2018}, originally published in 2018 and refined annually; the primary
 reference for this analysis is the \textbf{2023 Progress Update} \cite{googleaiprinciples2023}. The
 framework was chosen because its seven principles are formulated as concrete objectives that map
-cleanly onto the design decisions of a research project, and because Google's annual progress
-reports demonstrate how the principles apply to systems that share characteristics with this work
-(computer vision and on-device inference). The seven principles are:
+cleanly onto the design decisions of a research project. Google's annual progress reports
+demonstrate how the principles apply to systems that share characteristics with this work (computer
+vision and on-device inference). The seven principles are:
 
 \begin{enumerate}
     \item \textbf{Be socially beneficial:} address a real societal need and do so effectively.
     \item \textbf{Avoid creating or reinforcing unfair bias:} ensure fair and inclusive treatment.
-    \item \textbf{Be built and tested for safety:} prioritise safety in design, validation, and operation.
+    \item \textbf{Be built and tested for safety:} prioritise safety in design, validation and operation.
     \item \textbf{Be accountable to people:} provide transparency and user control.
     \item \textbf{Incorporate privacy design principles:} protect user data by design.
     \item \textbf{Uphold high standards of scientific excellence:} follow rigorous methodology.
     \item \textbf{Be made available for uses that accord with these principles:} prevent misuse and align deployment with the framework.
 \end{enumerate}
 
-The remainder of the chapter evaluates the project against each principle through quantitative
-metrics. Each metric is scored on a simplified \{0, 5, 10\} scale (not addressed, partially
-addressed, fully addressed). Some metrics derive from experimental results; others reflect design
-decisions or documentation practices. The summary table at the end of the chapter aggregates the
-metrics into per-principle averages and a global score.
-
 \section{Project Analysis Against Google's AI Principles}
+
+This section evaluates the project against each principle using scored metrics. Each identifier
+uses the format Mx.y, where x denotes the principle number and y denotes the metric within that
+principle. Each metric uses a three-point scale: 0 (not addressed), 5 (partially addressed) and 10
+(fully addressed). Averages are reported to one decimal place for consistency across principles.
+Some metrics derive from experimental results, whereas others reflect design decisions or
+documentation practices. Table~\ref{tab:ethics_metrics} consolidates the scores, per-principle
+averages and global score.
 
 \subsection{Principle 1: Be Socially Beneficial}
 
 Sign language is the primary means of communication for millions of deaf and hard-of-hearing
-individuals, yet a substantial communication barrier persists with the hearing population. An
-automatic ASL recognition system can act as a bridge in educational, medical, and everyday
-contexts.
+persons, yet significant communication barriers still exist in interactions with hearing people. An
+automatic American Sign Language (ASL) recognition system can act as a bridge in educational,
+medical and everyday contexts.
 
 \begin{itemize}
     \item \textbf{M1.1: Real societal need.} The World Health Organization estimates over 430 million people worldwide have disabling hearing loss; the project targets a clear accessibility problem. \textit{Score: 10.}
-    \item \textbf{M1.2: Effectiveness of the solution.} The champion model achieves \textbf{63.85\% Top-1 / 86.46\% Top-5 (5-fold cross-validation, WLASL30)}, reproduced under the modular pipeline as 58.82\% $\pm$ 2.94\% Top-1 across three seeds, and extends to \textbf{70.20\% $\pm$ 2.89\% Top-1 / 90.54\% $\pm$ 0.89\% Top-5} on MS-ASL50. Accuracy degrades at scale (44.70\% at 100 classes, 28.61\% at 300, 11.19\% at 1000), so the system is a research prototype rather than a deployment-ready translator. \textit{Score: 5.}
-    \item \textbf{M1.3: Accessibility of the technology.} Built on open-source tools (Python, PyTorch, MediaPipe) and public datasets (WLASL, MS-ASL), with the methodology documented in this thesis. The recognition pipeline was designed with mobile-first deployment in mind. \textit{Score: 10.}
+    \item \textbf{M1.2: Effectiveness of the solution.} As summarised in Table~\ref{tab:ethics_metrics}, the best-performing configuration achieves \textbf{63.85\% Top-1 / 86.46\% Top-5 (5-fold cross-validation, WLASL30)}. The same configuration is reproduced under the modular pipeline as 58.82\% $\pm$ 2.94\% Top-1 across three seeds and extends to \textbf{70.20\% $\pm$ 2.89\% Top-1 / 90.54\% $\pm$ 0.89\% Top-5} on MS-ASL50. Accuracy degrades at scale (44.70\% at 100 classes, 28.61\% at 300, 11.19\% at 1000), so the system remains a research prototype rather than a deployment-ready translator. This limitation supports an intermediate effectiveness assessment. \textit{Score: 5.}
+    \item \textbf{M1.3: Accessibility of the technology.} Built on open-source tools (Python, PyTorch, MediaPipe) and public datasets (WLASL, MS-ASL), with the methodology documented in this work. The recognition pipeline was designed with mobile-first deployment in mind. \textit{Score: 10.}
 \end{itemize}
 
 \subsection{Principle 2: Avoid Creating or Reinforcing Unfair Bias}
 
 Sign language recognition is particularly bias-sensitive: signers vary in hand size, skin tone,
-signing speed, and style. Bias arises both at the perception layer (hand detection / landmark
-extraction operating on raw images) and at the recognition layer.
+signing speed and style. Bias arises both at the perception stage (hand detection and landmark
+extraction operating on raw images) and at the recognition stage.
 
 \begin{itemize}
     \item \textbf{M2.1: Dataset diversity (word recognition).} WLASL aggregates videos from multiple online sources, providing implicit signer variation, but lacks demographic annotations (skin tone, age, hand morphology), so diversity cannot be quantified formally. \textit{Score: 5.}
-    \item \textbf{M2.2: Dataset diversity (hand detection and letter classification).} Hand detection used EgoHands ($\sim$4{,}800 egocentric images) and the Kaggle Hand Dataset ($\sim$4{,}200 third-person images). Letter classification used Sign Language MNIST (34{,}627 grayscale images) and the ASL Alphabet Dataset ($\sim$87{,}000 RGB images). None provide demographic metadata, so potential biases cannot be ruled out. \textit{Score: 5.}
-    \item \textbf{M2.3: Input representation fairness.} The word-recognition model consumes MediaPipe landmarks (21 keypoints $\times$ 3 coordinates) instead of raw pixels. Operating on geometric joint positions rather than visual appearance reduces sensitivity to skin colour, lighting, and background, mitigating appearance-based bias at the recognition stage (though not at the upstream landmark extractor). \textit{Score: 10.}
+    \item \textbf{M2.2: Dataset diversity (hand detection and letter classification).} The auxiliary datasets were:
+          \begin{enumerate}
+              \item EgoHands ($\sim$4{,}800 egocentric images) for hand detection.
+              \item The Kaggle Hand Dataset ($\sim$4{,}200 third-person images) for hand detection.
+              \item Sign Language MNIST (34{,}627 grayscale images for letter classification, with
+                    MNIST referring to the Modified National Institute of Standards and Technology
+                    dataset format).
+              \item The ASL Alphabet Dataset ($\sim$87{,}000 RGB images) for letter classification.
+          \end{enumerate}
+          None of these datasets provides demographic metadata, so potential biases cannot be ruled out. \textit{Score: 5.}
+    \item \textbf{M2.3: Input representation fairness.} The word-recognition model consumes MediaPipe landmarks (21 keypoints $\times$ 3 coordinates) instead of raw pixels. Operating on geometric joint positions rather than visual appearance reduces sensitivity to skin colour, lighting and background, mitigating appearance-based bias at the recognition stage (though not at the upstream landmark extractor). \textit{Score: 10.}
     \item \textbf{M2.4: Per-class performance analysis.} Per-class metrics were logged across all experiments, surfacing wide accuracy gaps (e.g.\ ``what'' 8.3\%, ``cool'' 12.5\%, vs.\ ``orange'' 100\%, ``table'' 100\%). The disparities are mostly explained by visual similarity between signs and small per-class sample counts rather than by demographic factors. Class-weighted loss or oversampling were not applied in this iteration but are facilitated by the existing per-class logging. \textit{Score: 5.}
 \end{itemize}
 
@@ -70,7 +85,7 @@ In this context, safety means producing reliable predictions and avoiding mislea
 could cause misunderstandings in sensitive domains.
 
 \begin{itemize}
-    \item \textbf{M3.1: Robust validation methodology.} Evaluation uses Stratified 5-Fold Cross-Validation (mean Top-1 \textbf{63.85\% $\pm$ 4.50\%}, mean Top-5 \textbf{86.46\% $\pm$ 2.04\%}), corroborated by a 3-seed multi-seed sweep on the same dataset (58.82\% $\pm$ 2.94\% Top-1) under the refactored pipeline. Test-Time Augmentation was deliberately avoided because it inflates reported accuracy without reflecting true generalisation. \textit{Score: 10.}
+    \item \textbf{M3.1: Cross-validation methodology.} Evaluation uses Stratified 5-Fold Cross-Validation (mean Top-1 \textbf{63.85\% $\pm$ 4.50\%}, mean Top-5 \textbf{86.46\% $\pm$ 2.04\%}), corroborated by a 3-seed multi-seed sweep on the same dataset (58.82\% $\pm$ 2.94\% Top-1) under the refactored pipeline. Test-Time Augmentation was deliberately avoided because it inflates reported accuracy without reflecting true generalisation. \textit{Score: 10.}
     \item \textbf{M3.2: Scalability testing.} The model was retrained on progressively larger WLASL subsets (30 / 100 / 300 / 500 / 700 / 900 / 1000 / 1200 / 1500 classes), documenting accuracy degradation and an instability point above 700 classes. This stress-test establishes the boundaries within which the system can be considered reliable. \textit{Score: 10.}
     \item \textbf{M3.3: Hand detection reliability.} The YOLOv8n hand detector reached approximately 98\% mAP50 on the combined test set, validated across both source datasets. A reliable detector is a prerequisite for the recognition pipeline. \textit{Score: 10.}
     \item \textbf{M3.4: Failure mode documentation.} Per-class confusion matrices identify systematically confused word pairs, but a confidence-threshold mechanism (so the system can abstain when uncertain) is not yet implemented and is needed before any production deployment. \textit{Score: 5.}
@@ -84,119 +99,129 @@ control over its outputs.
 \begin{itemize}
     \item \textbf{M4.1: Model interpretability.} The Temporal Attention layer produces per-frame weights that can be inspected to understand which frames drove a prediction. This provides a degree of post-hoc interpretability that fully opaque architectures lack. \textit{Score: 10.}
     \item \textbf{M4.2: Top-K predictions.} The system exposes Top-5 alongside Top-1. With Top-5 accuracy of 86.46\% on WLASL30 (and 90.54\% on MS-ASL50), the correct answer is almost always in the shortlist, allowing the user to make the final call rather than accepting a single forced prediction. \textit{Score: 10.}
-    \item \textbf{M4.3: Reproducibility.} All experiments are driven by versioned YAML configs and produce manifests with git commit, hyperparameters, and metrics. The main caveat is that some WLASL videos rely on YouTube URLs that may decay over time; this is also an ethical concern about data provenance, since the original signers did not explicitly consent to use of their videos for ML research. \textit{Score: 5.}
+    \item \textbf{M4.3: Reproducibility.} All experiments are driven by versioned YAML configs and produce manifests with git commit, hyperparameters and metrics. The main caveat is that some WLASL videos rely on YouTube URLs that may decay over time; this is also an ethical concern about data provenance, since the original signers did not explicitly consent to use of their videos for machine learning research. \textit{Score: 5.}
 \end{itemize}
 
 \subsection{Principle 5: Incorporate Privacy Design Principles}
 
 Privacy applies to three distinct stages of the project: training the hand detector on real
-photographs, training the word recognition model on landmark abstractions, and serving inference
+photographs, training the word recognition model on landmark abstractions and serving inference
 from a mobile client.
 
 \begin{itemize}
-    \item \textbf{M5.1: Data minimisation through landmarks (training).} Each video frame is reduced to 63 numerical values that discard the original visual content. Once landmarks are extracted, the original video is no longer needed and the processed data cannot reconstruct the signer's face, body, or background. \textit{Score: 10.}
-    \item \textbf{M5.2: Privacy in the hand detection phase.} Detector training relied on real photographs of identifiable individuals (EgoHands, Kaggle Hand). Although these datasets are publicly available for research, no independent privacy audit was conducted on their provenance, and the images were used as-is during training. \textit{Score: 5.}
-    \item \textbf{M5.3: Privacy in the inference pipeline.} The current FastAPI server receives full RGB frames (416$\times$416) from the mobile app, processes them, and persists raw frames and cropped regions to disk without encryption or automatic expiration. This is the weakest privacy point. A natural mitigation is to move landmark extraction to the client device so that only the abstract 63-dimensional vector ever leaves the phone. \textit{Score: 0.}
-    \item \textbf{M5.4: K-anonymity considerations.} WLASL stores no identifying metadata about signers, and the landmark representation acts as a generalisation: different individuals performing the same sign yield similar feature vectors \cite{sweeney2002kanonymity}. A formal k-anonymity algorithm was not applied, but the pipeline achieves a comparable effect for the recognition stage. The protection does not extend to the detector training data nor to the server inference path. \textit{Score: 5.}
+    \item \textbf{M5.1: Data minimisation through landmarks (training).} Each video frame is reduced to 63 numerical values that discard the original visual content. Once landmarks are extracted, the original video is no longer needed and the processed data cannot reconstruct the signer's face, body or background. \textit{Score: 10.}
+    \item \textbf{M5.2: Privacy in the hand detection phase.} Detector training relied on real photographs of identifiable persons (EgoHands, Kaggle Hand). Although these datasets are publicly available for research, no independent privacy audit was conducted on their provenance and the images were used as-is during training. \textit{Score: 5.}
+    \item \textbf{M5.3: Privacy in the inference pipeline.} The current FastAPI server receives full RGB frames (416$\times$416) from the mobile app, processes them and persists raw frames and cropped regions to disk without encryption or automatic expiration. This is the weakest privacy point. A natural mitigation is to move landmark extraction to the client device so that only the abstract 63-dimensional vector ever leaves the phone. \textit{Score: 0.}
+    \item \textbf{M5.4: K-anonymity considerations.} WLASL stores no identifying metadata about signers. The landmark representation acts as a generalisation: different persons performing the same sign yield similar feature vectors \cite{sweeney2002kanonymity}. A formal k-anonymity algorithm was not applied, but the pipeline achieves a comparable effect for the recognition stage. The protection does not extend to the detector training data nor to the server inference path. \textit{Score: 5.}
 \end{itemize}
 
 \subsection{Principle 6: Uphold High Standards of Scientific Excellence}
 
 \begin{itemize}
-    \item \textbf{M6.1: Systematic model comparison (word recognition).} Multiple architectures were trained under matched conditions: CNN+LSTM (pixel-based), LSTM (landmark-based), plain GRU, GRU with enriched features, GRU + Temporal Attention, and a Transformer variant. \textit{Score: 10.}
-    \item \textbf{M6.2: Systematic model comparison (hand detection).} The hand detection stage compared YOLOv8n, SSDLite-MobileNetV3, and EfficientDet-D0 on the same combined dataset using standard detection metrics (mAP50, mAP50-95, latency). \textit{Score: 10.}
-    \item \textbf{M6.3: Statistical validation.} Stratified 5-Fold Cross-Validation reports mean and standard deviation across folds (63.85\% $\pm$ 4.50\% Top-1), and the modular pipeline contributes additional multi-seed runs on WLASL30 and MS-ASL50 to bound model-init variance. Pearson correlation analysis quantifies the relationship between vocabulary size and accuracy. \textit{Score: 10.}
+    \item \textbf{M6.1: Systematic model comparison (word recognition).} Multiple architectures were trained under matched conditions: CNN+LSTM (pixel-based), LSTM (landmark-based), plain GRU, GRU with enriched features, GRU + Temporal Attention and a Transformer variant. \textit{Score: 10.}
+    \item \textbf{M6.2: Systematic model comparison (hand detection).} The hand detection stage compared YOLOv8n, SSDLite-MobileNetV3 and EfficientDet-D0 on the same combined dataset using standard detection metrics (mAP50, mAP50-95 and latency). \textit{Score: 10.}
+    \item \textbf{M6.3: Statistical validation.} Stratified 5-Fold Cross-Validation reports mean and standard deviation across folds (63.85\% $\pm$ 4.50\% Top-1). The modular pipeline contributes additional multi-seed runs on WLASL30 and MS-ASL50 to bound model-init variance. Pearson correlation analysis quantifies the relationship between vocabulary size and accuracy. \textit{Score: 10.}
     \item \textbf{M6.4: Literature grounding.} The State of the Art chapter situates each architectural choice (CNN, RNN, LSTM, GRU, Attention, MediaPipe) in the established literature. \textit{Score: 10.}
-    \item \textbf{M6.5: Honest reporting of limitations.} The thesis explicitly documents accuracy degradation at scale, the $\sim$69\% MediaPipe detection rate on WLASL, and the instability observed above 700 classes. Negative results are reported alongside positive findings. \textit{Score: 10.}
+    \item \textbf{M6.5: Honest reporting of limitations.} The project explicitly documents accuracy degradation at scale, the $\sim$69\% MediaPipe detection rate on WLASL and the instability observed above 700 classes. Negative results are reported alongside positive findings. \textit{Score: 10.}
 \end{itemize}
 
 \subsection{Principle 7: Be Made Available for Uses That Accord with These Principles}
 
 \begin{itemize}
-    \item \textbf{M7.1: Intended use clarity.} The thesis frames the system as a research prototype for ASL word recognition, with assistive technology as the target use case. Scope and limitations are explicit. \textit{Score: 10.}
+    \item \textbf{M7.1: Intended use clarity.} The project frames the system as a research prototype for ASL word recognition, with assistive technology as the target use case. Scope and limitations are explicit. \textit{Score: 10.}
     \item \textbf{M7.2: Misuse potential assessment.} Landmark vectors carry very limited misuse potential (no surveillance or facial recognition is recoverable from 63 floats per frame). The detector and the inference server, however, do process raw images and currently lack access controls and retention policies; this gap should be closed before any deployment beyond the research context. \textit{Score: 5.}
-    \item \textbf{M7.3: Open research contribution.} The methodology and code are documented in the thesis and in the repository. Trained models and processed datasets have not yet been published in a public artifact registry. \textit{Score: 5.}
+    \item \textbf{M7.3: Open research contribution.} The methodology and code are documented in the project report and in the repository. Trained models and processed datasets have not yet been published in a public artefact registry. \textit{Score: 5.}
 \end{itemize}
 
 \section{Impact Scale of Ethical Aspects}
 
-Table~\ref{tab:ethics_metrics} consolidates all metrics, their individual scores, and the
+Table~\ref{tab:ethics_metrics} consolidates all metrics, their individual scores and the
 per-principle average.
 
 \begin{table}[H]
     \centering
     \small
-    \begin{tabular}{|c|l|l|c|c|}
-        \hline
-        \textbf{Principle}                                   & \textbf{ID}  & \textbf{Metric}                          & \textbf{Score} & \textbf{Avg.}                  \\
-        \hline
-        \multirow{3}{*}{\shortstack{P1: Socially                                                                                                                         \\Beneficial}}
-                                                             & M1.1         & Addresses a real societal need           & 10             & \multirow{3}{*}{\textbf{8.3}}  \\
-                                                             & M1.2         & Effectiveness of the solution            & 5              &                                \\
-                                                             & M1.3         & Accessibility of the technology          & 10             &                                \\
-        \hline
-        \multirow{4}{*}{\shortstack{P2: Avoid                                                                                                                            \\Unfair Bias}}
-                                                             & M2.1         & Dataset diversity (word recognition)     & 5              & \multirow{4}{*}{\textbf{6.3}}  \\
-                                                             & M2.2         & Dataset diversity (detection \& letters) & 5              &                                \\
-                                                             & M2.3         & Input representation fairness            & 10             &                                \\
-                                                             & M2.4         & Per-class performance analysis           & 5              &                                \\
-        \hline
-        \multirow{4}{*}{\shortstack{P3: Safety}}
-                                                             & M3.1         & Robust validation methodology            & 10             & \multirow{4}{*}{\textbf{8.8}}  \\
-                                                             & M3.2         & Scalability testing                      & 10             &                                \\
-                                                             & M3.3         & Hand detection reliability               & 10             &                                \\
-                                                             & M3.4         & Failure mode documentation               & 5              &                                \\
-        \hline
-        \multirow{3}{*}{\shortstack{P4: Account-                                                                                                                         \\ability}}
-                                                             & M4.1         & Model interpretability                   & 10             & \multirow{3}{*}{\textbf{8.3}}  \\
-                                                             & M4.2         & Top-K predictions                        & 10             &                                \\
-                                                             & M4.3         & Reproducibility                          & 5              &                                \\
-        \hline
-        \multirow{4}{*}{\shortstack{P5: Privacy}}
-                                                             & M5.1         & Data minimisation (landmark training)    & 10             & \multirow{4}{*}{\textbf{5.0}}  \\
-                                                             & M5.2         & Privacy in detection phase               & 5              &                                \\
-                                                             & M5.3         & Privacy in inference pipeline            & 0              &                                \\
-                                                             & M5.4         & K-anonymity considerations               & 5              &                                \\
-        \hline
-        \multirow{5}{*}{\shortstack{P6: Scientific                                                                                                                       \\Excellence}}
-                                                             & M6.1         & Model comparison (word recognition)      & 10             & \multirow{5}{*}{\textbf{10.0}} \\
-                                                             & M6.2         & Model comparison (hand detection)        & 10             &                                \\
-                                                             & M6.3         & Statistical validation                   & 10             &                                \\
-                                                             & M6.4         & Literature grounding                     & 10             &                                \\
-                                                             & M6.5         & Honest reporting of limitations          & 10             &                                \\
-        \hline
-        \multirow{3}{*}{\shortstack{P7: Principled                                                                                                                       \\Availability}}
-                                                             & M7.1         & Intended use clarity                     & 10             & \multirow{3}{*}{\textbf{6.7}}  \\
-                                                             & M7.2         & Misuse potential assessment              & 5              &                                \\
-                                                             & M7.3         & Open research contribution               & 5              &                                \\
-        \hline
-        \multicolumn{4}{|r|}{\textbf{Overall Average Score}} & \textbf{7.6}                                                                                              \\
-        \hline
-    \end{tabular}
+    \resizebox{\textwidth}{!}{%
+        \begin{tabular}{|c|l|l|c|c|}
+            \hline
+            \textbf{Principle}                                   & \textbf{ID}  & \textbf{Metric}                          & \textbf{Score} & \textbf{Avg.}                 \\
+            \hline
+            \multirow{3}{*}{\shortstack{P1: Socially                                                                                                                        \\Beneficial}}
+                                                                 & M1.1         & Addresses a real societal need           & 10             & \multirow{3}{*}{\textbf{8.3}} \\
+                                                                 & M1.2         & Effectiveness of the solution            & 5              &                               \\
+                                                                 & M1.3         & Accessibility of the technology          & 10             &                               \\
+            \hline
+            \multirow{4}{*}{\shortstack{P2: Avoid                                                                                                                           \\Unfair Bias}}
+                                                                 & M2.1         & Dataset diversity (word recognition)     & 5              & \multirow{4}{*}{\textbf{6.3}} \\
+                                                                 & M2.2         & Dataset diversity (detection \& letters) & 5              &                               \\
+                                                                 & M2.3         & Input representation fairness            & 10             &                               \\
+                                                                 & M2.4         & Per-class performance analysis           & 5              &                               \\
+            \hline
+            \multirow{4}{*}{\shortstack{P3: Safety}}
+                                                                 & M3.1         & Cross-validation methodology             & 10             & \multirow{4}{*}{\textbf{8.8}} \\
+                                                                 & M3.2         & Scalability testing                      & 10             &                               \\
+                                                                 & M3.3         & Hand detection reliability               & 10             &                               \\
+                                                                 & M3.4         & Failure mode documentation               & 5              &                               \\
+            \hline
+            \multirow{3}{*}{\shortstack{P4: Account-                                                                                                                        \\ability}}
+                                                                 & M4.1         & Model interpretability                   & 10             & \multirow{3}{*}{\textbf{8.3}} \\
+                                                                 & M4.2         & Top-K predictions                        & 10             &                               \\
+                                                                 & M4.3         & Reproducibility                          & 5              &                               \\
+            \hline
+            \multirow{4}{*}{\shortstack{P5: Privacy}}
+                                                                 & M5.1         & Data minimisation (landmark training)    & 10             & \multirow{4}{*}{\textbf{5.0}} \\
+                                                                 & M5.2         & Privacy in detection phase               & 5              &                               \\
+                                                                 & M5.3         & Privacy in inference pipeline            & 0              &                               \\
+                                                                 & M5.4         & K-anonymity considerations               & 5              &                               \\
+            \hline
+            \multirow{5}{*}{\shortstack{P6: Scientific                                                                                                                      \\Excellence}}
+                                                                 & M6.1         & Model comparison (word recognition)      & 10             & \multirow{5}{*}{\textbf{10}}  \\
+                                                                 & M6.2         & Model comparison (hand detection)        & 10             &                               \\
+                                                                 & M6.3         & Statistical validation                   & 10             &                               \\
+                                                                 & M6.4         & Literature grounding                     & 10             &                               \\
+                                                                 & M6.5         & Honest reporting of limitations          & 10             &                               \\
+            \hline
+            \multirow{3}{*}{\shortstack{P7: Principled                                                                                                                      \\Availability}}
+                                                                 & M7.1         & Intended use clarity                     & 10             & \multirow{3}{*}{\textbf{6.7}} \\
+                                                                 & M7.2         & Misuse potential assessment              & 5              &                               \\
+                                                                 & M7.3         & Open research contribution               & 5              &                               \\
+            \hline
+            \multicolumn{4}{|r|}{\textbf{Overall Average Score}} & \textbf{7.6}                                                                                             \\
+            \hline
+        \end{tabular}
+    }
     \caption{Ethical evaluation metrics based on Google's AI Principles \cite{googleaiprinciples2023}}
     \label{tab:ethics_metrics}
 \end{table}
 
 \section{Conclusions of the Ethical Analysis}
 
-The ethical evaluation yields an overall score of \textbf{7.6 out of 10}. The strongest pillars are
-scientific excellence (10.0/10) and safety (8.8/10); the weakest is privacy (5.0/10), driven
-entirely by the inference pipeline.
+The project attains a composite ethical maturity score of \textbf{7.6/10}, reflecting a high
+standard of technical integrity with specific architectural risks that remain unresolved.
+
+The evaluation identifies scientific excellence (\textbf{10/10}) and safety (\textbf{8.8/10}) as
+the strongest dimensions. These scores reflect the rigour of the multi-seed validation strategy,
+the systematic reporting of limitations and the reliability of the best-performing configuration
+within the evaluated scope.
+
+The privacy dimension, rated \textbf{5.0/10}, represents the primary area for improvement. This
+deficit is attributed to the inference pipeline, where real-time data processing lacks the same
+level of protection as the static training environments.
 
 One architectural decision, the use of MediaPipe hand landmarks as input, propagates positive
 effects across multiple principles: it reduces appearance-based bias (P2), it implements data
-minimisation that protects identity by construction (P5), and it limits misuse potential because
+minimisation that protects identity by construction (P5) and it limits misuse potential because
 abstract landmarks cannot be repurposed for surveillance (P7). The same advantage, however, does
 not extend to the upstream stages that operate on raw images. The current FastAPI server receives,
-processes, and persists full RGB frames without encryption or automatic deletion, and the hand
-detector was trained on photographs of identifiable individuals. The most actionable mitigation is
-to relocate landmark extraction to the client device, so that only the 63-dimensional vector ever
-leaves the phone.
+processes and persists full RGB frames without encryption or automatic deletion. The hand detector
+was trained on photographs of identifiable persons. The most actionable mitigation is to relocate
+landmark extraction to the client device, so that only the 63-dimensional vector ever leaves the
+phone.
 
 The intermediate scores in bias avoidance (6.3/10) and principled availability (6.7/10) reflect
 missing formal processes rather than poor design choices: no demographic audit of signers was
-conducted, the auxiliary detection datasets lack diversity metadata, and the server prototype has
-no access controls or retention policies. Honest reporting of these gaps, including the privacy
+conducted, the auxiliary detection datasets lack diversity metadata and the server prototype has no
+access controls or retention policies. Honest reporting of these gaps, including the privacy
 weakness of the inference pipeline identified in this chapter and the documented accuracy collapse
 at large vocabularies, is itself an ethical practice aligned with Principle 6 and is a prerequisite
 for any responsible deployment of the system.
