@@ -5,11 +5,12 @@ Takes any photo of a hand making a sign and produces a clean version with
 the 21 keypoints + skeleton overlaid, ready to drop into Canva.
 
 Run from the project root with the venv activated:
-    source models/bin/activate
-    python scripts/generate_goal_slide_image.py
+    source .venv/bin/activate
+    python scripts/generate_landmarks_frame.py
 """
 import cv2
 import numpy as np
+import os
 import urllib.request
 from pathlib import Path
 
@@ -18,16 +19,17 @@ from mediapipe.tasks import python as mp_python
 from mediapipe.tasks.python import vision as mp_vision
 
 # ============================================================================
-# CONFIG — adjust these paths
+# CONFIG
 # ============================================================================
 # Path to your input image. Can be:
 #   - A frame extracted from one of your WLASL videos
 #   - A photo you take yourself making a sign
 #   - Any clean photo of a hand
-INPUT_IMAGE = Path("/home/fransando/Pictures/Screenshots/handimage.png")
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+INPUT_IMAGE = Path(os.getenv("SLR_FRAME_INPUT", str(PROJECT_ROOT / "05_experiments/testimages/Foto1.jpeg")))
 
 # Where the output images will be saved
-OUTPUT_DIR = Path.home() / "Desktop" / "tfg_goal_slide"
+OUTPUT_DIR = Path(os.getenv("SLR_FRAME_OUTPUT_DIR", str(PROJECT_ROOT / "07_docs/generated/frames")))
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # If INPUT_IMAGE is a video, which frame to extract (middle frame by default)
@@ -39,7 +41,7 @@ OUTPUT_WIDTH = 800
 
 # Visual style of landmarks (tuned to match the GIF you already have)
 KEYPOINT_RADIUS = 5             # bigger than the GIF (3) because it's a static image
-KEYPOINT_COLOR_BGR = (50, 50, 220)   # red (BGR) — slightly softer than pure red
+KEYPOINT_COLOR_BGR = (50, 50, 220)   # red (BGR), slightly softer than pure red
 CONNECTION_THICKNESS = 2
 CONNECTION_COLOR_BGR = (60, 200, 60)  # green (BGR)
 

@@ -8,6 +8,7 @@ and use generate_inference_gifs.py instead.
 import cv2
 import numpy as np
 import imageio.v2 as imageio
+import os
 import urllib.request
 from pathlib import Path
 
@@ -18,8 +19,12 @@ from mediapipe.tasks.python import vision as mp_vision
 # ============================================================================
 # CONFIG
 # ============================================================================
-VIDEO_PATH = Path("/home/fransando/Dev/tfg-sign-language-recognition/06_datasets/wlasl/raw/kaggle_wlasl/videos/38999.mp4")
-OUTPUT_DIR = Path.home() / "Desktop" / "tfg_gifs"
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+VIDEO_PATH = Path(os.getenv(
+    "SLR_GIF_VIDEO",
+    str(PROJECT_ROOT / "06_datasets/wlasl/raw/kaggle_wlasl/videos/38999.mp4"),
+))
+OUTPUT_DIR = Path(os.getenv("SLR_GIF_OUTPUT_DIR", str(PROJECT_ROOT / "07_docs/generated/gifs")))
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 TARGET_FRAMES = 12

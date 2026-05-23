@@ -55,7 +55,7 @@ venv.bak/
 envTFG*/
 handmodelsenv*/
 serverTFG/
-models/
+/models/
 
 # ============================================================================
 # Model files and weights (large files documented in README)
