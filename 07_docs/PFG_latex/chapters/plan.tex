@@ -13,9 +13,9 @@ experimental evidence is reported in Section~\ref{sec:exp_methodology} and follo
 \label{sec:plan_materials}
 % =============================================================================
 
-The project required three resource categories: (1) Hardware; (2) Software Stack; and (3) Datasets.
-Each category is described below and cross-referenced to the chapter section where the technical
-detail is reported.
+The project required three resource categories: (1) Hardware; (2) Software; and (3) Datasets. Each
+category is described below and cross-referenced to the chapter section where the technical detail
+is reported.
 
 \subsection{Hardware}
 
@@ -26,41 +26,68 @@ repeated here. The relevant hardware resource for the work plan is the GPU, an N
 Laptop with 4\,GB of VRAM. The practical implications of this memory ceiling are discussed in
 Section~\ref{sec:plan_constraints}.
 
-\subsection{Software Stack}
+\subsection{Software}
 
-The training and evaluation pipeline runs on Python~3.10 with PyTorch~2.x and CUDA~12.x. Pose
-estimation uses MediaPipe Hands~0.10+, video decoding uses OpenCV~4.8+, and version control is
-provided by Git with GitHub as remote host. The mobile client is built with React Native and Expo.
-The inference server uses FastAPI~0.111 with Uvicorn~0.29. Documentation is written in \LaTeX. The
-exact version constraints are locked in \texttt{pyproject.toml} for the training package and in
-\texttt{04\_server/requirements.txt} for the inference server, so that the operational environment
-can be reconstructed from a clean clone of the repository (cross-reference:
-Section~\ref{sec:operational_environment} and the reproduction guide at
-\texttt{docs/reproducibility\_guide.md}).
+The project combines a Python-based training pipeline, a FastAPI inference server and a React
+Native mobile client. Table~\ref{tab:software_libraries} summarises the most relevant software
+libraries and tools used during development. The exact version constraints are locked in
+\texttt{pyproject.toml}, \texttt{04\_server/requirements.txt} and
+\texttt{03\_app/signtotext-expo/package.json}, allowing the operational environment to be
+reconstructed from a clean clone of the repository.
+
+\begin{table}[!htbp]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.2}
+    \caption{Main software libraries and tools used in the project.}
+    \label{tab:software_libraries}
+    \begin{tabular}{@{}p{3.0cm} p{3.0cm} p{7.2cm}@{}}
+        \toprule
+        \textbf{Library or tool}                          & \textbf{Version} & \textbf{Use in the project}                                                                              \\
+        \midrule
+        Python                                            & 3.10+            & Main programming language for preprocessing, landmark extraction, model training and evaluation scripts. \\
+        PyTorch                                           & 2.0+             & Definition, training and evaluation of the neural sequence models used for word-level ASL recognition.   \\
+        CUDA                                              & 12.x             & GPU acceleration for model training and inference experiments on the local workstation.                  \\
+        MediaPipe Hands                                   & 0.10+            & Extraction of 21 three-dimensional hand landmarks per frame from ASL video clips.                        \\
+        OpenCV                                            & 4.8+             & Video decoding, frame extraction and image handling during preprocessing and inference.                  \\
+        NumPy                                             & 1.24+            & Storage and manipulation of landmark arrays and numerical features.                                      \\
+        scikit-learn                                      & 1.2+             & Dataset splitting, classification metrics and experimental evaluation utilities.                         \\
+        Matplotlib and Seaborn                            & 3.7+ / 0.12+     & Generation of plots, confusion matrices and visual summaries of experimental results.                    \\
+        TensorBoard                                       & 2.12+            & Monitoring of training curves and experiment logs.                                                       \\
+        FastAPI                                           & 0.111            & Implementation of the inference server exposed to the mobile client.                                     \\
+        Uvicorn                                           & 0.29             & ASGI server used to run the FastAPI application.                                                         \\
+        Pydantic                                          & 2.0+             & Data validation and structured request/response models in the server.                                    \\
+        React Native and Expo                             & 0.81.5 / 54.x    & Development of the mobile proof-of-concept application.                                                  \\
+        Expo Camera, File System, Image Picker and Speech & 55.x / 14.x      & Mobile recording, file access, media selection and speech output in the client.                          \\
+        Git and GitHub                                    & --               & Version control, repository hosting and development history management.                                  \\
+        \LaTeX                                            & --               & Writing and formatting of the final project report.                                                      \\
+        \bottomrule
+    \end{tabular}
+\end{table}
 
 \subsection{Datasets}
 
 The project used six datasets, grouped by their role in the development process.
 
 \begin{enumerate}
-    \item \textbf{EgoHands.} EgoHands provides annotated hand images recorded from egocentric video.
+    \item \textbf{EgoHands:} EgoHands provides annotated hand images recorded from egocentric video.
           It was used during the initial hand-localisation stage to train and evaluate a detector
           capable of finding hands before any sign-recognition model was applied.
-    \item \textbf{Kaggle Hand Dataset.} The Kaggle Hand Dataset supplied additional hand images for
+    \item \textbf{Kaggle Hand Dataset:} The Kaggle Hand Dataset supplied additional hand images for
           the same localisation stage. It increased the visual variability of the detector training
           data and complemented EgoHands with examples from different capture conditions.
-    \item \textbf{Sign Language MNIST.} Sign Language MNIST contains static greyscale images of
+    \item \textbf{Sign Language MNIST:} Sign Language MNIST contains static greyscale images of
           alphabet handshapes. It was used only in the exploratory letter-classification stage,
           where the objective was to test whether a simple image classifier could recognise isolated
           hand configurations.
-    \item \textbf{ASL Alphabet.} The ASL Alphabet dataset contains static colour images of
+    \item \textbf{ASL Alphabet:} The ASL Alphabet dataset contains static colour images of
           American Sign Language (ASL) alphabet signs. It supported the same early
           letter-recognition branch as Sign Language MNIST, but it did not form part of the final
           word-level recognition pipeline because it does not contain temporal sign videos.
-    \item \textbf{WLASL.} The Word-Level American Sign Language (WLASL) dataset is the main video
+    \item \textbf{WLASL:} The Word-Level American Sign Language (WLASL) dataset is the main video
           benchmark used for word-level ASL recognition. The project builds WLASL30 for controlled
           architecture comparison and also uses larger WLASL subsets to analyse vocabulary scaling.
-    \item \textbf{MS-ASL.} The Microsoft American Sign Language (MS-ASL) dataset is an independent
+    \item \textbf{MS-ASL:} The Microsoft American Sign Language (MS-ASL) dataset is an independent
           word-level ASL video dataset reconstructed from public video sources. The project uses
           MS-ASL50 as a cross-dataset validation benchmark to test whether the selected recognition
           pipeline generalises beyond WLASL.
@@ -103,20 +130,20 @@ referred to as the GRU+Attention model.
 The implemented recognition pipeline has four stages:
 
 \begin{enumerate}
-    \item \textbf{Video acquisition and decoding.} The input is a labelled video clip from WLASL,
+    \item \textbf{Video acquisition and decoding:} The input is a labelled video clip from WLASL,
           MS-ASL or the runtime prototype. OpenCV decodes the clip frame by frame. The output is an
           ordered frame sequence that preserves the temporal structure of the sign.
-    \item \textbf{Landmark extraction and normalisation.} MediaPipe Hands estimates 21
+    \item \textbf{Landmark extraction and normalisation:} MediaPipe Hands estimates 21
           three-dimensional landmarks per frame. The coordinates are wrist-centred and
           length-normalised by the wrist-to-middle-finger distance. Frames where MediaPipe fails are
           linearly interpolated from neighbouring valid frames, and clips with a detection rate
           below 0.3 are discarded. The output is a per-clip \texttt{.npy} array of shape
           $(T, 21, 3)$ plus metadata.
-    \item \textbf{Training-time augmentation.} During training, the landmark coordinates are
+    \item \textbf{Training-time augmentation:} During training, the landmark coordinates are
           transformed through rotation, scaling, translation, additive Gaussian noise and horizontal
           mirroring. These operations simulate variation in signer position and execution while
           preserving the skeletal representation.
-    \item \textbf{Sequence classification.} The GRU+Attention architecture receives the landmark
+    \item \textbf{Sequence classification:} The GRU+Attention architecture receives the landmark
           sequence and produces class scores over the selected gloss vocabulary. The same training
           loop also supports the alternative architectures compared in
           Section~\ref{sec:exp_phase2}, so the comparison changes the sequence-modelling component
@@ -181,25 +208,31 @@ documented in \texttt{docs/reproducibility\_guide.md}.
 \label{sec:plan_methodology}
 % =============================================================================
 
-The project followed a Lean Startup-inspired iterative methodology. In this work, the term does not
-refer to commercial product validation. It refers to short research and development cycles in which
-a technical assumption is built, measured and revised before the next cycle begins. This approach
-was appropriate because the early project direction changed after the exploratory stage, and the
-work plan had to preserve room for evidence-driven correction.
+The project followed a hypothesis-driven iterative methodology, adapted from the Lean Startup
+framework \cite{ries2011lean} to the research context of this work. In a research setting, the
+build-measure-learn loop is reinterpreted as a hypothesis-experiment-learn loop: each iteration
+tests a technical or methodological hypothesis through a controlled experiment, measures the result
+against defined metrics, and revises the next iteration accordingly. The original
+commercial-validation step is replaced with empirical experimental validation, which is what
+differentiates this adaptation from the standard Lean Startup formulation. This approach was
+appropriate because the early project direction changed after the exploratory stage, and the work
+plan had to preserve room for evidence-driven correction. It also made the methodological process
+explicit, since every relevant decision was linked to an observed result rather than to an initial
+assumption.
 
 Each iteration followed four stages:
 
 \begin{enumerate}
-    \item \textbf{Hypothesis definition.} The input was a previous devlog entry, tutor comment,
+    \item \textbf{Hypothesis definition:} The input was a previous devlog entry, tutor comment,
           experimental result or implementation problem. The output was a testable technical
           hypothesis, together with the dataset, metric and configuration needed to evaluate it.
-    \item \textbf{Build.} The input was the hypothesis and the current repository state. The output
+    \item \textbf{Build:} The input was the hypothesis and the current repository state. The output
           was an implementation change, a YAML configuration file or both, committed to Git so that
           the experiment could be traced to a specific version of the code.
-    \item \textbf{Measure.} The input was the committed implementation and its configuration. The
+    \item \textbf{Measure:} The input was the committed implementation and its configuration. The
           output was a set of experiment artefacts: metrics, checkpoints, plots and an
           \texttt{experiment\_manifest.json} file.
-    \item \textbf{Learn.} The input was the measured evidence from the previous stage. The output
+    \item \textbf{Learn:} The input was the measured evidence from the previous stage. The output
           was a documented decision to keep, revise or discard the hypothesis, recorded in the
           development log before the next iteration began.
 \end{enumerate}
@@ -229,21 +262,19 @@ experiment artefacts and supervision notes.
 % =============================================================================
 
 The executed work plan was reconstructed from the original proposal, development notes, experiment
-artefacts and supervision notes. It is organised into seven phases (A--G): the first two correspond
-closely to the proposal-era plan, while the remaining phases reflect the methodological pivot from
-static, pixel-based recognition to landmark-based word-level ASL recognition.
+artefacts and supervision notes. It is organised into seven phases (A to G): the first two
+correspond closely to the proposal plan, while the remaining phases reflect the methodological
+pivot from static, pixel-based recognition to landmark-based word-level ASL recognition.
 
 The original work plan from the project proposal (January 2026) followed a sequential structure
 with separate phases for hand detection, static handshape recognition, dynamic sign recognition,
 temporal fusion, language generation, mobile prototype, integration and validation. The executed
 plan diverged after the methodological pivot described in Section~\ref{sec:exp_phase1}, which
 replaced the static letter recognition route with landmark-based word recognition and folded the
-temporal fusion stage into the selected sequence model.
-
-Figure~\ref{fig:work_plan_timeline} summarises the executed work plan at the start of the section.
-The chart shows the start and end of each phase and makes the main deviation from the initial
-proposal visible: the shift from static letter recognition to landmark-based word-level
-recognition.
+temporal fusion stage into the selected sequence model. Figure~\ref{fig:work_plan_timeline}
+summarises the executed work plan at the start of the section, showing the start and end of each
+phase and making the main deviation from the initial proposal visible: the shift from static letter
+recognition to landmark-based word-level recognition.
 
 \clearpage
 \begin{landscape}
@@ -259,59 +290,66 @@ recognition.
 
 \FloatBarrier
 
-\paragraph{Phase A: Project framing and proposal (5 January 2026 to 16 January 2026).} The project formally started with problem definition, preliminary literature review, scope
-selection and proposal preparation. This phase defined the accessibility motivation, the initial
-system architecture, the first work schedule and the research direction. No model training was
-carried out at this stage. The main output was the approved project proposal and its initial
-planning material.
+\begin{enumerate}
+    \item \textbf{Phase A - Project framing and proposal (from 5 January 2026 to 16 January 2026):} The
+          project formally started with problem definition, preliminary literature review, scope
+          selection and proposal preparation. This phase defined the accessibility motivation, the
+          initial system architecture, the first work schedule and the research direction. No model
+          training was carried out at this stage. The main output was the approved project proposal
+          and its initial planning material.
 
-\paragraph{Phase B: Hand detection and static letter recognition (12 January 2026 to 20 January 2026).}
-The initial technical work explored the proposal's first recognition route: localising hands in
-images and classifying static ASL letters. A YOLOv8n detector was trained on a combined EgoHands
-and Kaggle Hand Dataset corpus, and CNN-based classifiers were explored on static ASL alphabet
-datasets. These components reached working performance on their own tasks, but they also revealed a
-limitation in the original direction: the central research challenge was not hand localisation, but
-representing the temporal structure of complete signs.
+    \item \textbf{Phase B - Hand detection and static letter recognition (from 12 January 2026 to 20 January 2026):}
+          The initial technical work explored the proposal's first recognition route: localising
+          hands in images and classifying static ASL letters. A YOLOv8n detector was trained on a
+          combined EgoHands and Kaggle Hand Dataset corpus, and CNN-based classifiers were explored
+          on static ASL alphabet datasets. These components reached working performance on their own
+          tasks, but they also revealed a limitation in the original direction: the central research
+          challenge was not hand localisation, but representing the temporal structure of complete
+          signs.
 
-\paragraph{Phase C: Landmark pivot and WLASL30 baseline (21 January 2026 to 19 February 2026).}
-The project pivoted from pixel-based letter recognition to word-level recognition using MediaPipe
-hand landmarks. WLASL30 was built as the first controlled benchmark, and several sequence
-architectures were compared under the same landmark input representation. The GRU+Attention
-architecture became the best-performing configuration because it combined recurrent temporal
-modelling with an attention layer able to weight informative frames. After supervisory review, TTA
-was excluded from the final evaluation protocol, and the WLASL30 result was strengthened through
-Stratified 5-Fold Cross-Validation.
+    \item \textbf{Phase C - Landmark pivot and WLASL30 baseline (from 21 January 2026 to 19 February 2026):}
+          The project pivoted from pixel-based letter recognition to word-level recognition using
+          MediaPipe hand landmarks. WLASL30 was built as the first controlled benchmark, and several
+          sequence architectures were compared under the same landmark input representation. The
+          GRU+Attention architecture became the best-performing configuration because it combined
+          recurrent temporal modelling with an attention layer able to weight informative frames.
+          After supervisory review, TTA was excluded from the final evaluation protocol, and the
+          WLASL30 result was strengthened through Stratified 5-Fold Cross-Validation.
 
-\paragraph{Phase D: Vocabulary scaling and ethical framework (19 February 2026 to 10 April 2026).}
-Once the GRU+Attention model had been selected, the next phase tested how the approach behaved as
-the WLASL vocabulary increased beyond the initial 30-class setting. The model was retrained on
-progressively larger WLASL subsets to quantify the effect of vocabulary size and per-class data
-scarcity. In parallel, the ethical and social-impact chapter was developed, including the
-accessibility motivation, privacy implications of landmark-based representations, bias
-considerations, reproducibility and the responsible-deployment limits of the prototype.
+    \item \textbf{Phase D - Vocabulary scaling and ethical framework (from 19 February 2026 to 10 April 2026):}
+          Once the GRU+Attention model had been selected, the next phase tested how the approach
+          behaved as the WLASL vocabulary increased beyond the initial 30-class setting. The model
+          was retrained on progressively larger WLASL subsets to quantify the effect of vocabulary
+          size and per-class data scarcity. In parallel, the ethical and social-impact chapter was
+          developed, including the accessibility motivation, privacy implications of landmark-based
+          representations, bias considerations, reproducibility and the responsible-deployment
+          limits of the prototype.
 
-\paragraph{Phase E: Runtime prototype (13 April 2026 to 20 April 2026).} The technical work expanded from offline training to a runtime proof of concept. A mobile client
-and FastAPI server were integrated so that short clips could be captured, sent for inference and
-returned as Top-$K$ word predictions. Additional prototype features included text-to-speech, model
-selection from the client and a heuristic continuous-prediction demo mode based on overlapping
-windows. This phase demonstrates end-to-end feasibility, but it is not treated as the main research
-result. The quantitative contribution remains the landmark-based recognition pipeline and its
-validation.
+    \item \textbf{Phase E - Runtime prototype (from 13 April 2026 to 20 April 2026):} The technical work
+          expanded from offline training to a runtime proof of concept. A mobile client and FastAPI
+          server were integrated so that short clips could be captured, sent for inference and
+          returned as Top-$K$ word predictions. Additional prototype features included
+          text-to-speech, model selection from the client and a heuristic continuous-prediction demo
+          mode based on overlapping windows. This phase demonstrates end-to-end feasibility, but it
+          is not treated as the main research result. The quantitative contribution remains the
+          landmark-based recognition pipeline and its validation.
 
-\paragraph{Phase F: Refactoring and cross-dataset validation (20 April 2026 to 23 April 2026).}
-The notebook-based experimental code was consolidated into a modular Python package, with
-configuration-driven training, structured experiment manifests, reusable evaluation scripts and
-preserved checkpoints and plots. This refactor improved reproducibility and made it possible to
-rerun the same pipeline across datasets. MS-ASL50 was then added as an independent validation
-benchmark, and the final evaluation protocol incorporated multi-seed runs, a sequence-length
-analysis, cross-dataset validation and comparison against the WLASL results.
+    \item \textbf{Phase F - Refactoring and cross-dataset validation (from 20 April 2026 to 23 April 2026):}
+          The notebook-based experimental code was consolidated into a modular Python package, with
+          configuration-driven training, structured experiment manifests, reusable evaluation
+          scripts and preserved checkpoints and plots. This refactor improved reproducibility and
+          made it possible to rerun the same pipeline across datasets. MS-ASL50 was then added as an
+          independent validation benchmark, and the final evaluation protocol incorporated
+          multi-seed runs, a sequence-length analysis, cross-dataset validation and comparison
+          against the WLASL results.
 
-\paragraph{Phase G: Documentation and qualitative validation (24 April 2026 to 25 May 2026).}
-The final phase focused on document writing, result consolidation, figure and table preparation and
-qualitative validation of the runtime prototype. The experimental chapter was organised into
-quantitative and qualitative tracks. The quantitative track reports completed model evaluations,
-while the qualitative track describes the participant protocol and reports the usability evidence
-collected from the participant sessions.
+    \item \textbf{Phase G - Documentation and qualitative validation (from 24 April 2026 to 25 May 2026):}
+          The final phase focused on document writing, result consolidation, figure and table
+          preparation and qualitative validation of the runtime prototype. The experimental chapter
+          was organised into quantitative and qualitative tracks. The quantitative track reports
+          completed model evaluations, while the qualitative track describes the participant
+          protocol and reports the usability evidence collected from the participant sessions.
+\end{enumerate}
 
 \FloatBarrier
 
@@ -320,19 +358,19 @@ collected from the participant sessions.
 \label{sec:plan_constraints}
 % =============================================================================
 
-This section lists the constraints that shaped the work plan and implementation. They are ordered
-by their impact on project scope and design. Limitations of the experimental conclusions
+This section lists the different constraints that shaped the work plan and implementation. They are
+ordered by their impact on project scope and design. Limitations of the experimental conclusions
 themselves, including standard deviations, test-set granularity and single-architecture
 cross-dataset validation, are treated separately in Section~\ref{sec:exp_limitations}.
 
 \begin{enumerate}
-    \item \textbf{Computing capacity.} Every training and evaluation run executed on a single
+    \item \textbf{Computing infrastructure:} Every training and evaluation run executed on a single
           NVIDIA RTX~3050~Ti Laptop GPU with 4\,GB of VRAM. This imposed a hard memory ceiling on
           the temporal window, batch size and model size that could be tested. The practical effect
           was to prioritise compact recurrent architectures and to exclude larger video models that
           would not fit reliably within the available hardware.
 
-    \item \textbf{Dataset reconstruction and landmark coverage.} Both word-recognition datasets
+    \item \textbf{Dataset reconstruction and landmark coverage:} Both word-recognition datasets
           depend on external video sources rather than on locally distributed video files. WLASL
           relies on URLs that have decayed since publication, and the MediaPipe detection rate on
           the surviving WLASL clips is approximately 69\,\%. MS-ASL is reconstructed from
@@ -343,13 +381,13 @@ cross-dataset validation, are treated separately in Section~\ref{sec:exp_limitat
           since only six MS-ASL classes met the train/val/test sample threshold needed for an
           MS-ASL30 reproduction (cf.\ Section~\ref{sec:exp_msasl}).
 
-    \item \textbf{Experimental calendar.} The executed work plan ran from 5 January 2026 to the
+    \item \textbf{Limited development timeline:} The executed work plan ran from 5 January 2026 to the
           final submission window in May 2026. This fixed calendar limited how many repeated
           experiments could be completed. Multi-seed evaluation was applied to the main reported
           configurations, but broader vocabulary-scaling runs and additional cross-dataset
           architecture comparisons were not included in the experimental scope.
 
-    \item \textbf{Linguistic scope.} The project validates a single sign language, American Sign
+    \item \textbf{Linguistic scope:} The project validates a single sign language, American Sign
           Language, and uses ASL exclusively for both the WLASL and MS-ASL benchmarks. The pipeline
           contains no ASL-specific rule-based component, and each component that consumes landmarks
           could in principle be retrained on a different sign language given a comparable dataset.

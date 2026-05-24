@@ -31,11 +31,343 @@ Section~\ref{sec:exp_scaling}. Each line corresponds to one vocabulary-scaling r
 mean videos per class, final train accuracy, validation Top-1, test Top-1 and test Top-5.
 
 \begin{landscape}
-\begin{figure}[p]
-    \thispagestyle{empty}
-    \centering
-    \includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{./images/results/scaling_parallel_coordinates.png}
-    \caption{Parallel-coordinates view of the selected GRU+Attention scaling line on WLASL. Each line is one experiment, coloured from green for smaller vocabularies to red for larger vocabularies. Source: self-created from experiment outputs.}
-    \label{fig:app_scaling_parallel}
-\end{figure}
+    \begin{figure}[p]
+        \thispagestyle{empty}
+        \centering
+        \includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{./images/results/scaling_parallel_coordinates.png}
+        \caption{Parallel-coordinates view of the selected GRU+Attention scaling line on WLASL. Each line is one experiment, coloured from green for smaller vocabularies to red for larger vocabularies. Source: self-created from experiment outputs.}
+        \label{fig:app_scaling_parallel}
+    \end{figure}
 \end{landscape}
+
+\clearpage
+
+\chapter{User Manual}
+\label{app:user_manual}
+
+This appendix describes the practical procedure required to install, prepare and execute the
+prototype developed in this FDP. All commands are intended to be executed from the repository root
+directory, unless another directory is explicitly indicated.
+
+\section{Repository Layout}
+\label{app:user_manual_layout}
+
+The project repository is organised around the main development artefacts:
+
+\begin{itemize}
+    \item \texttt{src/slr/}: reusable Python package for landmark datasets, models, training,
+          evaluation and experiment tracking.
+    \item \texttt{scripts/}: command-line entry points for training, evaluation, MS-ASL subset
+          construction and landmark extraction.
+    \item \texttt{configs/}: YAML experiment configurations. Base files are stored under
+          \texttt{configs/base/} and concrete runs under \texttt{configs/experiments/}.
+    \item \texttt{05\_experiments/}: experiment outputs, including metrics, figures, reports,
+          manifests and local checkpoints when available.
+    \item \texttt{06\_datasets/}: local datasets, landmark files and dataset-specific metadata.
+          This directory is intentionally not fully tracked in Git because of size and licensing
+          constraints.
+    \item \texttt{04\_server/}: FastAPI inference server used by the runtime prototype.
+    \item \texttt{03\_app/signtotext-expo/}: Expo/React Native mobile proof of concept.
+\end{itemize}
+
+\section{Environment Setup}
+\label{app:user_manual_environment}
+
+Python 3.10 or newer is required. The training code can run on CPU, but a CUDA-capable NVIDIA GPU
+is recommended for reproducible training times. The environment used in the project is described in
+Section~\ref{sec:operational_environment}.
+
+\begin{verbatim}
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -e ".[landmarks,dev]"
+\end{verbatim}
+
+The editable install exposes the \texttt{slr} package and installs the core training dependencies.
+The \texttt{landmarks} extra installs MediaPipe and OpenCV, which are required for landmark
+extraction and inference. The \texttt{dev} extra installs the test runner.
+
+The FastAPI prototype has a small additional requirements file:
+
+\begin{verbatim}
+pip install -r 04_server/requirements.txt
+\end{verbatim}
+
+The mobile prototype uses Expo and pnpm:
+
+\begin{verbatim}
+cd 03_app/signtotext-expo
+pnpm install
+\end{verbatim}
+
+\section{Dataset Preparation}
+\label{app:user_manual_datasets}
+
+Large datasets and downloaded videos are not included in the repository. A local workspace must
+therefore restore or regenerate the required data under \texttt{06\_datasets/}. The expected
+landmark paths used by the main configurations include:
+
+\begin{verbatim}
+06_datasets/wlasl/landmarks/wlasl100_filtered30/
+06_datasets/MS-ASL/subsets/msasl50/
+\end{verbatim}
+
+For WLASL experiments, the training configuration expects a directory split with \texttt{train/},
+\texttt{val/} and \texttt{test/} folders plus a \texttt{metadata.json} file with the gloss mapping.
+The baseline configuration points to:
+
+\begin{verbatim}
+06_datasets/wlasl/landmarks/wlasl100_filtered30/metadata.json
+\end{verbatim}
+
+For MS-ASL, the original annotation files are stored under \texttt{06\_datasets/MS-ASL/}. Because
+the dataset references online videos, the local available subset depends on which source videos can
+still be downloaded. The selected MS-ASL50 subset can be reconstructed from the local audit with:
+
+\begin{verbatim}
+python scripts/build_msasl_subset.py \
+  --audit-csv 06_datasets/MS-ASL/audit/audit_per_class.csv \
+  --audit-videos-csv 06_datasets/MS-ASL/audit/audit_videos.csv \
+  --output-dir 06_datasets/MS-ASL/subsets/msasl50 \
+  --n-classes 50 \
+  --min-train 20 \
+  --min-val 3 \
+  --min-test 3
+\end{verbatim}
+
+Once the subset metadata and source videos are available, hand landmarks are extracted with:
+
+\begin{verbatim}
+python scripts/extract_landmarks_msasl.py \
+  --subset-metadata \
+  06_datasets/MS-ASL/subsets/msasl50/metadata.json \
+  --videos-dir 06_datasets/MS-ASL/videos \
+  --output-dir \
+  06_datasets/MS-ASL/subsets/msasl50/landmarks \
+  --max-frames 64 \
+  --min-detection-rate 0.3 \
+  --skip-existing
+\end{verbatim}
+
+This process writes per-clip \texttt{.npy} files containing 21 three-dimensional hand landmarks per
+valid frame, together with extraction reports and metadata used by the training pipeline.
+
+\section{Training}
+\label{app:user_manual_training}
+
+Training is driven by YAML configuration files. A standard WLASL30 run is launched with:
+
+\begin{verbatim}
+python scripts/train.py \
+  --config configs/experiments/wlasl30_baseline.yaml
+\end{verbatim}
+
+The same entry point is used for the MS-ASL50 multi-seed runs:
+
+\begin{verbatim}
+python scripts/train.py \
+  --config configs/experiments/msasl50_baseline/seed42.yaml
+python scripts/train.py \
+  --config configs/experiments/msasl50_baseline/seed123.yaml
+python scripts/train.py \
+  --config configs/experiments/msasl50_baseline/seed2026.yaml
+\end{verbatim}
+
+The device can be forced when required:
+
+\begin{verbatim}
+python scripts/train.py \
+  --config configs/experiments/wlasl30_baseline.yaml \
+  --device cpu
+python scripts/train.py \
+  --config configs/experiments/wlasl30_baseline.yaml \
+  --device cuda
+\end{verbatim}
+
+Each completed run writes an experiment directory under \texttt{05\_experiments/}. The most
+relevant artifacts are \texttt{best\_model.pt}, \texttt{training\_history.json},
+\texttt{results.json}, \texttt{per\_class\_metrics.csv}, confusion matrices and
+\texttt{experiment\_manifest.json}. The manifest is the main reproducibility artifact because it
+records the resolved configuration, git state, hardware information, runtime and final metrics.
+
+\section{Evaluation}
+\label{app:user_manual_evaluation}
+
+An existing checkpoint can be evaluated on a split directory with:
+
+\begin{verbatim}
+python scripts/evaluate.py \
+  --checkpoint \
+  05_experiments/final_assault/best_model_attention.pt \
+  --metadata \
+  06_datasets/wlasl/landmarks/wlasl30/metadata.json \
+  --dataset-split 06_datasets/wlasl/landmarks/wlasl30/test \
+  --output-dir 05_experiments/final_assault/eval_test \
+  --architecture gru_attention
+\end{verbatim}
+
+The evaluation command reports Top-1 accuracy, Top-5 accuracy, Macro-F1 and balanced accuracy, and
+writes the corresponding plots and tables to the selected output directory.
+
+\section{Inference Server}
+\label{app:user_manual_server}
+
+The FastAPI server is started from the server directory:
+
+\begin{verbatim}
+cd 04_server
+python main.py
+\end{verbatim}
+
+By default, the server listens on port 8000. It expects the checkpoint and metadata paths declared
+in \texttt{04\_server/main.py} to exist locally. In particular, the production registry entry uses
+the GRU+Attention WLASL30 checkpoint under \texttt{05\_experiments/final\_assault/} and the
+corresponding WLASL30 metadata under \texttt{06\_datasets/}.
+
+The available HTTP endpoints are:
+
+\begin{itemize}
+    \item \texttt{GET /health}: server status and loaded model information.
+    \item \texttt{GET /models}: available model registry entries.
+    \item \texttt{GET /classes}: class list for the selected model.
+    \item \texttt{POST /predict}: isolated-word prediction from an uploaded video.
+    \item \texttt{POST /predict-sequence}: heuristic continuous-sequence prediction.
+\end{itemize}
+
+The isolated prediction endpoint accepts a video upload and returns Top-K gloss predictions,
+confidence scores, the detection rate and runtime metadata.
+
+\section{Mobile Prototype}
+\label{app:user_manual_mobile}
+
+After installing the mobile dependencies, the Expo application can be started with:
+
+\begin{verbatim}
+cd 03_app/signtotext-expo
+pnpm start
+\end{verbatim}
+
+The application records or selects a short video, sends it to the FastAPI server, displays the
+Top-K predictions and can read the Top-1 result through text-to-speech. For a physical device, the
+server URL configured in the mobile client must point to the computer running FastAPI, not to
+\texttt{localhost} on the phone.
+
+\section{Smoke Tests}
+\label{app:user_manual_smoke_tests}
+
+The Python unit tests do not require the full video datasets:
+
+\begin{verbatim}
+pytest
+\end{verbatim}
+
+A minimal runtime check consists of starting the server and requesting the health endpoint:
+
+\begin{verbatim}
+curl http://localhost:8000/health
+\end{verbatim}
+
+If the server starts but model loading fails during prediction, the most likely cause is a missing
+local checkpoint, missing \texttt{metadata.json} file or missing MediaPipe
+\texttt{hand\_landmarker.task} file in \texttt{04\_server/}.
+
+\clearpage
+\chapter{Declaration of the Use of AI Systems}
+\label{app:ai_declaration}
+
+In the preparation of this Final Degree Project, artificial intelligence systems have been used
+responsibly at different stages of the process. This appendix documents how, where and for what
+purpose these systems contributed to the work, in accordance with UFV regulations for the
+preparation and defence of Final Degree Projects.
+
+\section*{Systems used}
+
+The following systems were used at different points during the project:
+
+\begin{itemize}
+    \item \textbf{Claude} (Anthropic), versions 3.7 Sonnet, 4.5 Sonnet and 4.7 Opus,
+          accessed through the Claude web interface and through Claude Code as a
+          command-line coding agent. Both Sonnet and Opus variants of Claude Code
+          were used depending on the complexity of the task.
+    \item \textbf{ChatGPT} (OpenAI), used through its web interface for occasional
+          rewriting tasks and for resolving specific code questions and runtime
+          errors.
+    \item \textbf{OpenAI Codex CLI}, used directly from the terminal as an
+          additional coding agent.
+    \item \textbf{Cursor} (IDE with integrated AI), where both Claude and GPT
+          models were used as the underlying language models for in-editor
+          assistance.
+    \item \textbf{Gemini} (Google), used exclusively for the generation of
+          specific illustrative images. Every figure produced with Gemini is
+          explicitly attributed in its caption within the main body of the
+          document.
+\end{itemize}
+
+\section*{Stages of use}
+
+\paragraph{Literature analysis.} AI systems played a minor role in this stage. The bibliographic search was conducted mainly through
+Google Scholar and following the recommendations of the project supervisor. AI was used
+occasionally to summarise individual papers when a quick conceptual overview was useful, but
+sources were always read and verified directly before being cited in this work.
+
+\paragraph{Software development and experimentation.} The implementation of the recognition pipeline, training scripts and evaluation tooling was carried
+out following a mixed workflow. The author wrote the initial structure of each module, and AI
+coding agents (mainly Claude Code, complemented by OpenAI Codex CLI and in-editor assistance
+through Cursor) were asked to refine specific blocks, review existing code or generate new
+components within a defined scope. Every AI-generated or AI-modified block was subsequently
+reviewed, tested and adjusted by the author before being committed to the repository. The design
+decisions, the methodological pivot from pixel-based to landmark-based recognition, the choice of
+architectures, the experimental protocols and the interpretation of results were taken by the
+author. AI agents never made autonomous commits.
+
+\paragraph{Data curation.} AI assistance was used to support data preparation scripts, including dataset reconstruction
+routines, MS-ASL download auditing and landmark extraction utilities. The dataset selection
+criteria, the threshold choices for subset construction (MS-ASL50, WLASL30) and the final
+validation of the processed data were decisions taken by the author.
+
+\paragraph{Writing of the document.} AI systems were used during the writing of this report in two distinct ways. First, for the initial
+drafting of certain passages, where the author provided notes, bullet points and decisions, and AI
+systems produced prose drafts that were then revised, restructured and rewritten by the author to
+match the voice and content of the work. Second, for grammatical and stylistic revision, including
+consistency checks, identification of awkward phrasings and reorganisation of paragraphs within
+chapters based on supervisor feedback. The technical content, the experimental claims, the
+structure of arguments and the final wording of every chapter were decided by the author.
+
+\paragraph{Visualisation.} Most figures in this work were produced by the author using TikZ, GanttProject or by adapting
+figures from cited academic sources. A small number of illustrative images were generated using
+Gemini and are identified explicitly in their captions.
+
+\section*{Academic responsibility}
+
+Throughout every stage of the project, academic judgement was maintained. The use of AI systems did
+not replace the conceptual work of the project: the research questions, the hypothesis, the
+methodological design, the interpretation of experimental results and the ethical evaluation were
+the author's own. AI systems were used as productivity tools and as drafting and revision
+assistants, in the same way that a researcher might use a spell checker, an IDE autocomplete, a
+reference manager or a peer reviewer. The originality and quality of the work, and the
+responsibility for every claim contained in it, rest with the author.
+
+\section*{AI contribution summary (CRediT statement)}
+
+\begin{itemize}
+    \item \textbf{Conceptualization:} Author.
+    \item \textbf{Methodology:} Author.
+    \item \textbf{Software:} Author, with AI assistance (Claude Code, OpenAI
+          Codex CLI, Cursor with Claude and GPT models).
+    \item \textbf{Validation:} Author.
+    \item \textbf{Formal analysis:} Author.
+    \item \textbf{Investigation:} Author.
+    \item \textbf{Resources:} Author.
+    \item \textbf{Data curation:} Author, with AI assistance.
+    \item \textbf{Writing -- original draft preparation:} Author, with AI
+          assistance.
+    \item \textbf{Writing -- review and editing:} Author, with AI assistance.
+    \item \textbf{Visualization:} Author. Specific illustrative figures
+          generated with Gemini are individually attributed in their captions.
+    \item \textbf{Supervision:} Mois\'es Mart\'inez Mu\~noz, project supervisor.
+    \item \textbf{Project administration:} Author.
+\end{itemize}
+
+All uses of AI in this Final Degree Project that produced specific content referenced in the main
+text are cited at the appropriate location, in accordance with the UFV citation guidelines.

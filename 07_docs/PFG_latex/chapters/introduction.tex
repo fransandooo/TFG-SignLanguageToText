@@ -1,13 +1,10 @@
 \chapter{Introduction}
 \setcounter{section}{0}
 
-Sign Language Recognition (SLR) brings together accessibility, computer vision and sequence
-modelling. Far from being mere gestural shorthand or direct encodings of spoken languages, sign
-languages are sophisticated natural languages with a unique visual-spatial structure. Meaning is
-conveyed through a complex interplay of handshape, movement, orientation, location, timing and, in
-many cases, non-manual cues such as facial expression or body posture. Automatic recognition from
-video is therefore a demanding problem: the same sign may vary across signers, camera viewpoints,
-execution speeds, lighting conditions and recording devices.
+Sign Language Recognition (SLR) represents a highly interdisciplinary paradigm at the intersection
+of digital accessibility, computer vision, and temporal sequence modelling, focused on capturing
+fully-fledged, sophisticated natural languages where semantic meaning is conveyed simultaneously
+rather than sequentially through distinct grammatical, syntactic, and visual-spatial structures.
 
 \section{Problem description}
 
@@ -17,10 +14,19 @@ frame may show the handshape and approximate location of a sign, but it cannot r
 direction of movement, the order of articulatory changes or the rhythm of execution. The sign must
 therefore be interpreted from the ordered relationship between frames.
 
+This temporal nature makes the problem substantially different from conventional object or gesture
+recognition. Two signs may share a similar hand configuration in an individual frame, while
+differing in trajectory, speed, orientation changes or relative hand position over time. In
+addition, real videos introduce variability in signer appearance, camera viewpoint, lighting
+conditions, signing style and execution speed. A recognition system must therefore learn not only
+visual patterns, but also how those patterns evolve across a short sequence.
+
 The task addressed in this work is isolated word recognition. The system receives a short video
 clip and must assign it to a word gloss, that is, a written label used to annotate a sign. This
-task is more limited than continuous sign language translation, but it preserves the temporal
-nature of signs and provides a suitable scope for a research-oriented undergraduate project.
+formulation is more limited than continuous sign language translation, where complete sentences,
+grammar, co-articulation and broader linguistic context must be considered. However, isolated
+recognition still captures a central challenge of SLR: identifying a meaningful visual unit from
+motion and hand articulation.
 
 \section{Research scope and approach}
 
@@ -55,7 +61,7 @@ The remainder of the work is organised as follows:
           rigorous account of the data preprocessing pipeline and the experimental framework
           established for training and evaluation. The chapter concludes with a description of a
           functional proof of concept, demonstrating a real-time implementation through a mobile
-          client and a FastAPI-based inference server \cite{fastapi}.
+          app and a FastAPI-based inference server.
     \item Chapter 6 reports the experimental evaluation. It includes an architecture comparison and
           sequence-length analysis, followed by validation on the WLASL30 and MS-ASL50 datasets.
           The chapter also addresses cross-dataset validation, vocabulary scaling and the

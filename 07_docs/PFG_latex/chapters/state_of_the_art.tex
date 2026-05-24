@@ -1,11 +1,14 @@
 \chapter{State of the Art}
 \label{ch:sota}
 
-This chapter reviews the technical foundations that support this project. It begins with the move
-from symbolic Artificial Intelligence (AI) to data-driven learning, then introduces Deep Neural
-Networks (DNNs), feature extraction architectures, sequence processing layers, attention
-mechanisms, related Sign Language Recognition (SLR) work and the datasets most relevant to American
-Sign Language (ASL) recognition.
+This chapter reviews the technical foundations that support this project. It begins by exploring
+the evolution of Artificial Intelligence (AI), tracing the shift from early symbolic AI based on
+rules and logic techniques to modern sub-symbolic AI based on learning techniques. It then
+introduces the core components of Deep Neural Networks (DNNs) that drive this sub-symbolic
+paradigm, including feature extraction architectures, sequence and parallel processing
+architectures, and attention mechanisms. Finally, the chapter contextualises these technologies by
+reviewing previous work in Sign Language Recognition (SLR) and the main datasets used in American
+Sign Language (ASL) research.
 
 \section{From Symbolic to Subsymbolic AI}
 
@@ -40,11 +43,13 @@ aligns with the success seen in modern speech recognition and object detection f
 \section{Deep Neural Networks}
 \label{sec:dnn}
 
-A neural network is a parameterised function composed of layers. Each layer receives an input
-vector, applies a linear transformation and passes the result through a non-linear activation
-function. A DNN stacks several such layers, allowing the model to compose simple transformations
-into progressively more abstract representations. Figure~\ref{fig:dnn_basic} shows this structure
-as a mapping from input features to an output prediction through hidden layers.
+A Deep Neural Network (DNN) is a parameterised function composed of layered computational
+structures designed to map inputs to specific outputs. Each layer receives an input vector, applies
+a linear transformation and passes the result through a non-linear activation function. A DNN
+stacks several such layers sequentially, allowing the model to compose simple, low-level
+mathematical transformations into progressively more abstract, high-level representations.
+Figure~\ref{fig:dnn_basic} shows this structure as a mapping from input features to an output
+prediction through hidden layers.
 
 \begin{figure}[H]
     \centering
@@ -110,7 +115,7 @@ In this sense, a DNN is not a list of explicit rules but an optimised function a
 
 This formulation explains the link between DNNs and feature extraction. Intermediate layers do not
 only transform the data numerically; they also produce representations that make the target task
-easier. In computer vision, these representations may correspond to edges, textures, object parts
+easier. In Computer Vision, these representations may correspond to edges, textures, object parts
 or pose coordinates. Feature extraction therefore denotes the process of converting raw
 observations into informative variables that a later classifier or sequence model can use.
 
@@ -127,15 +132,68 @@ learns from appearance information or from a geometric abstraction of the body a
 \subsection{Pixel-Based Techniques}
 
 A digital image can be represented as a tensor $\mathbf{x}\in\mathbb{R}^{H\times W\times C}$, where
-$H$ and $W$ are height and width and $C$ is the number of colour channels. Pixel-based techniques
-use this tensor as the direct input to the model. This preserves all visual information, including
-hand texture, background, illumination and camera artefacts.
+$H$ and $W$ are height and width and $C$ is the number of colour channels, as shown in
+Figure~\ref{fig:rgb_tensor_decomposition}. Pixel-based techniques use this tensor as the direct
+input to the model. This preserves all visual information, including hand texture, background,
+illumination and camera artefacts.
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1.0, every node/.style={font=\small}]
+        % Original image (left)
+        \begin{scope}[shift={(0,0)}]
+            \draw[thick, fill=gray!10] (0,0) rectangle (2.5,2.5);
+            % Simulate image content with a simple grid pattern
+            \foreach \x in {0.25,0.75,1.25,1.75,2.25} {
+                    \foreach \y in {0.25,0.75,1.25,1.75,2.25} {
+                            \fill[gray!30] (\x-0.2,\y-0.2) rectangle (\x+0.2,\y+0.2);
+                        }
+                }
+            \node[below] at (1.25,-0.2) {Original image};
+            \draw[<->, thick] (-0.3,0) -- (-0.3,2.5) node[midway, left] {$H$};
+            \draw[<->, thick] (0,-0.7) -- (2.5,-0.7) node[midway, below] {$W$};
+        \end{scope}
+
+        % Arrow
+        \draw[->, very thick] (3.0,1.25) -- (4.0,1.25) node[midway, above] {decompose};
+
+        % Three stacked channels (right)
+        \begin{scope}[shift={(5.5,0)}]
+            % Blue channel (back)
+            \draw[thick, fill=blue!20] (0.4,0.4) rectangle (2.9,2.9);
+            \node[blue!60!black] at (2.6,2.6) {\footnotesize B};
+            % Green channel (middle)
+            \draw[thick, fill=green!20] (0.2,0.2) rectangle (2.7,2.7);
+            \node[green!60!black] at (2.4,2.4) {\footnotesize G};
+            % Red channel (front)
+            \draw[thick, fill=red!20] (0,0) rectangle (2.5,2.5);
+            \node[red!70!black] at (2.2,2.2) {\footnotesize R};
+
+            \node[below] at (1.45,-0.2) {Channels ($C=3$)};
+
+            % Annotations
+            \draw[->, thick] (3.2,2.6) -- (3.7,2.6) node[right] {\footnotesize Blue};
+            \draw[->, thick] (3.0,1.4) -- (3.7,1.4) node[right] {\footnotesize Green};
+            \draw[->, thick] (2.8,0.2) -- (3.7,0.2) node[right] {\footnotesize Red};
+        \end{scope}
+
+        % Tensor notation below
+        \node at (4.0,-1.5) {$\mathbf{x} \in \mathbb{R}^{H \times W \times C}$};
+    \end{tikzpicture}
+    \caption[Decomposition of a digital RGB image into its three colour channels.]{Decomposition of a digital RGB image into its three colour channels. The image is represented as a tensor $\mathbf{x} \in \mathbb{R}^{H \times W \times C}$, where $H$ and $W$ are the spatial dimensions and $C = 3$ corresponds to the red, green and blue channels.\textsuperscript{1}}
+    \label{fig:rgb_tensor_decomposition}
+    \vspace{0.3em}
+    \begin{minipage}{0.92\textwidth}
+        \footnotesize\textsuperscript{1} Figure source code generated by OpenAI GPT-5.5 in High mode, OpenAI, May 20, 2026, from a prompt asking for a diagram representing a digital image as a tensor $\mathbf{x} \in \mathbb{R}^{H \times W \times C}$ and decomposing it into its RGB colour channels.
+    \end{minipage}
+\end{figure}
 
 Convolutional Neural Networks (CNNs) are the standard DNN architecture for pixel-based computer
-vision \cite{lecun2015deeplearning}. A convolutional layer applies a small matrix of learned
-parameters, called a kernel or filter, across local regions of the image. At each spatial position,
-the kernel computes a response that indicates whether a visual pattern is present. The collection
-of responses produced by one kernel is a feature map.
+vision \cite{lecun2015deeplearning}. CNN architectures stack convolutional, activation and pooling
+layers. A convolutional layer applies a small matrix of learned parameters, called a kernel or
+filter, across local regions of the image. At each spatial position, the kernel computes a response
+that indicates whether a visual pattern is present. The collection of responses produced by one
+kernel is a feature map.
 
 For input tensor $\mathbf{x}$ and output feature map $\mathbf{y}$, a convolutional layer can be
 written as:
@@ -150,17 +208,17 @@ activation function. Because the same kernel is reused across the image, convolu
 translation equivariance: if a pattern shifts in the image, its corresponding activation shifts in
 the feature map.
 
-CNN architectures stack convolutional, activation and pooling layers. Pooling reduces the spatial
-resolution of feature maps by summarising local neighbourhoods, commonly through maximum or average
-values. This supports local translation invariance, since small shifts in the input produce similar
-pooled activations. Early layers usually respond to oriented edges and simple textures; deeper
-layers combine those responses into larger shapes and object-level cues, as illustrated in
-Figure~\ref{fig:cnn_features}. AlexNet \cite{krizhevsky2012imagenet} and ResNet \cite{he2016resnet}
-are established examples of this hierarchical design.
+Pooling layers reduce the spatial resolution of feature maps by summarising local neighbourhoods,
+commonly through maximum or average values. This supports local translation invariance, since small
+shifts in the input produce similar pooled activations. Early layers usually respond to oriented
+edges and simple textures; deeper layers combine those responses into larger shapes and
+object-level cues, as illustrated in Figure~\ref{fig:cnn_features}. AlexNet
+\cite{krizhevsky2012imagenet} and ResNet \cite{he2016resnet} are established examples of this
+hierarchical design.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{images/zeiler_fergus_features.png}
+    \includegraphics[width=1.0\textwidth]{images/zeiler_fergus_features.png}
     \caption{Hierarchical feature representations learned by a CNN.
         Layer 1 responds to oriented edges and simple colour gradients;
         Layer 2 captures corners, circular patterns and basic textures;
@@ -180,20 +238,30 @@ pixel-based recognition practical.
     \label{fig:cnn_arch}
 \end{figure}
 
-In SLR, pixel-based CNNs can learn discriminative visual patterns directly from frames. Their main
-limitation is that they also receive information that may not define the sign, including
-background, skin tone and recording conditions. When the available dataset is limited, this can
-encourage the model to fit appearance correlations instead of sign structure.
+In SLR context, pixel-based CNNs can learn discriminative visual patterns directly from raw video
+frames. However, their main limitation is that they also receive information that may not define
+the sign, including background, skin tone and recording conditions. When the available dataset is
+limited, this can encourage the model to fit appearance correlations instead of sign structure.
 
 \subsection{Pose Estimation Techniques}
 
-Pose estimation is the task of estimating the spatial location of anatomical points from an image
-or video frame. In machine learning, regression refers to predicting continuous numerical values
-rather than selecting one class from a fixed set. A landmark is a tracked point with image or world
-coordinates. In hand pose estimation, many landmarks correspond to joints, which are anatomical
-articulations such as knuckles, while fingertip landmarks mark the end of each finger. A
-regression-based pose estimator therefore predicts landmark coordinates rather than a discrete
-class label.
+Pose estimation involves predicting the spatial coordinates of anatomical points (landmarks) within
+an image or video frame, which constitutes a regression task because it requires calculating
+continuous numerical values rather than selecting a distinct class from a fixed set. In hand pose
+estimation, many landmarks correspond to joints, which are anatomical articulations such as
+knuckles, while fingertip landmarks mark the end of each finger. A regression-based pose estimator
+therefore predicts landmark coordinates rather than a discrete class label.
+
+Figure~\ref{fig:mediapipe_landmark_example} shows an example of the type of hand skeleton produced
+by a landmark-based hand tracking system. The image illustrates how the visual hand region is
+converted into a set of keypoints connected according to the anatomical structure of the hand.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\textwidth]{images/landmark_image_paper.png}
+    \caption{Rendered hand tracking result with hand landmarks and multi-hand tracking output. Source: Zhang et al. \cite{zhang2020mediapipehands}.}
+    \label{fig:mediapipe_landmark_example}
+\end{figure}
 
 Pose pipelines are commonly organised as top-down or bottom-up systems. A top-down pipeline first
 detects the relevant object or body part, then estimates landmarks inside the detected region. A
@@ -246,10 +314,15 @@ a region of interest, and a landmark model estimates hand coordinates inside tha
 
 The process consists of the following stages:
 \begin{enumerate}
-    \item \textbf{Palm detection.} \textbf{Input:} full image frame. \textbf{Operation:} a single-shot detector estimates a bounding region around the palm. \textbf{Output:} a rectangle defining the hand region of interest.
-    \item \textbf{Image cropping.} \textbf{Input:} original frame and detected rectangle. \textbf{Operation:} the image is cropped and aligned around the hand. \textbf{Output:} a normalised hand image for the landmark model.
-    \item \textbf{Landmark regression.} \textbf{Input:} cropped hand image. \textbf{Operation:} a DNN regresses the coordinates of 21 hand landmarks. \textbf{Output:} a structured set of three-dimensional landmark coordinates.
-    \item \textbf{Temporal tracking.} \textbf{Input:} landmarks and region of interest from the previous frame. \textbf{Operation:} the pipeline reuses recent location information when the hand remains visible. \textbf{Output:} a frame-to-frame landmark sequence.
+    \item \textbf{Palm detection:} The full image frame is processed by a single-shot detector, which
+          estimates a bounding region around the palm and defines the hand region of interest.
+    \item \textbf{Image cropping:} The detected region is cropped and aligned around the hand,
+          producing a normalised hand image for the landmark model.
+    \item \textbf{Landmark regression:} The landmark model receives the cropped hand image and
+          regresses the coordinates of 21 three-dimensional hand landmarks.
+    \item \textbf{Temporal tracking:} When the hand remains visible, the pipeline reuses landmarks and
+          region-of-interest information from the previous frame to obtain a continuous landmark
+          sequence.
 \end{enumerate}
 
 For SLR, landmark sequences provide a compact description of hand shape and movement. They remove
@@ -261,10 +334,10 @@ landmarks omit non-manual cues such as facial expression and upper-body movement
 \section{Sequence Processing Architectures}
 \label{sec:sequence_processing_architectures}
 
-Isolated sign recognition is a temporal classification problem. The input is not a single image but
-an ordered sequence of feature vectors, one per frame or sampled time step. A sequence processing
-layer therefore receives $\{\mathbf{x}_1,\mathbf{x}_2,\ldots,\mathbf{x}_T\}$ and produces a
-representation that accounts for temporal order.
+Isolated sign recognition is a temporal classification problem. This means that the input is not a
+single image but an ordered sequence of feature vectors, one per frame or sampled time step. A
+sequence processing layer therefore receives $\{\mathbf{x}_1,\mathbf{x}_2,\ldots,\mathbf{x}_T\}$
+and produces a representation that accounts for temporal order.
 
 \subsection{Recurrent Layers}
 
@@ -303,21 +376,19 @@ lengths while applying the same transition rule throughout the video.
     \label{fig:rnn_unrolled}
 \end{figure}
 
-Training recurrent layers uses Backpropagation Through Time (BPTT), which unfolds the recurrent
-computation across the sequence and propagates the loss backwards through the unfolded graph. As
-the number of time steps increases, standard recurrent layers frequently encounter the vanishing
-gradient problem \cite{bengio1994longterm}. The gradient signal becomes too small to preserve
-information from early time steps, which limits long-range temporal modelling.
+Training recurrent layers uses Backpropagation Through Time (BPTT) \cite{werbos1990bptt}, which
+unfolds the recurrent computation across the sequence and propagates the loss backwards through the
+unfolded graph. As the number of time steps increases, standard recurrent layers frequently
+encounter the vanishing gradient problem \cite{bengio1994longterm}. The gradient signal becomes too
+small to preserve information from early time steps, which limits long-range temporal modelling.
 
-The recurrent layer above is the simple recurrent case. The following advanced layer types are
-described in the next subsections:
+The recurrent layer described above represents the baseline architecture. To address its
+operational limitations, more sophisticated gated variants have been developed:
 \begin{itemize}
     \item Long Short-Term Memory (LSTM) layers, which introduce a cell state and gates to regulate
           information flow.
     \item Gated Recurrent Unit (GRU) layers, which simplify the LSTM design while retaining gated
           memory.
-    \item Transformer layers, which process all positions through self-attention rather than
-          recurrence.
 \end{itemize}
 
 \subsection{Long Short-Term Memory Layers}
@@ -367,22 +438,6 @@ When $\mathbf{z}_t$ is close to zero, the layer copies most of the previous hidd
 close to one, the layer replaces it with new information. This gives GRU layers a compact mechanism
 for modelling temporal dependencies with fewer parameters than LSTM layers.
 
-\subsection{Transformer Layers}
-
-Transformer layers replace recurrence with self-attention \cite{vaswani2017attention}, an extension
-of the attention mechanism described in Section~\ref{sec:attention_mechanisms}. Instead of
-processing the sequence step by step, a Transformer computes interactions between all positions in
-parallel. Each input position is projected into a query, a key and a value vector. The similarity
-between queries and keys determines how much each position attends to the others, and the values
-are combined according to those attention weights.
-
-This design supports parallel computation across the sequence, which is useful for large datasets
-and long inputs. However, Transformers do not include the same sequential inductive bias as
-recurrent layers. They require positional information to represent order, and their performance in
-small SLR datasets may depend strongly on the amount of data available for training. For this
-reason, Transformer layers are relevant to the comparison of sequence models, but they do not
-replace recurrent layers by default.
-
 \section{Attention Mechanisms}
 \label{sec:attention_mechanisms}
 
@@ -418,12 +473,41 @@ frames and lower weights to the preparation and recovery frames. This does not r
 a sequence model; it adds a learned weighting stage over the temporal representation produced by
 that model.
 
+\subsection{Transformer Layers}
+
+Transformer layers extend the attention idea by making self-attention the main operation of the
+sequence model \cite{vaswani2017attention}. Instead of updating a hidden state step by step, as in
+a recurrent layer, self-attention compares every position in the sequence with every other
+position. Each time step is projected into query, key and value vectors. The query-key similarities
+determine which positions are most relevant to each other, and the value vectors are combined
+according to those attention weights.
+
+This formulation allows a Transformer to model relationships between distant frames without passing
+information through all intermediate time steps. It also supports parallel computation across the
+sequence, which is useful when large datasets and long inputs are available. However, because the
+model does not process frames in their natural order by default, positional information must be
+added so that the network can distinguish earlier frames from later ones.
+
+In SLR, Transformer-based models are relevant because signs often contain dependencies between
+non-adjacent moments of the motion. At the same time, they can be more data-demanding than
+recurrent layers, especially in small word-level datasets. For this reason, Transformers are best
+understood in this work as attention-based sequence models to compare against recurrent
+alternatives, rather than as an automatic replacement for LSTM or GRU layers.
+
 \section{Related Work in Sign Language Recognition}
 \label{sec:related_slr_work}
 
-SLR research combines object detection, feature extraction and temporal classification. Earlier
-vision pipelines often treated hands as regions to be detected before classification. Modern object
-detectors such as Faster Region-based Convolutional Neural Network (Faster R-CNN)
+SLR research can be organised according to the recognition setting and the type of visual
+representation used by the model. Survey work distinguishes between isolated sign recognition,
+continuous sign recognition and sign language translation \cite{koller2020signlanguage,
+rastgoo2021signlanguage,bragg2019signlanguagerecognition}. Isolated recognition assigns a single
+gloss to a trimmed clip, which is the scope of this project. Continuous recognition must segment
+and classify signs from longer streams, while translation must produce spoken-language text and
+account for grammar, context and non-manual markers.
+
+\paragraph{Detection-based approaches:}
+Earlier vision pipelines often treated hands as regions to be detected before classification.
+Modern object detectors such as Faster Region-based Convolutional Neural Network (Faster R-CNN)
 \cite{ren2015fasterrcnn}, Single Shot MultiBox Detector (SSD) \cite{liu2016ssd}, EfficientDet
 \cite{tan2020efficientdet} and the You Only Look Once (YOLO) family
 \cite{redmon2016yolo,redmon2018yolov3} frame this problem as locating objects and assigning class
@@ -431,36 +515,33 @@ scores in images. YOLO is especially relevant for real-time hand detection becau
 detection in a single forward pass, and YOLOv8 is a current implementation frequently used in
 practical detection pipelines \cite{jocher2023yolov8}.
 
-Survey work distinguishes between isolated sign recognition, continuous sign recognition and sign
-language translation \cite{koller2020signlanguage,rastgoo2021signlanguage,
-bragg2019signlanguagerecognition}. Isolated recognition assigns a single gloss to a trimmed clip,
-which is the scope of this project. Continuous recognition must segment and classify signs from
-longer streams, while translation must produce spoken-language text and account for grammar,
-context and non-manual markers.
+\paragraph{Pixel-based deep learning approaches:}
+With the adoption of DNNs, many SLR systems moved from handcrafted descriptors towards models that
+learn visual features directly from video frames. Pixel-based CNNs extract frame-level appearance
+patterns, while recurrent layers model their temporal evolution and attention modules weight the
+most informative moments of the sequence. Transformer-based work such as Sign Language Transformers
+\cite{camgoz2020signlanguagetransformers} and STMC-Transformer \cite{yin2020stmc} shows how
+attention-based sequence models have been applied to continuous recognition and translation
+settings.
 
+\paragraph{Pose-based approaches:}
+Pose-based methods replace raw frames with landmark sequences, reducing dimensionality and limiting
+the influence of background appearance. Bohacek and Hruz \cite{bohacek2022spoter} proposed a
+pose-based Transformer for word-level SLR, while Sign2Pose \cite{eunice2023sign2pose} combines pose
+features and Transformer-based gloss prediction on WLASL. This project is situated in the
+pose-based line: MediaPipe Hands provides hand landmarks, and the recognition model evaluates
+recurrent and attention-based temporal processing.
+
+\paragraph{Datasets and evaluation context:}
 Word-level ASL recognition is strongly associated with WLASL and MS-ASL. Li et al.
 \cite{li2020wlasl} introduced WLASL together with benchmark comparisons for word-level recognition
 from video, while Joze and Koller \cite{joze2019msasl} introduced MS-ASL as a larger ASL benchmark.
 Both works helped move isolated SLR evaluation away from small curated vocabularies and towards
-larger, noisier video collections.
+larger, noisier video collections. Large-scale work such as BSL-1K \cite{albanie2020bsl1k} also
+highlights that dataset scale, weak supervision and cross-dataset transfer remain central concerns
+in sign recognition research.
 
-Architecturally, the literature has moved from handcrafted descriptors towards DNN-based pipelines.
-Pixel-based CNNs learn frame-level visual features, recurrent layers model temporal evolution and
-attention modules weight the most informative time steps. Transformer-based work such as Sign
-Language Transformers \cite{camgoz2020signlanguagetransformers} and STMC-Transformer
-\cite{yin2020stmc} shows how attention-based sequence models have been applied to continuous
-recognition and translation settings.
-
-Pose-based methods replace raw frames with landmark sequences, reducing dimensionality and limiting
-the influence of background appearance. Bohacek and Hruz \cite{bohacek2022spoter} proposed a
-pose-based Transformer for word-level SLR, while Sign2Pose \cite{eunice2023sign2pose} combines pose
-features and Transformer-based gloss prediction on WLASL. Large-scale work such as BSL-1K
-\cite{albanie2020bsl1k} also highlights that dataset scale, weak supervision and cross-dataset
-transfer remain central concerns in sign recognition research. This project is situated in the
-pose-based line: MediaPipe Hands provides hand landmarks, and the recognition model evaluates
-recurrent and attention-based temporal processing.
-
-\section{Datasets and Limitations}
+\section{Dataset Limitations}
 \label{sec:sota_datasets}
 
 SLR systems depend strongly on the datasets available for training and evaluation. Unlike general
@@ -469,15 +550,16 @@ languages, domains and signer populations. Dataset design therefore shapes what 
 can learn: the vocabulary determines the classification space, recording conditions affect visual
 variation and annotation practice defines the gloss labels used for evaluation.
 
-WLASL \cite{li2020wlasl} and MS-ASL \cite{joze2019msasl} are the main ASL references for word-level
-video recognition. They provide public benchmarks at a scale suitable for comparing temporal
-models, but they also reflect common limitations in SLR research. Many clips originate from online
-video sources, which introduces variable camera quality, inconsistent clip duration and dataset
-attrition when source videos are removed or made private. Class imbalance also remains a recurring
-issue, since frequent signs have many more examples than rare signs.
+The main limitations are fourfold. First, many sign datasets contain a limited number of examples
+per class, which makes it difficult to train high-capacity temporal models without overfitting.
+Second, class imbalance is common: frequent signs tend to have many more examples than rare signs,
+so aggregate accuracy may hide poor behaviour on under-represented glosses. Third, clips collected
+from online sources introduce uncontrolled variation in camera quality, viewpoint, signer
+appearance, background, duration and execution style. Finally, dataset attrition can occur when
+source videos are removed or made private, reducing reproducibility over time.
 
-Auxiliary resources such as static alphabet datasets or hand-detection corpora are useful for
-engineering stages such as detector training or letter-level experiments. They should not be
-treated as word-level SLR benchmarks because they do not evaluate temporal sign dynamics. For that
-reason, this chapter treats them as secondary resources and leaves the dataset composition and
-preparation details to the technical development chapter.
+These limitations affect how experimental results should be interpreted. A model can perform well
+on a constrained benchmark while still struggling to generalise to new signers, recording
+conditions or larger vocabularies. Auxiliary resources such as static alphabet datasets or
+hand-detection corpora are useful for engineering stages, but they should not be treated as
+word-level SLR benchmarks because they do not evaluate temporal sign dynamics.

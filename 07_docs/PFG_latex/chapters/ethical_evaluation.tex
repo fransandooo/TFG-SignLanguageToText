@@ -35,6 +35,7 @@ vision and on-device inference). The seven principles are:
 \end{enumerate}
 
 \section{Project Analysis Against Google's AI Principles}
+\label{sec:ethical_evaluation}
 
 This section evaluates the project against each principle using scored metrics. Each identifier
 uses the format Mx.y, where x denotes the principle number and y denotes the metric within that
@@ -52,9 +53,9 @@ automatic American Sign Language (ASL) recognition system can act as a bridge in
 medical and everyday contexts.
 
 \begin{itemize}
-    \item \textbf{M1.1: Real societal need.} The World Health Organization estimates over 430 million people worldwide have disabling hearing loss; the project targets a clear accessibility problem. \textit{Score: 10.}
-    \item \textbf{M1.2: Effectiveness of the solution.} As summarised in Table~\ref{tab:ethics_metrics}, the best-performing configuration achieves \textbf{63.85\% Top-1 / 86.46\% Top-5 (5-fold cross-validation, WLASL30)}. The same configuration is reproduced under the modular pipeline as 58.82\% $\pm$ 2.94\% Top-1 across three seeds and extends to \textbf{70.20\% $\pm$ 2.89\% Top-1 / 90.54\% $\pm$ 0.89\% Top-5} on MS-ASL50. Accuracy degrades at scale (44.70\% at 100 classes, 28.61\% at 300, 11.19\% at 1000), so the system remains a research prototype rather than a deployment-ready translator. This limitation supports an intermediate effectiveness assessment. \textit{Score: 5.}
-    \item \textbf{M1.3: Accessibility of the technology.} Built on open-source tools (Python, PyTorch, MediaPipe) and public datasets (WLASL, MS-ASL), with the methodology documented in this work. The recognition pipeline was designed with mobile-first deployment in mind. \textit{Score: 10.}
+    \item \textbf{M1.1 - Real societal need (Score: 10):} The World Health Organization estimates over 430 million people worldwide have disabling hearing loss; the project targets a clear accessibility problem.
+    \item \textbf{M1.2 - Effectiveness of the solution (Score: 5):} As summarised in Table~\ref{tab:ethics_metrics}, the best-performing configuration achieves \textbf{63.85\% Top-1 / 86.46\% Top-5 (5-fold cross-validation, WLASL30)}. The same configuration is reproduced under the modular pipeline as 58.82\% $\pm$ 2.94\% Top-1 across three seeds and extends to \textbf{70.20\% $\pm$ 2.89\% Top-1 / 90.54\% $\pm$ 0.89\% Top-5} on MS-ASL50. Accuracy degrades at scale (44.70\% at 100 classes, 28.61\% at 300, 11.19\% at 1000), so the system remains a research prototype rather than a deployment-ready translator. This limitation supports an intermediate effectiveness assessment.
+    \item \textbf{M1.3 - Accessibility of the technology (Score: 10):} Built on open-source tools (Python, PyTorch, MediaPipe) and public datasets (WLASL, MS-ASL), with the methodology documented in this work. The recognition pipeline was designed with mobile-first deployment in mind.
 \end{itemize}
 
 \subsection{Principle 2: Avoid Creating or Reinforcing Unfair Bias}
@@ -64,8 +65,8 @@ signing speed and style. Bias arises both at the perception stage (hand detectio
 extraction operating on raw images) and at the recognition stage.
 
 \begin{itemize}
-    \item \textbf{M2.1: Dataset diversity (word recognition).} WLASL aggregates videos from multiple online sources, providing implicit signer variation, but lacks demographic annotations (skin tone, age, hand morphology), so diversity cannot be quantified formally. \textit{Score: 5.}
-    \item \textbf{M2.2: Dataset diversity (hand detection and letter classification).} The auxiliary datasets were:
+    \item \textbf{M2.1 - Dataset diversity (word recognition) (Score: 5):} WLASL aggregates videos from multiple online sources, providing implicit signer variation, but lacks demographic annotations (skin tone, age, hand morphology), so diversity cannot be quantified formally.
+    \item \textbf{M2.2 - Dataset diversity (hand detection and letter classification) (Score: 5):} The auxiliary datasets were:
           \begin{enumerate}
               \item EgoHands ($\sim$4{,}800 egocentric images) for hand detection.
               \item The Kaggle Hand Dataset ($\sim$4{,}200 third-person images) for hand detection.
@@ -74,9 +75,9 @@ extraction operating on raw images) and at the recognition stage.
                     dataset format).
               \item The ASL Alphabet Dataset ($\sim$87{,}000 RGB images) for letter classification.
           \end{enumerate}
-          None of these datasets provides demographic metadata, so potential biases cannot be ruled out. \textit{Score: 5.}
-    \item \textbf{M2.3: Input representation fairness.} The word-recognition model consumes MediaPipe landmarks (21 keypoints $\times$ 3 coordinates) instead of raw pixels. Operating on geometric joint positions rather than visual appearance reduces sensitivity to skin colour, lighting and background, mitigating appearance-based bias at the recognition stage (though not at the upstream landmark extractor). \textit{Score: 10.}
-    \item \textbf{M2.4: Per-class performance analysis.} Per-class metrics were logged across all experiments, surfacing wide accuracy gaps (e.g.\ ``what'' 8.3\%, ``cool'' 12.5\%, vs.\ ``orange'' 100\%, ``table'' 100\%). The disparities are mostly explained by visual similarity between signs and small per-class sample counts rather than by demographic factors. Class-weighted loss or oversampling were not applied in this iteration but are facilitated by the existing per-class logging. \textit{Score: 5.}
+          None of these datasets provides demographic metadata, so potential biases cannot be ruled out.
+    \item \textbf{M2.3 - Input representation fairness (Score: 10):} The word-recognition model consumes MediaPipe landmarks (21 keypoints $\times$ 3 coordinates) instead of raw pixels. Operating on geometric joint positions rather than visual appearance reduces sensitivity to skin colour, lighting and background, mitigating appearance-based bias at the recognition stage (though not at the upstream landmark extractor).
+    \item \textbf{M2.4 - Per-class performance analysis (Score: 5):} Per-class metrics were logged across all experiments, surfacing wide accuracy gaps (e.g.\ ``what'' 8.3\%, ``cool'' 12.5\%, vs.\ ``orange'' 100\%, ``table'' 100\%). The disparities are mostly explained by visual similarity between signs and small per-class sample counts rather than by demographic factors. Class-weighted loss or oversampling were not applied in this iteration but are facilitated by the existing per-class logging.
 \end{itemize}
 
 \subsection{Principle 3: Be Built and Tested for Safety}
@@ -85,10 +86,10 @@ In this context, safety means producing reliable predictions and avoiding mislea
 could cause misunderstandings in sensitive domains.
 
 \begin{itemize}
-    \item \textbf{M3.1: Cross-validation methodology.} Evaluation uses Stratified 5-Fold Cross-Validation (mean Top-1 \textbf{63.85\% $\pm$ 4.50\%}, mean Top-5 \textbf{86.46\% $\pm$ 2.04\%}), corroborated by a 3-seed multi-seed sweep on the same dataset (58.82\% $\pm$ 2.94\% Top-1) under the refactored pipeline. Test-Time Augmentation was deliberately avoided because it inflates reported accuracy without reflecting true generalisation. \textit{Score: 10.}
-    \item \textbf{M3.2: Scalability testing.} The model was retrained on progressively larger WLASL subsets (30 / 100 / 300 / 500 / 700 / 900 / 1000 / 1200 / 1500 classes), documenting accuracy degradation and an instability point above 700 classes. This stress-test establishes the boundaries within which the system can be considered reliable. \textit{Score: 10.}
-    \item \textbf{M3.3: Hand detection reliability.} The YOLOv8n hand detector reached approximately 98\% mAP50 on the combined test set, validated across both source datasets. A reliable detector is a prerequisite for the recognition pipeline. \textit{Score: 10.}
-    \item \textbf{M3.4: Failure mode documentation.} Per-class confusion matrices identify systematically confused word pairs, but a confidence-threshold mechanism (so the system can abstain when uncertain) is not yet implemented and is needed before any production deployment. \textit{Score: 5.}
+    \item \textbf{M3.1 - Cross-validation methodology (Score: 10):} Evaluation uses Stratified 5-Fold Cross-Validation (mean Top-1 \textbf{63.85\% $\pm$ 4.50\%}, mean Top-5 \textbf{86.46\% $\pm$ 2.04\%}), corroborated by a 3-seed multi-seed sweep on the same dataset (58.82\% $\pm$ 2.94\% Top-1) under the refactored pipeline. Test-Time Augmentation was deliberately avoided because it inflates reported accuracy without reflecting true generalisation.
+    \item \textbf{M3.2 - Scalability testing (Score: 10):} The model was retrained on progressively larger WLASL subsets (30 / 100 / 300 / 500 / 700 / 900 / 1000 / 1200 / 1500 classes), documenting accuracy degradation and an instability point above 700 classes. This stress-test establishes the boundaries within which the system can be considered reliable.
+    \item \textbf{M3.3 - Hand detection reliability (Score: 10):} The YOLOv8n hand detector reached approximately 98\% mAP50 on the combined test set, validated across both source datasets. A reliable detector is a prerequisite for the recognition pipeline.
+    \item \textbf{M3.4 - Failure mode documentation (Score: 5):} Per-class confusion matrices identify systematically confused word pairs, but a confidence-threshold mechanism (so the system can abstain when uncertain) is not yet implemented and is needed before any production deployment.
 \end{itemize}
 
 \subsection{Principle 4: Be Accountable to People}
@@ -97,9 +98,9 @@ Accountability requires that the system is interpretable to its users and gives 
 control over its outputs.
 
 \begin{itemize}
-    \item \textbf{M4.1: Model interpretability.} The Temporal Attention layer produces per-frame weights that can be inspected to understand which frames drove a prediction. This provides a degree of post-hoc interpretability that fully opaque architectures lack. \textit{Score: 10.}
-    \item \textbf{M4.2: Top-K predictions.} The system exposes Top-5 alongside Top-1. With Top-5 accuracy of 86.46\% on WLASL30 (and 90.54\% on MS-ASL50), the correct answer is almost always in the shortlist, allowing the user to make the final call rather than accepting a single forced prediction. \textit{Score: 10.}
-    \item \textbf{M4.3: Reproducibility.} All experiments are driven by versioned YAML configs and produce manifests with git commit, hyperparameters and metrics. The main caveat is that some WLASL videos rely on YouTube URLs that may decay over time; this is also an ethical concern about data provenance, since the original signers did not explicitly consent to use of their videos for machine learning research. \textit{Score: 5.}
+    \item \textbf{M4.1 - Model interpretability (Score: 10):} The Temporal Attention layer produces per-frame weights that can be inspected to understand which frames drove a prediction. This provides a degree of post-hoc interpretability that fully opaque architectures lack.
+    \item \textbf{M4.2 - Top-K predictions (Score: 10):} The system exposes Top-5 alongside Top-1. With Top-5 accuracy of 86.46\% on WLASL30 (and 90.54\% on MS-ASL50), the correct answer is almost always in the shortlist, allowing the user to make the final call rather than accepting a single forced prediction.
+    \item \textbf{M4.3 - Reproducibility (Score: 5):} All experiments are driven by versioned YAML configs and produce manifests with git commit, hyperparameters and metrics. The main caveat is that some WLASL videos rely on YouTube URLs that may decay over time; this is also an ethical concern about data provenance, since the original signers did not explicitly consent to use of their videos for machine learning research.
 \end{itemize}
 
 \subsection{Principle 5: Incorporate Privacy Design Principles}
@@ -109,28 +110,28 @@ photographs, training the word recognition model on landmark abstractions and se
 from a mobile client.
 
 \begin{itemize}
-    \item \textbf{M5.1: Data minimisation through landmarks (training).} Each video frame is reduced to 63 numerical values that discard the original visual content. Once landmarks are extracted, the original video is no longer needed and the processed data cannot reconstruct the signer's face, body or background. \textit{Score: 10.}
-    \item \textbf{M5.2: Privacy in the hand detection phase.} Detector training relied on real photographs of identifiable persons (EgoHands, Kaggle Hand). Although these datasets are publicly available for research, no independent privacy audit was conducted on their provenance and the images were used as-is during training. \textit{Score: 5.}
-    \item \textbf{M5.3: Privacy in the inference pipeline.} The current FastAPI server receives full RGB frames (416$\times$416) from the mobile app, processes them and persists raw frames and cropped regions to disk without encryption or automatic expiration. This is the weakest privacy point. A natural mitigation is to move landmark extraction to the client device so that only the abstract 63-dimensional vector ever leaves the phone. \textit{Score: 0.}
-    \item \textbf{M5.4: K-anonymity considerations.} WLASL stores no identifying metadata about signers. The landmark representation acts as a generalisation: different persons performing the same sign yield similar feature vectors \cite{sweeney2002kanonymity}. A formal k-anonymity algorithm was not applied, but the pipeline achieves a comparable effect for the recognition stage. The protection does not extend to the detector training data nor to the server inference path. \textit{Score: 5.}
+    \item \textbf{M5.1 - Data minimisation through landmarks (training) (Score: 10):} Each video frame is reduced to 63 numerical values that discard the original visual content. Once landmarks are extracted, the original video is no longer needed and the processed data cannot reconstruct the signer's face, body or background.
+    \item \textbf{M5.2 - Privacy in the hand detection phase (Score: 5):} Detector training relied on real photographs of identifiable persons (EgoHands, Kaggle Hand). Although these datasets are publicly available for research, no independent privacy audit was conducted on their provenance and the images were used as-is during training.
+    \item \textbf{M5.3 - Privacy in the inference pipeline (Score: 0):} The current FastAPI server receives full RGB frames (416$\times$416) from the mobile app, processes them and persists raw frames and cropped regions to disk without encryption or automatic expiration. This is the weakest privacy point. A natural mitigation is to move landmark extraction to the client device so that only the abstract 63-dimensional vector ever leaves the phone.
+    \item \textbf{M5.4 - K-anonymity considerations (Score: 5):} WLASL stores no identifying metadata about signers. The landmark representation acts as a generalisation: different persons performing the same sign yield similar feature vectors \cite{sweeney2002kanonymity}. A formal k-anonymity algorithm was not applied, but the pipeline achieves a comparable effect for the recognition stage. The protection does not extend to the detector training data nor to the server inference path.
 \end{itemize}
 
 \subsection{Principle 6: Uphold High Standards of Scientific Excellence}
 
 \begin{itemize}
-    \item \textbf{M6.1: Systematic model comparison (word recognition).} Multiple architectures were trained under matched conditions: CNN+LSTM (pixel-based), LSTM (landmark-based), plain GRU, GRU with enriched features, GRU + Temporal Attention and a Transformer variant. \textit{Score: 10.}
-    \item \textbf{M6.2: Systematic model comparison (hand detection).} The hand detection stage compared YOLOv8n, SSDLite-MobileNetV3 and EfficientDet-D0 on the same combined dataset using standard detection metrics (mAP50, mAP50-95 and latency). \textit{Score: 10.}
-    \item \textbf{M6.3: Statistical validation.} Stratified 5-Fold Cross-Validation reports mean and standard deviation across folds (63.85\% $\pm$ 4.50\% Top-1). The modular pipeline contributes additional multi-seed runs on WLASL30 and MS-ASL50 to bound model-init variance. Pearson correlation analysis quantifies the relationship between vocabulary size and accuracy. \textit{Score: 10.}
-    \item \textbf{M6.4: Literature grounding.} The State of the Art chapter situates each architectural choice (CNN, RNN, LSTM, GRU, Attention, MediaPipe) in the established literature. \textit{Score: 10.}
-    \item \textbf{M6.5: Honest reporting of limitations.} The project explicitly documents accuracy degradation at scale, the $\sim$69\% MediaPipe detection rate on WLASL and the instability observed above 700 classes. Negative results are reported alongside positive findings. \textit{Score: 10.}
+    \item \textbf{M6.1 - Systematic model comparison (word recognition) (Score: 10):} Multiple architectures were trained under matched conditions: CNN+LSTM (pixel-based), LSTM (landmark-based), plain GRU, GRU with enriched features, GRU + Temporal Attention and a Transformer variant.
+    \item \textbf{M6.2 - Systematic model comparison (hand detection) (Score: 10):} The hand detection stage compared YOLOv8n, SSDLite-MobileNetV3 and EfficientDet-D0 on the same combined dataset using standard detection metrics (mAP50, mAP50-95 and latency).
+    \item \textbf{M6.3 - Statistical validation (Score: 10):} Stratified 5-Fold Cross-Validation reports mean and standard deviation across folds (63.85\% $\pm$ 4.50\% Top-1). The modular pipeline contributes additional multi-seed runs on WLASL30 and MS-ASL50 to bound model-init variance. Pearson correlation analysis quantifies the relationship between vocabulary size and accuracy.
+    \item \textbf{M6.4 - Literature grounding (Score: 10):} The State of the Art chapter situates each architectural choice (CNN, RNN, LSTM, GRU, Attention, MediaPipe) in the established literature.
+    \item \textbf{M6.5 - Honest reporting of limitations (Score: 10):} The project explicitly documents accuracy degradation at scale, the $\sim$69\% MediaPipe detection rate on WLASL and the instability observed above 700 classes. Negative results are reported alongside positive findings.
 \end{itemize}
 
 \subsection{Principle 7: Be Made Available for Uses That Accord with These Principles}
 
 \begin{itemize}
-    \item \textbf{M7.1: Intended use clarity.} The project frames the system as a research prototype for ASL word recognition, with assistive technology as the target use case. Scope and limitations are explicit. \textit{Score: 10.}
-    \item \textbf{M7.2: Misuse potential assessment.} Landmark vectors carry very limited misuse potential (no surveillance or facial recognition is recoverable from 63 floats per frame). The detector and the inference server, however, do process raw images and currently lack access controls and retention policies; this gap should be closed before any deployment beyond the research context. \textit{Score: 5.}
-    \item \textbf{M7.3: Open research contribution.} The methodology and code are documented in the project report and in the repository. Trained models and processed datasets have not yet been published in a public artefact registry. \textit{Score: 5.}
+    \item \textbf{M7.1 - Intended use clarity (Score: 10):} The project frames the system as a research prototype for ASL word recognition, with assistive technology as the target use case. Scope and limitations are explicit.
+    \item \textbf{M7.2 - Misuse potential assessment (Score: 5):} Landmark vectors carry very limited misuse potential (no surveillance or facial recognition is recoverable from 63 floats per frame). The detector and the inference server, however, do process raw images and currently lack access controls and retention policies; this gap should be closed before any deployment beyond the research context.
+    \item \textbf{M7.3 - Open research contribution (Score: 5):} The methodology and code are documented in the project report and in the repository. Trained models and processed datasets have not yet been published in a public artefact registry.
 \end{itemize}
 
 \section{Impact Scale of Ethical Aspects}
@@ -205,8 +206,8 @@ the systematic reporting of limitations and the reliability of the best-performi
 within the evaluated scope.
 
 The privacy dimension, rated \textbf{5.0/10}, represents the primary area for improvement. This
-deficit is attributed to the inference pipeline, where real-time data processing lacks the same
-level of protection as the static training environments.
+deficit is attributed to the inference pipeline, where live user data is handled with fewer
+safeguards than in the offline training workflow.
 
 One architectural decision, the use of MediaPipe hand landmarks as input, propagates positive
 effects across multiple principles: it reduces appearance-based bias (P2), it implements data

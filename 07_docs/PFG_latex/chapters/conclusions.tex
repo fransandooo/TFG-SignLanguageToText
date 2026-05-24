@@ -10,104 +10,104 @@ Chapter~\ref{chap:experiments}'s preamble and traced back to the main objective 
 now be answered.
 
 The answer is \textbf{yes, within the tested vocabulary scale, with reproducible stability across
-two ASL benchmarks and grounded in an explicit ethical framework}. The landmark-based GRU+Attention
-pipeline reaches 63.85\% Top-1 and 86.46\% Top-5 on WLASL30 under Stratified 5-Fold
-Cross-Validation, and reproduces with comparable seed-to-seed stability on MS-ASL50 (70.20\% Top-1,
-90.54\% Top-5) without any dataset-specific tuning. The pipeline achieves these results while
-reducing each video frame from a $224 \times 224$ RGB tensor to 63 landmark coordinates, a
-2{,}389$\times$ dimensionality reduction that simultaneously discards background appearance,
-reduces appearance-based bias and protects signer identity by construction.
+two ASL benchmarks and grounded in an explicit ethical framework}.
 
-The work also identifies the boundaries of the approach. Recognition accuracy degrades steadily as
+The landmark-based GRU+Attention pipeline reaches 63.85\% Top-1 and 86.46\% Top-5 on WLASL30 under
+Stratified 5-Fold Cross-Validation, and reproduces with comparable seed-to-seed stability on
+MS-ASL50 (70.20\% Top-1, 90.54\% Top-5) without any dataset-specific tuning. The pipeline achieves
+these results while reducing each video frame from a $224 \times 224$ RGB tensor to 63 landmark
+coordinates, a 2{,}389$\times$ dimensionality reduction that simultaneously discards background
+appearance, reduces appearance-based bias and protects signer identity by construction.
+
+This work also identifies the boundaries of the approach. Recognition accuracy degrades steadily as
 the vocabulary grows, from 58.82\% Top-1 at 30 classes to 9.76\% at 1{,}500 classes, reflecting the
 limited per-class data available in WLASL rather than a structural failure of the architecture. The
 qualitative validation with 15 participants further indicates that the prototype is perceived as
 useful ($4.5/5$ on perceived utility) and recommendable (Net Promoter Score $+40$), although result
 comprehension remains the lowest usability dimension and a clear target for interface improvement.
 
-Taken together, the experimental, ethical and qualitative evidence supports the project as a
-research prototype that demonstrates feasibility and reproducibility at the controlled-vocabulary
-scale, while explicitly delimiting the conditions under which the approach generalises.
+Taken together, the quantitative, qualitative, and ethical evidence validates the prototype,
+demonstrating its feasibility and reproducibility at a controlled-vocabulary scale while clearly
+defining its generalization boundaries
 
-\section{Conclusions Regarding Project Objectives}
+\section{Conclusions regarding Specific Objectives}
 
 The six specific objectives defined in Chapter~3 are addressed in the document as follows.
 
-\paragraph{SO1: Analyse state-of-the-art techniques in computer vision and temporal
-    modelling.} The State of the Art chapter (Chapter~\ref{ch:sota}) reviews convolutional
-                architectures, pose estimation, MediaPipe Hands, recurrent layers, attention
-                mechanisms and Transformer architectures, situating each within the SLR literature.
-                The objective is therefore considered achieved.
+\begin{enumerate}
+    \item \textbf{SO1 - Analyse state-of-the-art techniques in computer vision and temporal modelling:}
+          The State of the Art chapter (Chapter~\ref{ch:sota}) reviews convolutional architectures,
+          pose estimation, MediaPipe Hands, recurrent layers, attention mechanisms and Transformer
+          architectures, situating each within the SLR literature. The objective is therefore considered
+          achieved.
 
-\paragraph{SO2: Define a landmark-based data representation for ASL video clips.}
-The data preparation pipeline described in Chapter~5 converts raw WLASL and MS-ASL clips into
-normalised sequences of 21 three-dimensional hand landmarks per frame. The representation is
-consistent across both datasets and reduces sensitivity to background, lighting and signer
-appearance. The objective is achieved.
+    \item \textbf{SO2 - Define a landmark-based data representation for ASL video clips:}
+          The data preparation pipeline described in Section~\ref{sec:system_design} converts raw WLASL and MS-ASL clips into
+          normalised sequences of 21 three-dimensional hand landmarks per frame. The representation is
+          consistent across both datasets and reduces sensitivity to background, lighting and signer
+          appearance. The objective is achieved.
 
-\paragraph{SO3: Design and compare candidate convolutional and temporal architectures
-    for word-level ASL recognition.} Five locally tuned architecture families were compared under
-                                     matched conditions on WLASL30 (Section~\ref{sec:exp_phase2}).
-                                     The GRU+Attention configuration emerged as the best-performing
-                                     model under the controlled comparison and was selected as the
-                                     default for downstream experiments. The objective is achieved.
+    \item \textbf{SO3 - Design and compare candidate convolutional and temporal architectures for
+              word-level ASL recognition:} Five locally tuned architecture families were compared under
+          matched conditions on WLASL30 (Section~\ref{sec:exp_phase2}). The GRU+Attention configuration
+          emerged as the best-performing model under the controlled comparison and was selected as the
+          default for downstream experiments. The objective is achieved.
 
-\paragraph{SO4: Evaluate the selected recognition pipeline through reproducible
-    experimental protocols.} The selected configuration was evaluated through Stratified 5-Fold
-                             Cross-Validation, multi-seed runs at three random seeds and a
-                             sequence-length sweep (Sections~\ref{sec:exp_seqlen}
-                             and~\ref{sec:exp_wlasl30}). The mean Top-1 of 63.85\% $\pm$ 4.50\%
-                             under Cross-Validation and the seed-to-seed standard deviation of
-                             2.94\,pp on the fixed split provide the reproducibility evidence
-                             required for the objective. The objective is achieved.
+    \item \textbf{SO4 - Evaluate the selected recognition pipeline through reproducible experimental
+              protocols:} The selected configuration was evaluated through Stratified 5-Fold
+          Cross-Validation, multi-seed runs at three random seeds and a sequence-length sweep
+          (Sections~\ref{sec:exp_seqlen} and~\ref{sec:exp_wlasl30}). The mean Top-1 of 63.85\% $\pm$
+          4.50\% under Cross-Validation and the seed-to-seed standard deviation of 2.94\,pp on the fixed
+          split provide the reproducibility evidence required for the objective. The objective is
+          achieved.
 
-\paragraph{SO5: Analyse the generalisation and scalability of the recognition
-    pipeline.} The pipeline was retrained on MS-ASL50 without architectural changes
-               (Section~\ref{sec:exp_msasl}) and on WLASL subsets from 100 to 1{,}500 classes
-               (Section~\ref{sec:exp_scaling}). The cross-dataset results confirm that training
-               stability is a property of the pipeline rather than of a specific benchmark, while
-               the scaling experiments quantify the per-class data threshold below which
-               performance degrades. The objective is achieved with the explicit limitation that
-               scaling experiments beyond 30 classes are single-seed.
+    \item \textbf{SO5 - Analyse the generalisation and scalability of the recognition pipeline:}
+          The pipeline was retrained on MS-ASL50 without architectural changes
+          (Section~\ref{sec:exp_msasl}) and on WLASL subsets from 100 to 1{,}500 classes
+          (Section~\ref{sec:exp_scaling}). The cross-dataset results confirm that training stability is a
+          property of the pipeline rather than of a specific benchmark, while the scaling experiments
+          quantify the per-class data threshold below which performance degrades. The objective is
+          achieved with the explicit limitation that scaling experiments beyond 30 classes are
+          single-seed.
 
-\paragraph{SO6: Evaluate the runtime proof of concept and the ethical implications
-    of the recognition approach.} The runtime prototype is described in Chapter~5 and qualitatively
-                                  validated in Section~\ref{sec:exp_qualitative} with $N=15$
-                                  participants. The ethical evaluation against Google's AI
-                                  Principles (Chapter~7) yields an overall maturity score of
-                                  7.6/10, identifying the inference pipeline as the primary area
-                                  for improvement. The objective is achieved.
+    \item \textbf{SO6 - Evaluate the runtime proof of concept and the ethical implications of the
+              recognition approach:} The runtime prototype is described in Chapter~5 and qualitatively
+          validated in Section~\ref{sec:exp_qualitative} with $N=15$ participants. The ethical evaluation
+          against Google's AI Principles (Chapter~7) yields an overall maturity score of 7.6/10,
+          identifying the inference pipeline as the primary area for improvement. The objective is
+          achieved.
+\end{enumerate}
 
 \section{Next Steps}
 
 The conclusions above identify three frontiers that extend this work, ordered by the type of
 contribution they would make.
+\begin{enumerate}
+    \item \textbf{Technical - beyond word-level recognition and on-device miniaturisation:}
+          The natural technical extension is to move from isolated gloss classification to continuous ASL
+          sentence recognition, which remains an open frontier of sign language research. A complementary
+          technical track is to miniaturise the selected GRU+Attention configuration so that the model can
+          run entirely on a mobile device with reduced parameter count, enabling fully on-device inference
+          without server involvement.
 
-\paragraph{Technical: beyond word-level recognition and on-device miniaturisation.}
-The natural technical extension is to move from isolated gloss classification to continuous ASL
-sentence recognition, which remains an open frontier of sign language research. A complementary
-technical track is to miniaturise the selected GRU+Attention configuration so that the model can
-run entirely on a mobile device with reduced parameter count, enabling fully on-device inference
-without server involvement.
+    \item \textbf{Scientific - cross-lingual transfer and broader architectural comparison:}
+          The landmark representation is, by construction, language-agnostic at the geometric level: hand
+          anatomy is shared across sign languages, even when vocabularies are not. A scientific extension is
+          to transfer the pipeline from ASL to Lengua de Signos Espa\~nola (LSE), British Sign Language (BSL)
+          and other sign languages, evaluating whether the same architecture generalises across linguistic
+          boundaries. A second scientific direction, identified as a limitation in
+          Section~\ref{sec:exp_limitations}, is to extend the architectural comparison beyond GRU+Attention.
+          In particular, running the Transformer baseline of Section~\ref{sec:exp_phase2} on MS-ASL50 and on
+          larger WLASL subsets, using hardware capable of accommodating larger models such as more powerful
+          GPUs, would test whether the recurrent advantage observed at the WLASL30 scale persists in data
+          regimes where Transformer architectures are typically competitive.
 
-\paragraph{Scientific: cross-lingual transfer and broader architectural comparison.}
-The landmark representation is, by construction, language-agnostic at the geometric level: hand
-anatomy is shared across sign languages, even when vocabularies are not. A scientific extension is
-to transfer the pipeline from ASL to Lengua de Signos Espa\~nola (LSE), British Sign Language (BSL)
-and other sign languages, evaluating whether the same architecture generalises across linguistic
-boundaries. A second scientific direction, identified as a limitation in
-Section~\ref{sec:exp_limitations}, is to extend the architectural comparison beyond GRU+Attention.
-In particular, running the Transformer baseline of Section~\ref{sec:exp_phase2} on MS-ASL50 and on
-larger WLASL subsets, using hardware capable of accommodating larger models such as more powerful
-GPUs, would test whether the recurrent advantage observed at the WLASL30 scale persists in data
-regimes where Transformer architectures are typically competitive.
-
-\paragraph{Applied: privacy-first edge deployment.} The ethical analysis in Chapter~7 identified the inference pipeline as the weakest privacy point of
-the current system. The applied next step is therefore to move the entire pipeline on-device,
-including landmark extraction and recognition, so that only the abstract 63-dimensional vector ever
-leaves the phone if any data leaves it at all. This closes the privacy gap identified in the
-ethical evaluation while preserving the recognition capability validated in Part~I.
-
+    \item \textbf{Applied - privacy-first edge deployment:} The ethical analysis in Section~\ref{sec:ethical_evaluation} identified the inference pipeline as the weakest privacy point of
+          the current system. The applied next step is therefore to move the entire pipeline on-device,
+          including landmark extraction and recognition, so that only the abstract 63-dimensional vector ever
+          leaves the phone if any data leaves it at all. This closes the privacy gap identified in the
+          ethical evaluation while preserving the recognition capability validated in Section~\ref{sec:exp_phase1}.
+\end{enumerate}
 These three directions are not exclusive. A complete continuation of the work would combine
 continuous-sentence modelling with cross-lingual evaluation under a privacy-first deployment
 configuration, building on the foundations established in this Final Degree Project.

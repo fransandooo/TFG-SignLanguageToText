@@ -40,6 +40,9 @@
 \usepackage{float}        % for [H] (exact placement)
 \usepackage{placeins}     % for \FloatBarrier
 \usepackage{needspace}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{ragged2e}
 % Optionally (nice tables):
 \usepackage{booktabs}
 \usepackage{longtable}
@@ -48,7 +51,6 @@
   style=ieee,
   citestyle=ieee,
   sorting=none,
-  defernumbers=true,
   maxbibnames=99,
   maxcitenames=2,
   giveninits=true,
@@ -157,9 +159,14 @@
 \newcommand{\myname}{Francisco Sandoval Hern{\'a}ndez}
 \newcommand{\tutor}{Mois{\'e}s Mart{\'i}nez Muñoz}
 \newcommand{\subject}{Final Degree Project (FDP)}
-\newcommand{\mykeywords}{Sign Language Recognition, Artificial Intelligence, Deep Neural Networks, Computer Vision, Hand Landmarks}
-\newcommand{\mykeywordses}{reconocimiento de lengua de signos, inteligencia artificial, redes neuronales profundas, visi{\'o}n por computador, puntos clave de la mano}
+\newcommand{\mykeywords}{Sign Language Recognition, Artificial Intelligence, Deep Neural Networks, Computer Vision, Hand Landmarks.}
+\newcommand{\mykeywordses}{reconocimiento de lengua de signos, Inteligencia Artificial, Redes Neuronales Profundas, Visi{\'o}n por Computador, Puntos de referencia de la mano.}
 \newcommand{\mytitle}{Word-Level American Sign Language Recognition from Hand Landmarks}
+\newcommand{\mytitlecover}{%
+  Word-Level American Sign\\[0.24cm]
+  Language Recognition from\\[0.24cm]
+  Hand Landmarks\\[0.24cm]
+}
 
 \hypersetup{pdfauthor={\myname{}},%
             pdftitle={\mytitle{}},%

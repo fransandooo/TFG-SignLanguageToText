@@ -3,11 +3,18 @@
 \setcounter{section}{0}
 
 This chapter presents the experimental process chronologically, reflecting the project's evolution
-from its inception to final validation. It begins with the initial hand-detection and
-letter-classification pilot studies that informed the subsequent methodological pivot. The work
-then progressed into a rigorous architectural benchmarking phase and an extensive hyperparameter
-sweep, which ultimately yielded the best-performing configuration. Finally, the process concluded
-with multi-seed, cross-validation and cross-dataset validation to assess statistical stability.
+from its inception to final validation. The quantitative part is organised as seven phases. Each
+phase states what it tries to test, which configuration is used, which results are obtained, what
+the result contributes, what it does not solve, and whether the phase objective is achieved. This
+structure is intended to make the experimental reasoning understandable without requiring prior
+knowledge of the repository or the intermediate notebooks.
+
+The chapter begins with the initial hand-detection and letter-classification pilot studies that
+informed the subsequent methodological pivot. The work then progressed into architectural
+benchmarking, sequence-length selection, WLASL30 validation, cross-dataset validation on MS-ASL50
+and vocabulary scaling. The quantitative block closes with a balance of the evidence and its
+limitations.
+
 Every result reported below is backed by stored experiment artefacts, including configurations,
 metrics, plots, trained checkpoints and an experiment manifest for each run. The detailed
 repository paths needed to reproduce or audit the results are centralised in the reproducibility
@@ -17,54 +24,95 @@ repeating long file paths in every caption.
 \section{Experimental Methodology}
 \label{sec:exp_methodology}
 
-The experimental methodology is organised as a sequence of phases. Each phase has a defined input,
-configuration, measurement procedure and output, so that later sections can report results without
-mixing datasets, hyperparameters and interpretation in the same paragraph. The comparative metrics
-used throughout the chapter are those defined in Section~\ref{sec:plan_methods}: Top-1 accuracy,
-Top-5 accuracy, Macro-F1 and balanced accuracy.
+The experimental methodology is organised as a sequence of phases. Each phase has a defined
+purpose, configuration, measurement procedure, positive evidence, negative evidence and final
+balance. The comparative metrics used throughout the chapter are those defined in
+Section~\ref{sec:plan_methods}: Top-1 accuracy, Top-5 accuracy, Macro-F1 and balanced accuracy.
 
-\paragraph{M1: Exploratory pilots.} \textbf{Input:} EgoHands, Kaggle Hand Dataset, Sign Language
-MNIST and ASL Alphabet. \textbf{Configuration and measurements:} YOLOv8n,
-SSDLite-MobileNetV3 and EfficientDet-D0 were compared for hand localisation, while CNN classifiers
-were trained for static ASL letters. Detection used mAP50, Mean IoU and latency; letter recognition
-used classification accuracy. \textbf{Output:} evidence that detection and static letters were
-tractable but insufficient for word-level ASL recognition.
+\begin{enumerate}
+    \item \textbf{M1 - Exploratory pilots:}
+          \begin{itemize}
+              \item \textbf{Input:} EgoHands, Kaggle Hand Dataset, Sign Language MNIST and ASL
+                    Alphabet.
+              \item \textbf{Configuration and measurements:} YOLOv8n, SSDLite-MobileNetV3 and
+                    EfficientDet-D0 were compared for hand localisation, while CNN classifiers
+                    were trained for static ASL letters. Detection used mAP50, Mean IoU and
+                    latency; letter recognition used classification accuracy.
+              \item \textbf{Output:} Evidence that detection and static letters were tractable but
+                    insufficient for word-level ASL recognition.
+          \end{itemize}
 
-\paragraph{M2: Architecture selection.} \textbf{Input:} WLASL30 landmark sequences, with 242 train,
-56 validation and 34 test clips. \textbf{Configuration and measurements:} five locally tuned
-architecture families were compared under the same split, preprocessing and hardware. Each run was
-evaluated on the fixed test split. \textbf{Output:} selection of the best-performing GRU+Attention
-configuration for downstream experiments.
+    \item \textbf{M2 - Architecture selection:}
+          \begin{itemize}
+              \item \textbf{Input:} WLASL30 landmark sequences, with 242 train, 56 validation and
+                    34 test clips.
+              \item \textbf{Configuration and measurements:} Five locally tuned architecture
+                    families were compared under the same split, preprocessing and hardware. Each
+                    run was evaluated on the fixed test split.
+              \item \textbf{Output:} Selection of the best-performing GRU+Attention configuration
+                    for downstream experiments.
+          \end{itemize}
 
-\paragraph{M3: Sequence-length sweep.} \textbf{Input:} WLASL30 landmark sequences and the selected
-GRU+Attention architecture. \textbf{Configuration and measurements:} three maximum sequence lengths
-were tested, 32, 64 and 96 frames, each with seeds 42, 123 and 2026. \textbf{Output:} selection of
-\texttt{max\_frames}=64 as the default temporal input length.
+    \item \textbf{M3 - Sequence-length sweep:}
+          \begin{itemize}
+              \item \textbf{Input:} WLASL30 landmark sequences and the selected GRU+Attention
+                    architecture.
+              \item \textbf{Configuration and measurements:} Three maximum sequence lengths were
+                    tested, 32, 64 and 96 frames, each with seeds 42, 123 and 2026.
+              \item \textbf{Output:} Selection of \texttt{max\_frames}=64 as the default temporal
+                    input length.
+          \end{itemize}
 
-\paragraph{M4: WLASL30 validation.} \textbf{Input:} the WLASL30 fixed split and WLASL100 filtered
-to the same 30 glosses. \textbf{Configuration and measurements:} the fixed split used three seeds,
-while the complementary validation used Stratified 5-Fold Cross-Validation with class distribution
-preserved. \textbf{Output:} mean and standard deviation estimates for the selected configuration
-under seed and split variation.
+    \item \textbf{M4 - WLASL30 validation:}
+          \begin{itemize}
+              \item \textbf{Input:} The WLASL30 fixed split and WLASL100 filtered to the same 30
+                    glosses.
+              \item \textbf{Configuration and measurements:} The fixed split used three seeds,
+                    while the complementary validation used Stratified 5-Fold Cross-Validation with
+                    class distribution preserved.
+              \item \textbf{Output:} Mean and standard deviation estimates for the selected
+                    configuration under seed and split variation.
+          \end{itemize}
 
-\paragraph{M5: Cross-dataset validation.} \textbf{Input:} MS-ASL50 landmark sequences, with 1{,}410
-train, 306 validation and 236 test clips. \textbf{Configuration and measurements:} the selected
-configuration was retrained with the same preprocessing and three seeds, changing only the dataset
-path and vocabulary. \textbf{Output:} evidence about whether the pipeline reproduced on a second ASL
-corpus.
+    \item \textbf{M5 - Cross-dataset validation:}
+          \begin{itemize}
+              \item \textbf{Input:} MS-ASL50 landmark sequences, with 1{,}410 train, 306 validation
+                    and 236 test clips.
+              \item \textbf{Configuration and measurements:} The selected configuration was
+                    retrained with the same preprocessing and three seeds, changing only the
+                    dataset path and vocabulary.
+              \item \textbf{Output:} Evidence about whether the pipeline reproduced on a second
+                    ASL corpus.
+          \end{itemize}
 
-\paragraph{M6: Vocabulary scaling.} \textbf{Input:} WLASL subsets from 100 to 1{,}500 classes, plus
-the 30-class reference. \textbf{Configuration and measurements:} the selected configuration was
-retrained with \texttt{max\_frames}=64 and seed 42. Larger subsets used the extended budgets
-recorded in their manifests. \textbf{Output:} a scaling curve relating vocabulary size, per-class
-data availability and test performance.
+    \item \textbf{M6 - Vocabulary scaling:}
+          \begin{itemize}
+              \item \textbf{Input:} WLASL subsets from 100 to 1{,}500 classes, plus the 30-class
+                    reference.
+              \item \textbf{Configuration and measurements:} The selected configuration was
+                    retrained with \texttt{max\_frames}=64 and seed 42. Larger subsets used the
+                    extended budgets recorded in their manifests.
+              \item \textbf{Output:} A scaling curve relating vocabulary size, per-class data
+                    availability and test performance.
+          \end{itemize}
+
+    \item \textbf{M7 - Quantitative balance and limitations:}
+          \begin{itemize}
+              \item \textbf{Input:} The results and artefacts produced by phases M1 to M6.
+              \item \textbf{Configuration and measurements:} No new model is trained. The phase
+                    classifies the limitations observed during the previous experiments and
+                    separates supported conclusions from claims that remain outside the evidence.
+              \item \textbf{Output:} A final assessment of what the quantitative experiments prove,
+                    what they do not prove and which objectives are only partially satisfied.
+          \end{itemize}
+\end{enumerate}
 
 Unless a phase states otherwise, training and evaluation execute on the local workstation described
-in Section~\ref{sec:operational_environment}: NVIDIA RTX 3050 Ti Laptop GPU (4\,GB VRAM, CUDA
-12.x). The standard optimisation schedule uses AdamW with learning rate $1 \times 10^{-3}$, weight
-decay $5 \times 10^{-4}$ and label smoothing of $0.1$ on the cross-entropy loss. The learning rate
-follows a CosineAnnealingLR schedule. Early stopping monitors validation Top-1 with patience 30
-epochs, and the maximum standard run length is 150 epochs.
+in Section~\ref{sec:operational_environment}. The standard optimisation schedule uses AdamW with
+learning rate $1 \times 10^{-3}$, weight decay $5 \times 10^{-4}$ and label smoothing of $0.1$ on
+the cross-entropy loss. The learning rate follows a CosineAnnealingLR schedule. Early stopping
+monitors validation Top-1 with patience 30 epochs, and the maximum standard run length is 150
+epochs.
 
 Two reliability protocols are used when the sample size permits it. The \textbf{multi-seed
 protocol} repeats the same configuration with seeds 42, 123 and 2026, then reports mean $\pm$
@@ -83,60 +131,90 @@ sample.
 \section*{Part I: Quantitative Evaluation}
 \addcontentsline{toc}{section}{Part I: Quantitative Evaluation}
 
-\section{Phase 1: Exploratory Work and Methodological Pivot}
+\section{Phase 1 - Exploratory Work and Methodological Pivot}
 \label{sec:exp_phase1}
 
-The first months of the project explored two avenues that were eventually superseded by the
-landmark + word approach. They are reported here because the lessons drawn from them are the
-technical justification of the pivot, not because they appear as headline numbers in the final
-system. This section applies Phase M1 from Section~\ref{sec:exp_methodology}: the input is the set
-of hand-detection and letter-recognition datasets, the output is the decision to abandon
-pixel-based pilots in favour of landmark-based word recognition.
+\paragraph{Purpose:} The purpose of the first phase is not to obtain the final recognition result. Its role is to decide
+whether the project should remain in a pixel-based hand-detection and letter-classification path,
+or pivot towards word-level recognition from hand landmarks. The phase therefore evaluates two
+simpler problems first: locating hands in images and recognising static ASL letters.
 
-\paragraph{Hand detection with YOLOv8n.} As introduced in the related-work discussion and dataset description, an initial hand-localisation
-experiment trained YOLOv8n \cite{jocher2023yolov8} on the joint EgoHands and Kaggle Hand Dataset
-corpus described in Section~\ref{subsec:datasets_hd}. The input was the merged and deduplicated
-bounding-box dataset, approximately 5{,}223 annotated images after stratified train/validation/test
-splitting. The output was a detector with approximately \textbf{98\,\% mAP@0.5} and \textbf{87\,\%
-Mean IoU} on the held-out test split. YOLOv8n was selected after comparison with
-SSDLite-MobileNetV3 and EfficientDet-D0 because it provided lower inference latency at comparable
-detection accuracy on this corpus.
+\paragraph{Configuration:} Table~\ref{tab:exp_phase1_config} summarises the two exploratory branches. The table is
+intentionally separated from the later result tables because these pilots do not use the same
+benchmark, task or metric as the final word-recognition experiments.
 
-\paragraph{Letter-level pixel classification.} A parallel track trained CNN classifiers on the union of Sign Language MNIST (DS-03) and ASL
-Alphabet (DS-04). Coverage was limited to 24 of the 26 ASL letters because \emph{J} and \emph{Z}
-require hand motion and cannot be represented by a single static image. Accuracy on this
-static-frame classification task was high, but the task was also far simpler than the eventual
-project goal: predicting one of $\sim$24 hand poses per frame is a different problem from
-predicting a word from a multi-frame sign.
+\begin{table}[!htbp]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.25}
+    \caption{Configuration of the exploratory pilots. Source: self-created from the dataset chapter and stored exploratory artefacts.}
+    \label{tab:exp_phase1_config}
+    \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{2.6cm} >{\RaggedRight\arraybackslash}X >{\RaggedRight\arraybackslash}X >{\RaggedRight\arraybackslash}X@{}}
+        \toprule
+        \textbf{Branch}           & \textbf{Input data}                                                                                 & \textbf{Configuration}                                         & \textbf{Measurement and decision criterion}                                                                                                                                                  \\
+        \midrule
+        Hand localisation         & EgoHands + Kaggle Hand Dataset, approximately 5{,}223 annotated images after merging and splitting. & YOLOv8n compared with SSDLite-MobileNetV3 and EfficientDet-D0. & Detection quality through mAP@0.5 and Mean IoU, plus practical latency. The branch passes if hand localisation is reliable enough not to be the main bottleneck.                             \\
+        Static letter recognition & Sign Language MNIST + ASL Alphabet, restricted to static ASL letters.                               & CNN-based image classifiers over static hand-shape images.     & Classification accuracy on isolated letters. The branch passes only as a feasibility pilot, because letters \emph{J} and \emph{Z} require motion and are outside a static-frame formulation. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
-\paragraph{What the exploration revealed.} The bounding-box detector was not the bottleneck, since it worked reliably. The bottleneck was
-\emph{representation}. Pixel-based recognition has three properties that are problematic at the
-WLASL scale: (i) it carries appearance signal (skin tone, lighting, background) that is irrelevant
-to the linguistic content of a sign and that the model has to learn to discount with limited data;
-(ii) the parameter cost of an image-conditioned sequence model grows quickly, which makes
-overfitting on a few hundred clips per class very likely; and (iii) the geometry of hand
-articulation, which is the actual carrier of meaning, is not made explicit to the model.
+\FloatBarrier
 
-The pivot to landmark-based word recognition replaced the visual problem with a geometric one: each
-frame is reduced from a $224 \times 224$ RGB tensor to 21 three-dimensional keypoints (63
-features), a reduction of approximately $2{,}389\times$ in input dimensionality. The representation
-discards background and appearance at the source and exposes the joint geometry directly to a
-temporal model. The remainder of this chapter studies the resulting pipeline.
+\paragraph{Results:} The hand-localisation experiment produced a YOLOv8n detector with approximately \textbf{98\,\%
+mAP@0.5} and \textbf{87\,\% Mean IoU} on the held-out test split. This confirmed that locating
+hands was technically feasible. In parallel, the static-letter classifiers also achieved high
+accuracy on the simplified alphabet task, but the task itself was too far from the final objective:
+recognising a word from a temporal ASL clip.
 
-\section{Architecture Selection on WLASL30}
+\paragraph{Positive evidence:} The positive contribution of this phase is that it de-risks the front of the pipeline. It shows
+that the project does not fail because hands cannot be detected or because hand-shape information
+is impossible to learn. It also provides evidence that a visual pipeline can extract useful signal
+from ASL-related images.
+
+\paragraph{Negative evidence:} The limitation is that neither pilot solves word-level sign recognition. Static images cannot
+represent signs whose meaning depends on movement, and an RGB sequence model would have to learn to
+ignore background, lighting and signer appearance from a very small number of clips per class. The
+pilot therefore exposes a representation problem rather than a model-selection problem.
+
+\paragraph{Conclusion:} The phase achieves its objective as an exploratory phase. It does not produce a deployable
+recogniser, but it justifies the methodological pivot used in the rest of the chapter: each frame
+is represented by 21 three-dimensional MediaPipe landmarks, flattened into 63 features, instead of
+by a $224 \times 224$ RGB image. This reduces the input dimensionality by approximately
+$2{,}389\times$ and moves the learning problem from appearance-based recognition to geometric
+sequence classification.
+
+\section{Phase 2 - Architecture Selection on WLASL30}
 \label{sec:exp_phase2}
 
-This section instantiates Phase M2 from Section~\ref{sec:exp_methodology}. The objective is to
-select the architecture family that best converts one-hand MediaPipe landmark sequences into
-word-level ASL predictions under a fixed WLASL30 split. The input is WLASL30, the 30 most frequent
-WLASL classes, with 242 train, 56 validation and 34 test clips. Each row in
-Table~\ref{tab:exp_arch_comparison} is the best local configuration retained for that architecture
-family before the final comparison. The comparison then holds constant the dataset, landmark
-pipeline, hardware, optimiser, loss, batch size and early-stopping rule defined in
-Section~\ref{sec:exp_methodology}. The Transformer baseline is the only exception in optimiser
-scale, using $d_{\mathrm{model}} = 256$, $\mathrm{nhead} = 8$, four transformer layers,
-$\mathrm{lr} = 5 \times 10^{-4}$, $\mathrm{wd} = 1 \times 10^{-4}$ and dropout $0.3$, as recorded
-in its experiment manifest.
+\paragraph{Purpose:} The purpose of this phase is to choose the architecture family that best converts one-hand
+MediaPipe landmark sequences into word-level ASL predictions. The question is specific: among the
+locally implemented and tuned candidates, which architecture should be carried forward to the
+validation phases?
+
+\paragraph{Configuration:} Table~\ref{tab:exp_phase2_config} defines the fixed comparison setup. The architecture itself is
+the variable under test; the dataset, preprocessing and training policy remain fixed except for the
+Transformer optimiser settings documented in the table note.
+
+\begin{table}[H]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.25}
+    \caption{Configuration used for architecture selection. Source: self-created from experiment manifests and configuration files.}
+    \label{tab:exp_phase2_config}
+    \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{3.2cm} >{\RaggedRight\arraybackslash}X@{}}
+        \toprule
+        \textbf{Element}       & \textbf{Value}                                                                                                                            \\
+        \midrule
+        Dataset                & WLASL30, the 30 most frequent WLASL classes: 242 train, 56 validation and 34 test clips.                                                  \\
+        Input representation   & One detected hand per frame, represented by 21 MediaPipe landmarks with 3 coordinates each, flattened to 63 features.                     \\
+        Temporal length        & 64 frames per clip, using uniform sampling or padding as required.                                                                        \\
+        Compared architectures & LSTM, GRU, GRU with enriched geometric features, GRU+Attention and Transformer.                                                           \\
+        Shared training policy & AdamW, cross-entropy with label smoothing, cosine learning-rate schedule, batch size 32, early stopping on validation Top-1.              \\
+        Selection criterion    & Best fixed-split test performance, with Top-1 accuracy as the primary metric and Top-5 accuracy as a secondary usability-oriented metric. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
 \begin{table}[H]
     \centering
@@ -144,38 +222,45 @@ in its experiment manifest.
     \renewcommand{\arraystretch}{1.25}
     \caption{Single-split test results of the five locally tuned architectures evaluated on WLASL30 (34 test samples). Source: self-created from experiment outputs. Standard deviations are not available at this stage; the multi-seed validation of the selected configuration is in Section~\ref{sec:exp_wlasl30}.}
     \label{tab:exp_arch_comparison}
-    \begin{tabular}{@{}l r r p{4.6cm}@{}}
+    \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}X >{\centering\arraybackslash}p{2.0cm} >{\centering\arraybackslash}p{2.0cm} >{\RaggedRight\arraybackslash}X@{}}
         \toprule
-        \textbf{Architecture}    & \textbf{Top-1 (\%)} & \textbf{Top-5 (\%)} & \textbf{Notes}                                            \\
+        \textbf{Architecture}          & \textbf{Top-1 (\%)} & \textbf{Top-5 (\%)} & \textbf{Notes}                                            \\
         \midrule
-        LSTM (landmarks)         & 41.18               & 67.65               & Bidirectional, hidden size 256, 2 recurrent layers.       \\
-        GRU (landmarks)          & 38.24               & 76.47               & Bidirectional, hidden size 256, 2 recurrent layers.       \\
-        GRU + Enriched features  & 47.06               & 79.41               & GRU baseline with bone vectors and joint angles.          \\
-        \textbf{GRU + Attention} & \textbf{58.82}      & \textbf{91.18}      & Selected configuration, 2.26\,M parameters.               \\
-        Transformer              & 50.00               & 73.53               & Four encoder layers, 8 heads, $d_{\mathrm{model}} = 256$. \\
+        LSTM (landmarks)               & 41.18               & 67.65               & Bidirectional, hidden size 256, 2 recurrent layers.       \\
+        GRU (landmarks)                & 38.24               & 76.47               & Bidirectional, hidden size 256, 2 recurrent layers.       \\
+        GRU + Enriched features        & 47.06               & 79.41               & GRU baseline with bone vectors and joint angles.          \\
+        \textbf{GRU + Attention}       & \textbf{58.82}      & \textbf{91.18}      & Selected configuration, 2.26\,M parameters.               \\
+        Transformer\textsuperscript{a} & 50.00               & 73.53               & Four encoder layers, 8 heads, $d_{\mathrm{model}} = 256$. \\
         \bottomrule
-    \end{tabular}
+    \end{tabularx}
+    \vspace{0.2cm}
+    \footnotesize
+    \parbox{0.95\linewidth}{\textsuperscript{a}\textit{The Transformer baseline is the only exception in optimiser scale, using $d_{\mathrm{model}} = 256$, $\mathrm{nhead} = 8$, four transformer layers, $\mathrm{lr} = 5 \times 10^{-4}$, $\mathrm{wd} = 1 \times 10^{-4}$ and dropout $0.3$, as recorded in its experiment manifest.}}
 \end{table}
+\FloatBarrier
 
-The ordering in Table~\ref{tab:exp_arch_comparison} is consistent with a low-data setting. Plain
-GRU and plain LSTM architectures receive only 242 training examples spread over 30 classes, which
-limits the amount of temporal variation that either recurrent architecture can learn. Adding
-hand-engineered enriched features, namely bone vectors and inter-joint angles, gives the model a
-9-point absolute Top-1 increase over the plain GRU baseline. That gain disappears once temporal
-attention is added, because the attention layer can learn which frames carry the discriminative
-signal instead of receiving that information through manually designed geometric features.
+\FloatBarrier
 
-The Transformer baseline from this comparison is informative because its parameter budget is
-competitive with the GRU+Attention model. It underperforms on Top-1, 50.00 versus 58.82, and more
-sharply on Top-5, 73.53 versus 91.18. This result suggests that a recurrent sequential prior is
-useful when the training set is small. The experiment does not show that Transformer architectures
-are unsuitable for SLR in general, only that this specific Transformer configuration did not match
-the selected recurrent architecture on WLASL30.
+\paragraph{Results:} Table~\ref{tab:exp_arch_comparison} shows that GRU+Attention is the best candidate in this
+controlled comparison: 58.82\,\% Top-1 and 91.18\,\% Top-5. The attention layer improves over the
+plain GRU by 20.58 percentage points in Top-1 and over the enriched-feature GRU by 11.76 percentage
+points. The Transformer baseline reaches 50.00\,\% Top-1, which is competitive but below the
+selected recurrent model on both Top-1 and Top-5.
 
-The best-performing configuration, a bidirectional GRU with hidden size 256, two layers, dropout
-$0.4$ and a Temporal Attention head, is therefore selected as the default for every downstream
-experiment in the chapter. Its confusion matrix on the WLASL30 test split is shown in
-Figure~\ref{fig:exp_cm_wlasl30}.
+\paragraph{Positive evidence:} The phase supports the choice of a recurrent model with temporal attention. This is coherent with
+the structure of isolated sign clips: only some frames contain the most discriminative hand
+configuration or motion phase, and the attention head can weight those frames more heavily than
+preparation or recovery frames.
+
+\paragraph{Negative evidence:} The comparison is still a single-split result on only 34 test samples, so one error changes Top-1
+by approximately 2.94 percentage points. In addition, the table cannot report Macro-F1 or balanced
+accuracy for all non-selected candidates because the stored comparison artefact only contains Top-1
+and Top-5 for those rows. The result should therefore be read as architecture selection, not as a
+final statistical validation.
+
+\paragraph{Conclusion:} The phase achieves its objective. The selected architecture is a bidirectional GRU with hidden size
+256, two layers, dropout $0.4$ and a Temporal Attention head. This configuration becomes the
+default for every downstream quantitative experiment.
 
 \begin{figure}[p]
     \centering
@@ -183,33 +268,61 @@ Figure~\ref{fig:exp_cm_wlasl30}.
     \caption{Row-normalised confusion matrix of the selected GRU+Attention configuration on the WLASL30 test split (34 samples). Source: self-created from experiment outputs.}
     \label{fig:exp_cm_wlasl30}
 \end{figure}
+\clearpage
 
-The matrix exposes two structural failure modes. The first is class imbalance at evaluation time:
-several test classes have only one or two samples, so a single error is enough to drop their
-per-class recall to zero. The second is genuine visual similarity between specific signs: according
-to the stored experiment outputs, the most common confusions on this split are \emph{candy}
-$\rightarrow$ \emph{who} and \emph{what} $\rightarrow$ \emph{book}, both at 2 of 3 affected
-samples, plus single-sample failures on \emph{fine} $\rightarrow$ \emph{help}, \emph{thanksgiving}
-$\rightarrow$ \emph{black}, and \emph{cool} $\rightarrow$ \emph{computer}.
+\paragraph{Confusion-matrix reading:} Figure~\ref{fig:exp_cm_wlasl30} is used to inspect the selected model rather than to change the
+architecture decision. The matrix shows that the strongest errors are concentrated in low-support
+rows and in visually similar signs. Table~\ref{tab:exp_wlasl30_confusion_examples} extracts the
+most relevant examples from the stored confusion artefacts.
 
-The attention layer performs best because sign language clips contain a small number of \emph{key
-frames} where the linguistic content is concentrated, surrounded by neutral preparation and
-recovery frames; weighting the GRU outputs by a learned attention distribution focuses capacity
-where it matters and tolerates variation in execution speed across signers.
+\begin{table}[!htbp]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.2}
+    \caption{Most relevant confusion examples observed in the selected GRU+Attention WLASL30 run. Source: self-created from stored experiment outputs.}
+    \label{tab:exp_wlasl30_confusion_examples}
+    \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{2.5cm} >{\RaggedRight\arraybackslash}p{2.5cm} >{\centering\arraybackslash}p{1.6cm} >{\RaggedRight\arraybackslash}X@{}}
+        \toprule
+        \textbf{Ground truth} & \textbf{Predicted as} & \textbf{Errors} & \textbf{Interpretation}                                                               \\
+        \midrule
+        \emph{candy}          & \emph{who}            & 2 / 3           & Repeated class-level confusion on a low-count test row.                               \\
+        \emph{what}           & \emph{book}           & 2 / 3           & Repeated class-level confusion on a low-count test row.                               \\
+        \emph{fine}           & \emph{help}           & 1               & Single-sample error; recall impact is high because the class has few test clips.      \\
+        \emph{thanksgiving}   & \emph{black}          & 1               & Single-sample error; likely driven by overlapping hand pose or brief decisive frames. \\
+        \emph{cool}           & \emph{computer}       & 1               & Single-sample error; likely driven by overlapping hand pose or brief decisive frames. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
-\section{Sequence Length Sweep}
+\section{Phase 3 - Sequence Length Sweep}
 \label{sec:exp_seqlen}
 
-This section applies Phase M3 from Section~\ref{sec:exp_methodology} to the selected GRU+Attention
-architecture (Section~\ref{sec:exp_phase2}). The objective is to determine the maximum sequence
-length \texttt{max\_frames}, which is the only hyperparameter that changes the temporal input shape
-seen by the model. Subsampling too aggressively, as in 32-frame sequences, can discard temporal
-dynamics. Oversampling, as in 96-frame sequences, can introduce padding and noise on shorter clips.
-A multi-seed sweep distinguishes the effect of sequence length from initialisation variance.
+\paragraph{Purpose:} The purpose of this phase is to select the maximum temporal input length \texttt{max\_frames}. This
+is the only hyperparameter in the reported pipeline that changes the shape of the input sequence.
+Too few frames may remove discriminative motion; too many frames may increase padding and noise in
+short clips.
 
-The sweep covers nine runs: 3 seeds (42, 123, 2026) $\times$ 3 sequence lengths (32, 64, 96), with
-every other variable held fixed at the values in Section~\ref{sec:exp_methodology}. Aggregated
-results from the sweep are reported in Table~\ref{tab:exp_seqlen_sweep}.
+\paragraph{Configuration:} Table~\ref{tab:exp_seqlen_config} gives the sweep design. The selected architecture from Phase 2 is
+fixed, and only the temporal length changes.
+
+\begin{table}[H]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.25}
+    \caption{Configuration of the sequence-length sweep. Source: self-created from sweep configuration files.}
+    \label{tab:exp_seqlen_config}
+    \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{3.2cm} >{\RaggedRight\arraybackslash}X@{}}
+        \toprule
+        \textbf{Element}    & \textbf{Value}                                                                                            \\
+        \midrule
+        Dataset and model   & WLASL30 with the selected GRU+Attention architecture.                                                     \\
+        Tested values       & 32, 64 and 96 frames.                                                                                     \\
+        Seeds               & 42, 123 and 2026 for each temporal length, giving nine runs.                                              \\
+        Fixed settings      & Same landmark representation, optimiser, loss, batch size and early-stopping rule as Phase 2.             \\
+        Selection criterion & Stability across seeds, prioritising Macro-F1 and balanced accuracy consistency alongside Top-1 accuracy. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
 \begin{table}[H]
     \centering
@@ -217,324 +330,417 @@ results from the sweep are reported in Table~\ref{tab:exp_seqlen_sweep}.
     \renewcommand{\arraystretch}{1.25}
     \caption{Sequence-length sweep on WLASL30 with 3 seeds per row. Mean $\pm$ standard deviation across seeds. Top-1 standard deviations are bounded below by the test-set granularity ($\approx$2.94\,pp per misclassification on 34 samples). Source: self-created from experiment outputs.}
     \label{tab:exp_seqlen_sweep}
-    \begin{tabular}{@{}r r r r r@{}}
+    \begin{tabularx}{\linewidth}{@{}>{\centering\arraybackslash}p{1.6cm} >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X@{}}
         \toprule
-        \textbf{Frames} & \textbf{Top-1}   & \textbf{Top-5}   & \textbf{Macro-F1} & \textbf{Balanced Acc.} \\
+        \textbf{Frames} & \textbf{Top-1}   & \textbf{Top-5}   & \textbf{Macro-F1} & \textbf{Balanced Accuracy} \\
         \midrule
-        32              & $56.86 \pm 6.12$ & $85.29 \pm 2.95$ & $50.52 \pm 8.27$  & $64.65 \pm 7.48$       \\
-        64              & $58.82 \pm 2.94$ & $78.43 \pm 4.49$ & $54.88 \pm 0.93$  & $67.42 \pm 0.76$       \\
-        96              & $54.90 \pm 4.49$ & $81.37 \pm 4.49$ & $49.63 \pm 6.33$  & $61.36 \pm 6.56$       \\
+        32              & $56.86 \pm 6.12$ & $85.29 \pm 2.95$ & $50.52 \pm 8.27$  & $64.65 \pm 7.48$           \\
+        64              & $58.82 \pm 2.94$ & $78.43 \pm 4.49$ & $54.88 \pm 0.93$  & $67.42 \pm 0.76$           \\
+        96              & $54.90 \pm 4.49$ & $81.37 \pm 4.49$ & $49.63 \pm 6.33$  & $61.36 \pm 6.56$           \\
         \bottomrule
-    \end{tabular}
+    \end{tabularx}
 \end{table}
 
-The 64-frame configuration produces the most stable training across the three seeds. Macro-F1
-standard deviation drops to $0.93$ pp, and Balanced Accuracy standard deviation to $0.76$ pp, both
-an order of magnitude tighter than at 32 or 96 frames. The sweep does not select the configuration
-that maximises any single mean metric, since 32 frames actually edges out 64 on Top-5 (85.29 vs.\
-78.43), but it does select the configuration whose mean is least sensitive to the seed. The
-selection criterion is reproducibility, not peak Top-1, and that is the criterion this chapter
-applies to every downstream choice.
+\FloatBarrier
 
-\image{results/sequence_length_sweep.png}{0.85}{Per-metric distribution across the sequence-length sweep (3 seeds at 32, 64, and 96 frames). Source: self-created from experiment outputs.}{fig:exp_seqlen}
+\paragraph{Results:} The 64-frame configuration gives the highest Top-1 mean and the most stable per-class metrics. Its
+Macro-F1 standard deviation is $0.93$ percentage points and its balanced accuracy standard
+deviation is $0.76$ percentage points, both much lower than the corresponding values at 32 and 96
+frames.
 
-The 64-frame value is therefore fixed as the default for every downstream experiment in this
-chapter, including the cross-dataset MS-ASL50 evaluation in Section~\ref{sec:exp_msasl}. A
-dedicated sweep on MS-ASL50, where median clip length is approximately 80 frames, would be a
-natural extension and is acknowledged in Section~\ref{sec:exp_limitations}.
+\paragraph{Positive evidence:} The sweep supports 64 frames as a practical default. It preserves enough temporal information to
+outperform 32 and 96 frames on Top-1, while reducing seed-to-seed variation in Macro-F1 and
+balanced accuracy.
 
-\section{WLASL30 Validation}
+\paragraph{Negative evidence:} The phase does not show that 64 frames is universally optimal. Both alternative settings have
+higher mean Top-5 accuracy, and the sweep is performed only on WLASL30. A dedicated sweep on
+MS-ASL50, where clips are longer on average, remains outside the executed experiments.
+
+\paragraph{Conclusion:} The phase achieves its objective for this project. The selected value is \texttt{max\_frames}=64,
+which is fixed for the downstream WLASL30, MS-ASL50 and vocabulary-scaling experiments.
+
+\image{results/sequence_length_sweep.png}{0.75}{Per-metric distribution across the sequence-length sweep (3 seeds at 32, 64, and 96 frames). Source: self-created from experiment outputs.}{fig:exp_seqlen}
+
+\section{Phase 4 - WLASL30 Validation}
 \label{sec:exp_wlasl30}
 
-This section applies Phase M4 from Section~\ref{sec:exp_methodology}. Two independent validation
-protocols characterise the selected configuration on WLASL30. The first is the \textbf{Stratified
-5-Fold Cross-Validation} run on WLASL100 filtered to the same 30 classes (332 total samples), which
-yields a Top-1 mean of \textbf{63.85\,\% $\pm$ 4.50\,\%} and a Top-5 mean of \textbf{86.46\,\%
-$\pm$ 2.04\,\%}. This is the headline result because it averages across both initialisation and
-split, and because the standard deviations are computed across non-overlapping test partitions. The
-second is the \textbf{multi-seed evaluation} on the fixed WLASL30 split at $\mathit{max\_frames} =
-64$ extracted from the sequence-length sweep (Table~\ref{tab:exp_wlasl30_seeds}).
+\paragraph{Purpose:} The purpose of this phase is to validate the selected GRU+Attention pipeline on WLASL30 using
+protocols that reduce dependence on one random seed or one fixed test partition. This phase is the
+main answer to whether the selected configuration is reproducible on the dataset where it was
+tuned.
 
-\begin{table}[H]
+\paragraph{Configuration:} Two complementary validation protocols are used. Table~\ref{tab:exp_wlasl30_protocol_summary} shows
+why both are needed: one varies the split, and the other varies the model initialisation on the
+original fixed split.
+
+\begin{table}[!htbp]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.25}
+    \caption{Validation protocols used for the selected GRU+Attention configuration on WLASL30. Source: self-created from k-fold and multi-seed outputs.}
+    \label{tab:exp_wlasl30_protocol_summary}
+    \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{3.1cm} >{\RaggedRight\arraybackslash}X >{\RaggedRight\arraybackslash}X >{\RaggedRight\arraybackslash}X@{}}
+        \toprule
+        \textbf{Protocol}                  & \textbf{Data used}                                             & \textbf{What changes}                            & \textbf{Role in the phase}                                                                     \\
+        \midrule
+        Stratified 5-Fold Cross-Validation & WLASL100 filtered to the same 30 classes, 332 total samples.   & Five non-overlapping stratified test partitions. & Headline WLASL30 estimate because it smooths the effect of a single small test split.          \\
+        Fixed-split multi-seed evaluation  & WLASL30 split with 242 train, 56 validation and 34 test clips. & Seeds 42, 123 and 2026.                          & Measures seed sensitivity on the original benchmark split used by the architecture comparison. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\begin{table}[!htbp]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.25}
+    \caption{Aggregate WLASL30 validation results. K-fold artefacts store Top-1 and Top-5; Macro-F1 and balanced accuracy are therefore reported only for the fixed-split multi-seed protocol. Source: self-created from stored experiment outputs.}
+    \label{tab:exp_wlasl30_validation_summary}
+    \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{3.0cm} >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X@{}}
+        \toprule
+        \textbf{Protocol}    & \textbf{Top-1}   & \textbf{Top-5}   & \textbf{Macro-F1} & \textbf{Balanced Accuracy} \\
+        \midrule
+        Stratified 5-Fold CV & $63.85 \pm 4.50$ & $86.46 \pm 2.04$ & N/A               & N/A                        \\
+        Fixed split, 3 seeds & $58.82 \pm 2.94$ & $78.43 \pm 4.49$ & $54.88 \pm 0.93$  & $67.42 \pm 0.76$           \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+\begin{table}[!htbp]
     \centering
     \small
     \renewcommand{\arraystretch}{1.25}
     \caption{Per-seed test results of the selected GRU+Attention configuration on the fixed WLASL30 split (34 test samples). Source: self-created from experiment outputs.}
     \label{tab:exp_wlasl30_seeds}
-    \begin{tabular}{@{}r r r r r r@{}}
+    \begin{tabularx}{\linewidth}{@{}>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}p{1.8cm}@{}}
         \toprule
-        \textbf{Seed}           & \textbf{Top-1}   & \textbf{Top-5}   & \textbf{Macro-F1} & \textbf{Balanced Acc.} & \textbf{Best Epoch} \\
+        \textbf{Seed}          & \textbf{Top-1}   & \textbf{Top-5}   & \textbf{Macro-F1} & \textbf{Balanced Accuracy} & \textbf{Best Epoch} \\
         \midrule
-        42                      & 55.88            & 73.53            & 55.94             & 68.18                  & 40                  \\
-        123                     & 61.76            & 79.41            & 54.20             & 66.67                  & 29                  \\
-        2026                    & 58.82            & 82.35            & 54.49             & 67.42                  & 27                  \\
+        42                     & 55.88            & 73.53            & 55.94             & 68.18                      & 40                  \\
+        123                    & 61.76            & 79.41            & 54.20             & 66.67                      & 29                  \\
+        2026                   & 58.82            & 82.35            & 54.49             & 67.42                      & 27                  \\
         \midrule
-        \textbf{Mean $\pm$ Std} & $58.82 \pm 2.94$ & $78.43 \pm 4.49$ & $54.88 \pm 0.93$  & $67.42 \pm 0.76$       & N/A                 \\
+        \textbf{Mean $\pm$ SD} & $58.82 \pm 2.94$ & $78.43 \pm 4.49$ & $54.88 \pm 0.93$  & $67.42 \pm 0.76$           & N/A                 \\
         \bottomrule
-    \end{tabular}
+    \end{tabularx}
 \end{table}
 
-The two protocols disagree by approximately five percentage points on Top-1 (63.85 vs.\ 58.82). The
-disagreement is informative rather than contradictory: 5-Fold CV varies the test partition itself,
-so the Top-1 average is taken over five non-overlapping test partitions of approximately 66 samples
-each ($332 / 5 = 66.4$) and effectively smooths the worst single split; the multi-seed protocol
-fixes the 34-sample test split and varies only the model initialisation and batch order. Both
-quantities are real; they answer different questions. The headline number reported elsewhere in the
-work is the 5-Fold mean because it is the more statistically stable of the two and is directly
-comparable to the K-Fold standard in the SLR literature.
+\FloatBarrier
 
-The per-class behaviour of the selected configuration on the fixed split is concentrated on a small
-number of low-support classes. According to the per-class metric outputs, the worst recall values
-among supported classes are \emph{fine} (1 sample, recall $0.00$), \emph{thanksgiving} (1, $0.00$),
-\emph{thin} (2, $0.00$), \emph{candy} (3, $0.33$), \emph{what} (3, $0.33$), and \emph{cool} (2,
-$0.50$). With one to three test samples per class, even a single misprediction yields a 33--100\,pp
-recall drop. This is a property of the test split, not of the model: the per-class metric can be
-recovered only by enlarging the evaluation set, which is exactly what the cross-dataset experiment
-in Section~\ref{sec:exp_msasl} achieves.
+\paragraph{Results:} The Stratified 5-Fold protocol reaches \textbf{63.85\,\% $\pm$ 4.50\,\%} Top-1 and
+\textbf{86.46\,\% $\pm$ 2.04\,\%} Top-5. The fixed-split multi-seed protocol reaches
+\textbf{58.82\,\% $\pm$ 2.94\,\%} Top-1 and \textbf{78.43\,\% $\pm$ 4.49\,\%} Top-5. The two
+numbers differ by approximately five percentage points because they answer different questions: the
+k-fold run varies the test partition, while the fixed-split run keeps the 34-sample test set and
+varies only the seed.
 
-\section{Cross-Dataset Validation: MS-ASL50}
+\paragraph{Positive evidence:} The phase supports the reproducibility objective. The k-fold result is the strongest WLASL30
+estimate because it averages over multiple stratified partitions, and the multi-seed result shows
+that the selected pipeline does not collapse under different initialisations.
+
+\paragraph{Negative evidence:} The fixed WLASL30 test split remains small. Classes such as \emph{fine}, \emph{thanksgiving} and
+\emph{thin} have one or two supported test samples in the stored per-class metrics, so a single
+mistake can make their recall appear as zero. This limits the strength of per-class conclusions on
+WLASL30.
+
+\paragraph{Conclusion:} The phase achieves the WLASL30 validation objective, with an important qualification: the headline
+63.85\,\% Top-1 result is a cross-validation estimate, while the 58.82\,\% Top-1 result is the
+stricter fixed-split multi-seed estimate. Both are reported because they describe complementary
+sources of uncertainty.
+
+\section{Phase 5 - Cross-Dataset Validation on MS-ASL50}
 \label{sec:exp_msasl}
 
-This section applies Phase M5 from Section~\ref{sec:exp_methodology}. The pipeline was tuned on
-WLASL30. To check whether its behaviour is a property of the method or of the benchmark, the same
-code path was retrained on MS-ASL50 with no architectural changes and no dataset-specific
-hyperparameter tuning. The only fields that differ between the two configurations are the dataset
-path and the gloss vocabulary.
+\paragraph{Purpose:} The purpose of this phase is to test whether the selected pipeline is tied to WLASL30 or can be
+retrained on an independent ASL dataset without changing the architecture. This phase therefore
+evaluates generalisation at the pipeline level, not zero-shot transfer: the model is trained again
+on MS-ASL50, but the preprocessing and architecture remain the same.
+
+\paragraph{Configuration:} Table~\ref{tab:exp_msasl_config} summarises the cross-dataset setup. The only intended changes are
+the dataset path and the output vocabulary.
+
+\begin{table}[!htbp]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.25}
+    \caption{Configuration of the MS-ASL50 cross-dataset validation. Source: self-created from MS-ASL50 configuration files and experiment manifests.}
+    \label{tab:exp_msasl_config}
+    \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{3.2cm} >{\RaggedRight\arraybackslash}X@{}}
+        \toprule
+        \textbf{Element}                & \textbf{Value}                                                                                                                 \\
+        \midrule
+        Dataset                         & MS-ASL50, reconstructed from locally available MS-ASL clips.                                                                   \\
+        Split after landmark extraction & 1{,}410 train, 306 validation and 236 test clips.                                                                              \\
+        Model and input                 & Same GRU+Attention model, 64 frames and 63 landmark features per frame as WLASL30.                                             \\
+        Seeds                           & 42, 123 and 2026.                                                                                                              \\
+        Changed fields                  & Dataset location and gloss vocabulary. No architecture-specific or dataset-specific tuning is introduced.                      \\
+        Decision criterion              & The phase passes if the same pipeline trains reproducibly on MS-ASL50 and reaches stable Top-1/Top-5 performance across seeds. \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
 \subsection{Building the MS-ASL50 subset}
 
-MS-ASL ships only annotation JSONs and YouTube URLs; the 25{,}513 declared instances must be
-retrieved per-clip, and not all of them are still online. The dataset reconstruction audit records
-that \textbf{16{,}816 of 25{,}513 clips were successfully downloaded (65.9\,\%)}, with split-level
-coverage of 74.0\,\% / 47.5\,\% / 58.0\,\% (train / val / test). The drop-out is dominated by
-YouTube videos that have been removed or made private since the dataset was published.
+MS-ASL ships annotation JSONs and YouTube URLs rather than a fixed local video archive. The subset
+used in this project is therefore constrained by which clips were still downloadable when the local
+audit was executed. Table~\ref{tab:exp_msasl_subset_audit} records the relevant reconstruction
+facts.
 
-The subset selection itself is constrained by data deficiency. The disk-level audit reports that
-only \textbf{6} of the top-30 classes meet the strict 30 train / 5 val / 5 test threshold;
-\textbf{17} meet the 20 / 5 / 5 threshold; and \textbf{57} meet the relaxed 20 / 3 / 3 threshold.
-An MS-ASL30 reproduction is therefore not viable from the locally available data. The chosen
-alternative is \textbf{MS-ASL50}, defined as the 50 classes with the largest train counts among
-those satisfying the 20 / 3 / 3 threshold. After landmark extraction, 31 source clips are dropped
-because their mean MediaPipe detection rate falls below the 0.3 floor, leaving \textbf{1{,}410
-train / 306 val / 236 test (1{,}952 total)}. The mean detection rate across surviving clips is
-\textbf{83.9\,\%}, substantially above the WLASL figure (approximately $69\,\%$), consistent with
-MS-ASL clips being longer and shot under more controlled conditions.
+\begin{table}[!htbp]
+    \centering
+    \small
+    \renewcommand{\arraystretch}{1.25}
+    \caption{MS-ASL reconstruction and MS-ASL50 subset audit. Source: self-created from the MS-ASL download audit and subset extraction report.}
+    \label{tab:exp_msasl_subset_audit}
+    \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{4.0cm} >{\RaggedRight\arraybackslash}X@{}}
+        \toprule
+        \textbf{Audit item}           & \textbf{Observed value}                                                                     \\
+        \midrule
+        Declared MS-ASL instances     & 25{,}513 clips in the original annotation files.                                            \\
+        Successfully downloaded clips & 16{,}816 clips, equivalent to 65.9\,\% of the declared instances.                           \\
+        Split-level download coverage & 74.0\,\% train, 47.5\,\% validation and 58.0\,\% test.                                      \\
+        Viability thresholds          & 6 top-30 classes meet 30 / 5 / 5; 17 classes meet 20 / 5 / 5; 57 classes meet 20 / 3 / 3.   \\
+        Selected subset               & 50 classes with the largest train counts among classes satisfying the 20 / 3 / 3 threshold. \\
+        Landmark extraction output    & 31 clips dropped by the detection-rate floor, leaving 1{,}952 usable clips.                 \\
+        Mean MediaPipe detection rate & 83.9\,\% across surviving MS-ASL50 clips.                                                   \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
+
+The MS-ASL50 subset reproducible from the current YouTube state is therefore not identical to the
+subset that would have been reproducible when the dataset was released. Any direct comparison with
+published MS-ASL numbers must be contextualised by this time-dependent availability of source
+videos.
 
 \subsection{Cross-dataset results}
 
-Both datasets were trained with three seeds (42, 123, 2026). Aggregated metrics are in
-Table~\ref{tab:exp_cross_dataset}, with the MS-ASL50 per-seed breakdown in
-Table~\ref{tab:exp_msasl_seeds}.
-
-\begin{table}[H]
+\begin{table}[!htbp]
     \centering
     \small
     \renewcommand{\arraystretch}{1.25}
     \caption{Side-by-side comparison of the GRU+Attention pipeline on WLASL30 and MS-ASL50. Both rows are aggregated over 3 seeds. Source: self-created from experiment outputs.}
     \label{tab:exp_cross_dataset}
-    \begin{tabular}{@{}l r r r r r@{}}
+    \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{2.1cm} >{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X@{}}
         \toprule
         \textbf{Dataset} & \textbf{Classes} & \textbf{Train / Val / Test} & \textbf{Top-1}   & \textbf{Top-5}   & \textbf{Macro-F1} \\
         \midrule
         WLASL30          & 30               & 242 / 56 / 34               & $58.82 \pm 2.94$ & $78.43 \pm 4.49$ & $54.88 \pm 0.93$  \\
         MS-ASL50         & 50               & 1{,}410 / 306 / 236         & $70.20 \pm 2.89$ & $90.54 \pm 0.89$ & $68.08 \pm 3.44$  \\
         \bottomrule
-    \end{tabular}
+    \end{tabularx}
 \end{table}
 
-\begin{table}[H]
+\begin{table}[!htbp]
     \centering
     \small
     \renewcommand{\arraystretch}{1.25}
     \caption{Per-seed test results on MS-ASL50 (236 test samples). Source: self-created from experiment outputs.}
     \label{tab:exp_msasl_seeds}
-    \begin{tabular}{@{}r r r r r r@{}}
+    \begin{tabularx}{\linewidth}{@{}>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}X >{\centering\arraybackslash}p{1.8cm}@{}}
         \toprule
-        \textbf{Seed}           & \textbf{Top-1}   & \textbf{Top-5}   & \textbf{Macro-F1} & \textbf{Balanced Acc.} & \textbf{Best Epoch} \\
+        \textbf{Seed}          & \textbf{Top-1}   & \textbf{Top-5}   & \textbf{Macro-F1} & \textbf{Balanced Accuracy} & \textbf{Best Epoch} \\
         \midrule
-        42                      & 66.95            & 89.83            & 64.22             & 66.34                  & 55                  \\
-        123                     & 72.46            & 90.25            & 70.81             & 72.75                  & 120                 \\
-        2026                    & 71.19            & 91.53            & 69.21             & 71.58                  & 92                  \\
+        42                     & 66.95            & 89.83            & 64.22             & 66.34                      & 55                  \\
+        123                    & 72.46            & 90.25            & 70.81             & 72.75                      & 120                 \\
+        2026                   & 71.19            & 91.53            & 69.21             & 71.58                      & 92                  \\
         \midrule
-        \textbf{Mean $\pm$ Std} & $70.20 \pm 2.89$ & $90.54 \pm 0.89$ & $68.08 \pm 3.44$  & $70.22 \pm 3.41$       & N/A                 \\
+        \textbf{Mean $\pm$ SD} & $70.20 \pm 2.89$ & $90.54 \pm 0.89$ & $68.08 \pm 3.44$  & $70.22 \pm 3.41$           & N/A                 \\
         \bottomrule
-    \end{tabular}
+    \end{tabularx}
 \end{table}
 
-The central observation is that the Top-1 standard deviations on the two datasets are nearly
-identical (2.94 pp on WLASL30 versus 2.89 pp on MS-ASL50). With 7$\times$ fewer test samples on
-WLASL30, this is the strongest statement the experiment supports: \emph{training stability is a
-property of the pipeline, not of a specific benchmark}. The pipeline does not need dataset-specific
-tuning to produce reproducible results on a second ASL corpus.
+\FloatBarrier
 
-The absolute Top-1 figure on MS-ASL50 (70.20) is higher than on WLASL30 (58.82), but this is not
-evidence that MS-ASL is intrinsically easier. Three structural factors account for the gap. First,
-MS-ASL50 has approximately 6$\times$ more training samples (1{,}410 vs.\ 242), which is the
-dominant variable in this data regime. Second, the test set is 7$\times$ larger (236 vs.\ 34), so
-each individual misclassification moves Top-1 by approximately 0.42 pp instead of 2.94 pp; a finer
-measurement grid yields more representative values, which usually means closer to the true
-asymptotic performance. Third, MS-ASL clips are sourced from longer, better-lit YouTube educational
-material, which is reflected in the higher MediaPipe detection rate. The experiment therefore
-supports the claim that the pipeline reproduces; it does not support a claim about intrinsic
-dataset difficulty.
+\paragraph{Results:} The same GRU+Attention pipeline reaches \textbf{70.20\,\% $\pm$ 2.89\,\%} Top-1 and
+\textbf{90.54\,\% $\pm$ 0.89\,\%} Top-5 on MS-ASL50. The seed-to-seed Top-1 standard deviation is
+almost identical to WLASL30 (2.89 percentage points versus 2.94), even though the MS-ASL50 test set
+is substantially larger.
 
-The full 50-class confusion matrix for the seed-2026 MS-ASL50 run is too dense to read at inline
-chapter size, so it is provided as a full-page figure in
-Appendix~\ref{app:additional_experimental_figures}, Figure~\ref{fig:app_cm_msasl50}. The confusion
-pattern, as verified by the stored experiment outputs, is dominated by visually adjacent signs. The
-largest absolute confusion is \emph{deaf} $\rightarrow$ \emph{need} (4 of 14 samples, 28.6\,\%),
-followed by \emph{pencil} $\rightarrow$ \emph{write} and \emph{fish} $\rightarrow$ \emph{lost}
-(each 3 of 5, 60.0\,\%), \emph{nurse} $\rightarrow$ \emph{sit} (3 of 6, 50.0\,\%), and
-\emph{mother} $\rightarrow$ \emph{woman} (2 of 4, 50.0\,\%). These are recognisable as one-handed,
-location-similar pairs whose discriminative cue is fine-grained finger shape rather than gross
-trajectory.
+\paragraph{Positive evidence:} The phase supports cross-dataset reproducibility. The model does not require a new architecture or
+dataset-specific tuning to train successfully on MS-ASL50. The larger test split also gives a finer
+measurement grid: one MS-ASL50 test error changes Top-1 by approximately 0.42 percentage points,
+compared with 2.94 percentage points on the fixed WLASL30 test split.
 
-The per-class metrics show three classes with $0.00$ recall (\emph{here}, \emph{man}, \emph{woman},
-all with three test samples), and six further classes below $50\,\%$ recall (\emph{need} at $0.25$,
-\emph{school} at $0.29$, \emph{nurse} at $0.33$, \emph{lost} at $0.33$, \emph{write} at $0.40$,
-\emph{doctor} at $0.43$). At the other end, nineteen classes reach perfect recall on this split,
-including six with five or more support samples (\emph{teacher} 9, \emph{no} 7, \emph{tired} 7,
-\emph{deaf} 6, \emph{please} 5, \emph{like} 5). The headline Macro-F1 of 68.08 is therefore an
-average over a strongly bimodal per-class distribution, which is consistent with the higher
-Macro-F1 standard deviation (3.44) compared to Top-1 (2.89): per-class recall is a finer-grained
-signal and amplifies seed-to-seed variation in which classes happen to be learned best.
+\paragraph{Negative evidence:} The higher MS-ASL50 Top-1 value should not be interpreted as proof that MS-ASL is intrinsically
+easier. MS-ASL50 has more training clips, a larger test set and a higher MediaPipe detection rate
+than WLASL30. These structural differences are enough to explain part of the performance gap. The
+experiment proves reproduction of the pipeline, not a universal ranking of dataset difficulty.
 
-\section{Vocabulary Scaling}
+\paragraph{Confusion behaviour:} The full 50-class confusion matrix for the seed-2026 run is provided in
+Appendix~\ref{app:additional_experimental_figures}, Figure~\ref{fig:app_cm_msasl50}. The stored
+top-confusion artefact reports the largest absolute confusions as \emph{deaf} $\rightarrow$
+\emph{need} (4 of 14 samples, 28.6\,\%), \emph{pencil} $\rightarrow$ \emph{write} and \emph{fish}
+$\rightarrow$ \emph{lost} (each 3 of 5, 60.0\,\%), \emph{nurse} $\rightarrow$ \emph{sit} (3 of 6,
+50.0\,\%), and \emph{mother} $\rightarrow$ \emph{woman} (2 of 4, 50.0\,\%). The per-class metrics
+file separately identifies three labels with zero recall on that run: \emph{here}, \emph{man} and
+\emph{woman}. These errors indicate that some one-handed, location-similar signs still depend on
+fine-grained finger-shape cues that the one-hand landmark pipeline does not always separate.
+
+\paragraph{Conclusion:} The phase achieves its objective. It validates that the selected pipeline can be retrained on a
+second ASL corpus with stable performance. It does not remove the need for a larger, fully
+reproducible benchmark, because MS-ASL reconstruction depends on YouTube clip availability.
+
+\section{Phase 6 - Vocabulary Scaling}
 \label{sec:exp_scaling}
 
-This section applies Phase M6 from Section~\ref{sec:exp_methodology} to the selected GRU+Attention
-configuration. The objective is to measure how recognition performance changes as the WLASL
-vocabulary grows from 30 classes to 1{,}500 classes. The input is a sequence of WLASL subsets with
-progressively lower mean videos per class. The configuration keeps the same landmark
-representation, recurrent architecture, \texttt{max\_frames}=64 and seed 42. Multi-seed validation
-was not performed beyond 30 classes, so the 30-class row is the multi-seed reference and every
-larger-vocabulary row is a single-seed run.
+\paragraph{Purpose:} The purpose of this phase is to measure how the selected pipeline behaves as the recognition
+vocabulary grows. The question is not whether the model can reach deployment-ready accuracy at
+1{,}500 classes; the question is where and how performance degrades when the number of classes
+increases and the mean number of videos per class decreases.
 
-The output of this phase is a scaling table, a Top-1 curve and a parallel-coordinates diagnostic.
-Table~\ref{tab:exp_scaling} reports the split sizes, test metrics, best epoch and training time for
-each subset. Figure~\ref{fig:exp_scaling} shows the main performance curve. The denser
-parallel-coordinates view is provided at full-page size in
-Appendix~\ref{app:additional_experimental_figures}, Figure~\ref{fig:app_scaling_parallel}, because
-its five axes are not legible at inline chapter size.
+\paragraph{Configuration:} Table~\ref{tab:exp_scaling_config} summarises the scaling setup. The 30-class row is the multi-seed
+WLASL30 reference from Phase 4. All larger-vocabulary rows are single-seed runs and must be
+interpreted as trend evidence rather than precise multi-seed estimates.
 
-\begin{table}[H]
+\begin{table}[!htbp]
     \centering
     \small
     \renewcommand{\arraystretch}{1.25}
-    \caption{Vocabulary scaling of the selected GRU+Attention configuration on WLASL subsets. The 30-class row is the multi-seed mean from Table~\ref{tab:exp_cross_dataset}; all other rows are single-seed runs and standard deviations cannot be reported. \emph{Train time} is the total wall-clock time of the training run on the NVIDIA RTX 3050 Ti Laptop GPU described in Section~\ref{sec:exp_methodology}. Source: self-created from experiment manifests.}
-    \label{tab:exp_scaling}
-    \begin{tabular}{@{}r r r r r r@{}}
+    \caption{Configuration of the WLASL vocabulary-scaling experiment. Source: self-created from scaling manifests and result files.}
+    \label{tab:exp_scaling_config}
+    \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{3.3cm} >{\RaggedRight\arraybackslash}X@{}}
         \toprule
-        \textbf{Vocabulary} & \textbf{Train / Val / Test} & \textbf{Top-1}   & \textbf{Top-5}   & \textbf{Best Epoch} & \textbf{Train time (s)} \\
+        \textbf{Element}   & \textbf{Value}                                                                                                                                            \\
         \midrule
-        30                  & 242 / 56 / 34               & $58.82 \pm 2.94$ & $78.43 \pm 4.49$ & 27--40              & N/A                     \\
-        100                 & 795 / 186 / 132             & 44.70            & 70.45            & 99                  & 83                      \\
-        300                 & 1{,}974 / 474 / 360         & 28.61            & 59.72            & 112                 & 224                     \\
-        500                 & 2{,}967 / 723 / 561         & 23.71            & 49.55            & 111                 & 311                     \\
-        700                 & 3{,}879 / 974 / 736         & 19.57            & 42.66            & 57                  & 248                     \\
-        900                 & 4{,}707 / 1{,}202 / 880     & 12.50            & 33.75            & 220                 & 881                     \\
-        1{,}000             & 5{,}122 / 1{,}329 / 938     & 11.19            & 31.24            & 113                 & 602                     \\
-        1{,}200             & 5{,}840 / 1{,}536 / 1{,}051 & 10.56            & 27.69            & 220                 & 1{,}105                 \\
-        1{,}500             & 6{,}864 / 1{,}834 / 1{,}229 & 9.76             & 28.23            & 220                 & 1{,}308                 \\
+        Model              & Selected GRU+Attention pipeline with 64-frame landmark input.                                                                                             \\
+        Datasets           & WLASL subsets with 30, 100, 300, 500, 700, 900, 1{,}000, 1{,}200 and 1{,}500 classes.                                                                     \\
+        Seed policy        & WLASL30 uses the three-seed reference; all larger subsets use seed 42.                                                                                    \\
+        Training budgets   & Standard budget for smaller runs, with extended maximum budgets recorded in the manifests for larger subsets.                                             \\
+        Primary output     & Relationship between vocabulary size, available data per class and test Top-1 / Top-5 performance.                                                        \\
+        Decision criterion & The phase passes if it quantifies the scaling trend and identifies whether the bottleneck is vocabulary size, data scarcity or an implementation failure. \\
         \bottomrule
-    \end{tabular}
+    \end{tabularx}
 \end{table}
 
-\image{results/vocabulary_scaling.png}{0.85}{Top-1 accuracy as a function of vocabulary size on WLASL. Source: self-created from experiment outputs.}{fig:exp_scaling}
+\begin{table}[!htbp]
+    \centering
+    \footnotesize
+    \renewcommand{\arraystretch}{1.2}
+    \caption{Vocabulary scaling of the selected GRU+Attention configuration on WLASL subsets. The 30-class row is the multi-seed mean from Table~\ref{tab:exp_wlasl30_validation_summary}; all other rows are single-seed runs and standard deviations cannot be reported. \emph{Train time} is the total wall-clock time of the training run on the NVIDIA RTX 3050 Ti Laptop GPU described in Section~\ref{sec:exp_methodology}. Source: self-created from experiment manifests.}
+    \label{tab:exp_scaling}
+    \begin{tabularx}{\linewidth}{@{}>{\centering\arraybackslash}p{1.5cm} >{\centering\arraybackslash}X >{\centering\arraybackslash}p{1.7cm} >{\centering\arraybackslash}p{1.7cm} >{\centering\arraybackslash}p{1.6cm} >{\centering\arraybackslash}p{2.0cm}@{}}
+        \toprule
+        \textbf{Classes} & \textbf{Train / Val / Test} & \textbf{Top-1}   & \textbf{Top-5}   & \textbf{Best Epoch} & \textbf{Train Time (s)} \\
+        \midrule
+        30               & 242 / 56 / 34               & $58.82 \pm 2.94$ & $78.43 \pm 4.49$ & 27--40              & N/A                     \\
+        100              & 795 / 186 / 132             & 44.70            & 70.45            & 99                  & 83                      \\
+        300              & 1{,}974 / 474 / 360         & 28.61            & 59.72            & 112                 & 224                     \\
+        500              & 2{,}967 / 723 / 561         & 23.71            & 49.55            & 111                 & 311                     \\
+        700              & 3{,}879 / 974 / 736         & 19.57            & 42.66            & 57                  & 248                     \\
+        900              & 4{,}707 / 1{,}202 / 880     & 12.50            & 33.75            & 218                 & 881                     \\
+        1{,}000          & 5{,}122 / 1{,}329 / 938     & 11.19            & 31.24            & 113                 & 602                     \\
+        1{,}200          & 5{,}840 / 1{,}536 / 1{,}051 & 10.56            & 27.69            & 211                 & 1{,}105                 \\
+        1{,}500          & 6{,}864 / 1{,}834 / 1{,}229 & 9.76             & 28.23            & 209                 & 1{,}308                 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}
 
-The relationship between vocabulary size and Top-1 accuracy is monotonically decreasing across the
-entire range and roughly linear in $\log(\mathrm{num\_classes})$ between 30 and 1{,}000 classes.
-The curve does not show an abrupt implementation failure. Instead, it matches the reduction in
-per-class data as the vocabulary expands. WLASL2000 has a median of approximately ten samples per
-class, which is below the regime where a discriminative neural sequence model can separate
-fine-grained gestural categories without external pretraining or stronger augmentation. The
-bottleneck is the per-class data budget, not an isolated failure of the architecture.
+\image{results/vocabulary_scaling.png}{1.00}{Top-1 accuracy as a function of vocabulary size on WLASL. Source: self-created from experiment outputs.}{fig:exp_scaling}
 
-A weaker secondary observation, restricted to the runs above 700 classes, is that the training
-curves of the larger subsets show greater sensitivity to early-stopping triggers; runs at 900,
-1{,}200, and 1{,}500 classes saturate the maximum-epoch budget without an unambiguous improvement,
-while runs below 700 classes consistently early-stop earlier. This is the practical edge of the
-data-starvation regime: not a discrete failure point, but a regime where additional training time
-stops paying back.
+\FloatBarrier
 
-The data-starvation interpretation is corroborated by the parallel-coordinates view in
-Figure~\ref{fig:app_scaling_parallel}, which projects every scaling run onto five normalised axes:
-mean videos per class, final train accuracy, validation Top-1, test Top-1 and test Top-5. At 30
-classes the line stays high across all axes, with a mean of $11.07$ videos per class, train
-accuracy of $99.00\,\%$ and validation Top-1 of $63.85\,\%$. At $1{,}500$ classes, the same
-relationship collapses from $74.77\,\%$ train accuracy to $11.67\,\%$ validation Top-1, with only
-$4.58$ videos per class. The train-side values remain comparatively high while validation and test
-metrics fall, which supports the interpretation that sample scarcity drives the scaling behaviour.
+\paragraph{Results:} Top-1 accuracy decreases at every measured vocabulary size, from $58.82\,\%$ at 30 classes to
+$9.76\,\%$ at 1{,}500 classes. Top-5 also decreases strongly, although it rises slightly between
+1{,}200 and 1{,}500 classes (27.69 to 28.23), which is another reminder that the large-vocabulary
+rows are single-seed measurements.
 
-\section{Limitations}
+\paragraph{Positive evidence:} The phase quantifies the scaling bottleneck instead of hiding it. The drop is gradual rather than
+an abrupt implementation failure, and it is consistent with the reduction in per-class data as the
+vocabulary expands. The parallel-coordinates diagnostic in
+Appendix~\ref{app:additional_experimental_figures}, Figure~\ref{fig:app_scaling_parallel}, also
+supports this interpretation: the 30-class reference has 11.07 mean videos per class, 99.00\,\%
+final train accuracy and 63.90\,\% validation Top-1, while the 1{,}500-class run has 4.58 videos
+per class, 74.77\,\% final train accuracy and 11.67\,\% validation Top-1.
+
+\paragraph{Negative evidence:} The phase does not show that the selected model scales to large vocabularies in a practically
+usable way. Above 700 classes, several runs reach the maximum epoch budget without a clear
+improvement in validation performance. Because these rows are single-seed, the exact slope of the
+curve should not be treated as a statistically validated law.
+
+\paragraph{Conclusion:} The phase achieves its analytical objective but not a deployment objective. It shows that the main
+limitation is data starvation at the class level, not simply the number of labels or a single
+software failure. It also sets a clear boundary for the project: the implemented pipeline is
+appropriate as a research prototype and small-vocabulary recogniser, but it is not a
+large-vocabulary ASL translator.
+
+\section{Phase 7 - Quantitative Balance and Limitations}
 \label{sec:exp_limitations}
 
-These experimental results provide empirical support for several core assumptions, yet they also
-challenge several prevailing premises. The supported assumptions are that landmark-based input is a
-viable representation for isolated ASL recognition, that temporal attention improves the recurrent
-baseline on WLASL30, that the selected pipeline can reproduce on MS-ASL50 without dataset-specific
-architecture changes and that vocabulary growth is mainly constrained by per-class data
-availability. At the same time, the results challenge the assumption that Transformer architectures
-dominate recurrent baselines across all data regimes and the assumption that single-seed reporting
-is sufficient for small test sets. The remaining constraints are classified into six categories and
-addressed systematically below.
+\paragraph{Purpose:} The purpose of the final quantitative phase is to separate what the preceding experiments
+demonstrate from what remains unresolved. No new model is trained here. The phase summarises the
+positive evidence, the negative evidence and the practical meaning of the results with respect to
+the project objectives.
 
-\begin{table}[H]
+\paragraph{Configuration:} The input to this phase is the set of artefacts generated by phases M1 to M6: configuration files,
+metrics, confusion matrices, per-class reports, manifests and audit notes.
+Table~\ref{tab:exp_limitation_categories} classifies the limitations that affect interpretation.
+
+\begin{table}[!htbp]
     \centering
-    \scriptsize
-    \renewcommand{\arraystretch}{1.2}
+    \footnotesize
+    \renewcommand{\arraystretch}{1.15}
     \caption{Limitation categories, ordered from data acquisition constraints to modelling choices. Source: self-created from the experimental audit.}
     \label{tab:exp_limitation_categories}
-    \begin{tabular}{@{}p{2.8cm} p{4.6cm} p{4.7cm}@{}}
+    \begin{tabularx}{\linewidth}{@{}>{\RaggedRight\arraybackslash}p{3.1cm} >{\RaggedRight\arraybackslash}X >{\RaggedRight\arraybackslash}X@{}}
         \toprule
-        \textbf{Category}           & \textbf{Where it appears}                 & \textbf{Effect on interpretation}                                               \\
+        \textbf{Category}           & \textbf{Where it appears}                 & \textbf{Effect on interpretation}                                                                                   \\
         \midrule
-        Landmark extraction quality & WLASL and MS-ASL landmark preprocessing   & Low MediaPipe detection rates reduce the number of informative frames.          \\
-        Evaluation resolution       & WLASL30 fixed test split                  & Small test sets make single errors change Top-1 by several percentage points.   \\
-        Dataset reconstruction      & MS-ASL download audit                     & YouTube attrition means the reconstructed subset is time-dependent.             \\
-        Seed coverage               & Vocabulary scaling beyond 30 classes      & Single-seed runs show the trend but not the exact seed variance.                \\
-        Architecture coverage       & Cross-dataset validation                  & Only the selected GRU+Attention configuration was retrained on MS-ASL50.        \\
-        Training policy             & Augmentation and class-imbalance handling & Fixed augmentation and unweighted loss leave minority-class effects unresolved. \\
+        Landmark extraction quality & WLASL and MS-ASL landmark preprocessing   & Low MediaPipe detection rates reduce the number of informative frames available to the sequence model.              \\
+        Evaluation resolution       & WLASL30 fixed test split                  & Small test sets make single errors change Top-1 accuracy by several percentage points.                              \\
+        Dataset reconstruction      & MS-ASL download audit                     & YouTube attrition means the reconstructed subset is time-dependent and not identical to the original release state. \\
+        Seed coverage               & Vocabulary scaling beyond 30 classes      & Single-seed runs show the scaling trend but not the exact seed variance.                                            \\
+        Architecture coverage       & Cross-dataset validation                  & Only the selected GRU+Attention configuration was retrained on MS-ASL50.                                            \\
+        Training policy             & Augmentation and class-imbalance handling & Fixed augmentation and unweighted loss leave minority-class effects unresolved.                                     \\
         \bottomrule
-    \end{tabular}
+    \end{tabularx}
 \end{table}
 
-\paragraph{Landmark extraction quality.} The MediaPipe detection rate on WLASL is approximately $69\,\%$ at the frame level. Clips with
-motion blur, partially occluded hands or hands moving outside the frame produce silent failures
-that the linear-interpolation step mitigates but does not erase. The interpolated frames carry no
-new information, so any clip with sustained low detection rate effectively provides fewer
-informative frames than its nominal length suggests. The same caveat applies less strongly to
-MS-ASL50, where the average detection rate is $83.9\,\%$.
+\paragraph{Positive evidence:} The quantitative experiments support four project claims. First, landmark-based input is a viable
+representation for isolated ASL word recognition. Second, temporal attention improves the recurrent
+baseline on WLASL30 under the executed comparison. Third, the same pipeline can be retrained on
+MS-ASL50 without dataset-specific architecture changes. Fourth, vocabulary growth exposes a
+data-scarcity bottleneck that can be measured directly.
 
-\paragraph{Evaluation resolution.} The WLASL30 test split is small, with 34 samples. Even at three seeds, the standard deviation in
-Top-1 is bounded below by $\approx$2.94 pp because that is the resolution of one misclassification.
-The $58.82 \pm 2.94$ figure should be read as an interval of expected runs, not as a precise
-estimate of true generalisation accuracy. The 5-Fold CV mean of 63.85 partially mitigates this by
-averaging over five different test partitions, although the absolute resolution per fold remains
-limited.
+\paragraph{Negative evidence:} The experiments also constrain what can be claimed. The Transformer baseline was not dominant in
+the WLASL30 low-data setting, but this does not prove that Transformers are unsuitable for sign
+language recognition in general. The WLASL30 fixed test split is too small for precise per-class
+conclusions. The MS-ASL50 reconstruction must be interpreted in light of YouTube attrition.
+Finally, the scaling study beyond 30 classes is single-seed, so it establishes a downward trend but
+not a fully validated variance estimate.
 
-\paragraph{Dataset reconstruction.} YouTube attrition on MS-ASL is $34.1\,\%$ of source clips. The MS-ASL50 subset reproducible from
-the current YouTube state is therefore not identical to the one that was reproducible when the
-dataset was released. Any direct numerical comparison with results published against the original
-MS-ASL release \cite{joze2019msasl} must account for this difference in available clips.
+\paragraph{Detailed limitations:} The MediaPipe detection rate on WLASL is approximately 69\,\% at the frame level. Clips with motion
+blur, partially occluded hands or hands moving outside the frame produce silent failures that
+interpolation mitigates but does not erase. The same caveat applies less strongly to MS-ASL50,
+where the average detection rate is 83.9\,\%.
 
-\paragraph{Seed coverage.} Beyond 30 classes, every reported result is single-seed. Differences between adjacent vocabulary
-sizes in Section~\ref{sec:exp_scaling}, for example 23.71 at 500 classes versus 19.57 at 700
-classes, may sit within plausible seed-to-seed variation. The downward trend is supported by all
-scaling runs, but the exact slope should not be treated as a multi-seed estimate.
+The WLASL30 test split contains 34 samples, so Top-1 accuracy has a resolution of approximately
+2.94 percentage points per misclassification. The 5-Fold CV estimate partially mitigates this by
+averaging over five stratified partitions, but the fixed-split confusion matrix should not be read
+as a definitive per-class diagnosis.
 
-\paragraph{Architecture coverage.} Only the selected GRU+Attention configuration was evaluated cross-dataset. A run of the specific
+YouTube attrition on MS-ASL is 34.1\,\% of declared source clips. The MS-ASL50 subset reproducible
+from the current YouTube state is therefore not identical to the one that was reproducible when the
+dataset was released. Comparisons against the original MS-ASL release \cite{joze2019msasl} must be
+contextualised by this difference in available clips.
+
+Only the selected GRU+Attention configuration was evaluated cross-dataset. Running the specific
 Transformer baseline from Table~\ref{tab:exp_arch_comparison} on MS-ASL50 would test whether its
-underperformance in Section~\ref{sec:exp_phase2} reflects the WLASL30 low-data setting or the
-architecture choice itself. That experiment is a natural extension, but it was not executed within
-the scope of this project.
+lower WLASL30 result reflects the low-data regime or the architecture choice itself. That
+experiment is a natural extension, but it was not executed within the scope of this project.
 
-\paragraph{Training policy.} The augmentation pipeline was kept fixed throughout the chapter: rotation, scaling, translation,
+The augmentation pipeline was kept fixed throughout the chapter: rotation, scaling, translation,
 Gaussian noise and horizontal flip. Horizontal flip conflates left-handed and right-handed signers,
 which is acceptable for a small-vocabulary one-hand pipeline but would need re-examination for
 two-hand signs and for downstream studies of signer-handedness bias. Class-weighted loss and
 minority-class oversampling were also not applied, despite the per-class disparities documented in
 Sections~\ref{sec:exp_wlasl30} and~\ref{sec:exp_msasl}.
+
+\paragraph{Conclusion:} The quantitative block passes the reproducibility objective for the selected pipeline: the model is
+selected through a controlled comparison, validated through repeated WLASL30 protocols and
+reproduced on MS-ASL50. The scalability objective is only partially achieved: the project measures
+the degradation from 30 to 1{,}500 WLASL classes, but it does not solve the large vocabulary
+setting. The final conclusion is therefore deliberately bounded: this work delivers a traceable,
+reproducible research prototype for isolated word-level ASL recognition from hand landmarks, not a
+deployment-ready general ASL translator.
 
 % Part II header (Qualitative Evaluation)
 \section*{Part II: Qualitative Evaluation}
@@ -553,19 +759,29 @@ was validated through the benchmark experiments above.
 \label{subsec:exp_qual_survey_design}
 
 The qualitative validation used a short Google Form completed after participants tested the
-SignToText demo. The form introduced the application as an ASL recognition prototype that
-translates detected signs into text and speech. It then collected three types of data: previous
-knowledge of sign language, Likert-scale usability ratings and open-ended feedback about confusion
-points or requested changes. The expected completion time was approximately five minutes.
+SignToText demo~\cite{signtotextSurvey2026}. The form introduced the application as an ASL
+recognition prototype that translates detected signs into text and speech. It then collected three
+types of data: previous knowledge of sign language, Likert-scale usability ratings and open-ended
+feedback about confusion points or requested changes. The expected completion time was
+approximately five minutes.
 
-The Likert block used a 1--5 scale and evaluated five dimensions: first impression, understood as
-whether the participant quickly knew what the app did and how to start using it, clarity of the
-buttons and capture modes, comprehensibility of the prediction results, perceived response speed
-and perceived utility. The feature-preference question allowed multiple selections, including
-automatic text-to-speech, Top-K alternatives with confidence percentages, temporal attention maps,
-model selection, continuous phrase mode, countdown before recording, gallery upload and processing
-statistics. The recommendation question used a 1--10 scale and was reduced to Net Promoter Score
-(NPS), computed as the percentage of promoters minus the percentage of detractors.
+The remaining survey questions were organised as follows:
+
+\begin{enumerate}[1.]
+    \item \textbf{Likert-scale usability block:} This block used a 1 to 5 scale and evaluated five
+          dimensions: first impression, understood as whether the participant quickly knew what the app
+          did and how to start using it; clarity of the buttons and capture modes; comprehensibility of
+          the prediction results; perceived response speed; and perceived utility.
+
+    \item \textbf{Feature-preference question:} This question allowed multiple selections, including
+          automatic text-to-speech, Top-K alternatives with confidence percentages, temporal attention
+          maps, model selection, continuous phrase mode, countdown before recording, gallery upload and
+          processing statistics.
+
+    \item \textbf{Recommendation question:} This question used a 1 to 10 scale and was reduced to
+          Net Promoter Score (NPS), computed as the percentage of promoters minus the percentage of
+          detractors.
+\end{enumerate}
 
 \subsection{Results}
 \label{subsec:exp_qual_results}
@@ -580,9 +796,15 @@ output still needs refinement.
     \centering
     \small
     \renewcommand{\arraystretch}{1.2}
-    \caption{Usability questionnaire results for the SignToText demo. Means are computed on a 1--5 Likert scale. Source: self-created from Google Form responses.}
+    \caption{Usability questionnaire results for the SignToText demo. Means are computed on a 1 to 5 Likert scale. Source: self-created from Google Form responses.}
     \label{tab:exp_qual_likert}
-    \begin{tabular}{@{}l r@{}}
+
+    \begin{tabularx}{\linewidth}{
+        @{}
+        >{\RaggedRight\arraybackslash}X
+        >{\centering\arraybackslash}p{2.8cm}
+        @{}
+        }
         \toprule
         \textbf{Dimension}              & \textbf{Mean score} \\
         \midrule
@@ -592,7 +814,7 @@ output still needs refinement.
         Perceived speed                 & 4.3                 \\
         Perceived utility               & 4.5                 \\
         \bottomrule
-    \end{tabular}
+    \end{tabularx}
 \end{table}
 
 The recommendation item produced an NPS of $+40$. This is a positive usability signal for a
@@ -614,7 +836,13 @@ markedly fewer selections.
     \renewcommand{\arraystretch}{1.2}
     \caption{Most valued SignToText features according to the usability questionnaire. Participants could select multiple options. Source: self-created from Google Form responses.}
     \label{tab:exp_qual_features}
-    \begin{tabular}{@{}l r@{}}
+
+    \begin{tabularx}{\linewidth}{
+        @{}
+        >{\RaggedRight\arraybackslash}X
+        >{\centering\arraybackslash}p{4.0cm}
+        @{}
+        }
         \toprule
         \textbf{Feature}                               & \textbf{Participants selecting it} \\
         \midrule
@@ -622,7 +850,7 @@ markedly fewer selections.
         Automatic text-to-speech                       & 73\,\%                             \\
         Selection between several trained models       & 60\,\%                             \\
         \bottomrule
-    \end{tabular}
+    \end{tabularx}
 \end{table}
 
 \subsection{Discussion}

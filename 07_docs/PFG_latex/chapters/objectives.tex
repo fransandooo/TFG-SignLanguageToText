@@ -11,15 +11,21 @@ the functional and non-functional behaviour expected from the implemented system
 
 The main objective of this Final Degree Project (FDP) is to design, implement and experimentally
 validate a research prototype for word-level American Sign Language (ASL) recognition from short
-video clips through computer vision and neural modelling techniques. The purpose is not to build a
-production-ready translator, but to study how convolutional and temporal recognition approaches can
-support feasible and reproducible isolated-word sign recognition.
+video clips through Computer Vision. The purpose is not to build a production-ready translator, but
+to study how convolutional and temporal recognition approaches can support feasible and
+reproducible isolated-word sign recognition.
 
-The hypothesis derived from this objective is that a compact sequence representation of sign
-movement can retain enough discriminative information to recognise a controlled vocabulary of
-isolated ASL signs while reducing dependence on raw video appearance. This hypothesis is tested by
-comparing candidate architectures, selecting the best-performing configuration and evaluating its
-behaviour across repeated runs, datasets and vocabulary sizes.
+The hypothesis derived from this objective is the following:
+
+\begin{quote}
+    \itshape
+    A compact sequence representation of sign movement can retain enough discriminative
+    information to recognise a controlled vocabulary of isolated ASL signs while reducing
+    dependence on raw video appearance.
+\end{quote}
+
+This hypothesis is tested by comparing candidate architectures, selecting the best-performing
+configuration and evaluating its behaviour across repeated runs, datasets and vocabulary sizes.
 
 \section{Specific objectives}
 
@@ -28,17 +34,17 @@ project outcome and is later mapped to a validation method in
 Section~\ref{sec:objective_validation}.
 
 \begin{itemize}
-    \item \textbf{SO1: Analyse state-of-the-art techniques in computer vision and temporal modelling.} This objective covers the relevant foundations of computer vision, pose estimation, MediaPipe Hands, sequence modelling, convolutional architectures, recurrent layers, attention mechanisms and Transformer architectures, with emphasis on their applicability to word-level sign language recognition.
+    \item \textbf{SO1 - Analyse state-of-the-art techniques in Computer Vision and temporal modelling:} This objective covers the relevant foundations of computer vision, pose estimation, MediaPipe Hands, sequence modelling, convolutional architectures, recurrent architectures, attention mechanisms and Transformer architectures, with emphasis on their applicability to word-level sign language recognition.
 
-    \item \textbf{SO2: Define a landmark-based data representation for ASL video clips.} This objective focuses on transforming raw ASL video clips into normalised sequences of three-dimensional hand landmarks suitable for temporal modelling, while documenting the datasets, preprocessing decisions and limitations introduced by landmark extraction. The resulting representation is intended to provide a compact and consistent description of hand movement and spatial relationships across frames, facilitating the development of sign language recognition models while reducing sensitivity to background variation, lighting conditions and camera position.
+    \item \textbf{SO2 - Define a landmark-based data representation for ASL video clips:} This objective focuses on transforming raw ASL video clips into normalised sequences of three-dimensional hand landmarks suitable for temporal modelling, while documenting the datasets, preprocessing decisions and limitations introduced by landmark extraction. The resulting representation is intended to provide a compact and consistent description of hand movement and spatial relationships across frames, facilitating the development of sign language recognition models while reducing sensitivity to background variation, lighting conditions and camera position.
 
-    \item \textbf{SO3: Design and compare candidate convolutional and temporal architectures for word-level ASL recognition.} This objective evaluates alternative architectures under a controlled 30-class subset of the Word-Level American Sign Language (WLASL) dataset, referred to as WLASL30, and identifies the configuration most suitable for the available data regime. It also examines each architecture's ability to capture temporal dependencies and dynamic hand movements from landmark sequences, while assessing performance, generalisation, computational cost and consistency across different sign categories. The objective further analyses the trade-off between model complexity and recognition accuracy in order to determine the most appropriate architecture for reliable word-level ASL recognition.
+    \item \textbf{SO3 - Design and compare candidate convolutional and temporal architectures for word-level ASL recognition:} This objective evaluates alternative architectures under a controlled 30-class subset of the WLASL dataset, referred to as WLASL30, and identifies the configuration most suitable for the available data regime. It also examines each architecture's ability to capture temporal dependencies and dynamic hand movements from landmark sequences, while assessing performance, generalisation, computational cost and consistency across different sign categories. The objective further analyses the trade-off between model complexity and recognition accuracy in order to determine the most appropriate architecture for reliable word-level ASL recognition.
 
-    \item \textbf{SO4: Evaluate the selected recognition pipeline through reproducible experimental protocols.} This objective evaluates the selected model using standard classification metrics and protocols that reduce dependence on a single random seed or split, including multi-seed evaluation and stratified cross-validation. It also assesses the stability, consistency and generalisation capability of the recognition pipeline across different evaluation settings to ensure that the reported performance is reliable and reproducible.
+    \item \textbf{SO4 - Evaluate the selected recognition pipeline through reproducible experimental protocols:} This objective evaluates the selected model using standard classification metrics and protocols that reduce dependence on a single random seed or split, including multi-seed evaluation and stratified cross-validation. It also assesses the stability, consistency and generalisation capability of the recognition pipeline across different evaluation settings to ensure that the reported performance is reliable and reproducible.
 
-    \item \textbf{SO5: Analyse the generalisation and scalability of the recognition pipeline.} This objective tests whether the selected approach transfers effectively to the 50-class subset of the independent Microsoft American Sign Language (MS-ASL) dataset, referred to as MS-ASL50, and analyses how performance changes as the WLASL vocabulary size increases. It also evaluates the stability and scalability of the recognition pipeline under more challenging classification settings, identifying potential limitations related to vocabulary expansion, dataset variability and model generalisation across different signing conditions.
+    \item \textbf{SO5 - Analyse the generalisation and scalability of the recognition pipeline:} This objective tests whether the selected approach transfers effectively to the 50-class subset of the independent MS-ASL dataset, referred to as MS-ASL50, and analyses how performance changes as the WLASL vocabulary size increases. It also evaluates the stability and scalability of the recognition pipeline under more challenging classification settings, identifying potential limitations related to vocabulary expansion, dataset variability and model generalisation across different signing conditions.
 
-    \item \textbf{SO6: Evaluate the runtime proof of concept and the ethical implications of the recognition approach.} This objective integrates the recognition pipeline into an end-to-end mobile/server prototype as a proof of concept and analyses its accessibility motivation, privacy implications, bias risks, reproducibility constraints and responsible-deployment requirements.
+    \item \textbf{SO6 - Evaluate the runtime proof of concept and the ethical implications of the recognition approach:} This objective integrates the recognition pipeline into an end-to-end mobile/server prototype as a proof of concept and analyses its accessibility motivation, privacy implications, bias risks, reproducibility constraints and responsible-deployment requirements.
 \end{itemize}
 
 \section{Validation methods}
@@ -49,20 +55,51 @@ and to the document evidence where the committee can verify the result. Detailed
 are intentionally left to the Experiments chapter; this section only defines how objective
 achievement is assessed.
 
-The experimental objectives use four classification metrics. \textbf{Top-1 accuracy} measures the
-proportion of test samples for which the highest-scoring prediction matches the ground-truth label.
-For example, if 20 out of 34 WLASL30 test clips are classified correctly as the first prediction,
-Top-1 accuracy is $20/34 = 58.82\%$. \textbf{Top-5 accuracy} measures whether the ground-truth
-label appears among the five highest-scoring predictions. For example, if the correct ASL sign
-appears in the five proposed labels for 27 out of 34 clips, Top-5 accuracy is $27/34 = 79.41\%$.
+The experimental objectives use four classification metrics. Let $N$ be the number of test clips,
+$C$ the number of classes, $y_i$ the ground-truth label of clip $i$, $\hat{y}_i$ the
+highest-scoring predicted label and $\mathrm{TopK}_i$ the set of the $K$ highest-scoring predicted
+labels for clip $i$.
 
-\textbf{Macro-F1} evaluates class-level behaviour by computing the F1 score for each class and then
-averaging all classes with equal weight. F1 combines precision and recall as
-$2 \cdot \frac{\mathrm{precision} \cdot \mathrm{recall}}{\mathrm{precision} + \mathrm{recall}}$; for example, a class with precision
-$0.80$ and recall $0.60$ obtains an F1 score of $0.69$. Macro-F1 is therefore useful when frequent
-classes could otherwise dominate the average. \textbf{Balanced accuracy} averages recall across
-classes. For example, if three classes obtain recall values of $1.00$, $0.50$ and $0.00$, the
-balanced accuracy is $(1.00 + 0.50 + 0.00)/3 = 0.50$.
+\begin{itemize}
+    \item \textbf{Top-1 accuracy - } This metric measures the proportion of test samples for which the
+          highest-scoring prediction matches the ground-truth label:
+          \begin{equation}
+              \mathrm{Top1} = \frac{1}{N}\sum_{i=1}^{N}\mathbb{1}(\hat{y}_i = y_i)
+          \end{equation}
+          where $\mathbb{1}(\cdot)$ is $1$ when the condition is true and $0$ otherwise. For example,
+          if 20 out of 34 WLASL30 test clips are classified correctly as the first prediction, then
+          $\mathrm{Top1} = 20/34 = 58.82\%$.
+
+    \item \textbf{Top-5 accuracy - } This metric measures whether the ground-truth label appears among
+          the five highest-scoring predictions:
+          \begin{equation}
+              \mathrm{Top5} = \frac{1}{N}\sum_{i=1}^{N}\mathbb{1}(y_i \in \mathrm{Top5}_i)
+          \end{equation}
+          For example, if the correct ASL sign appears in the five proposed labels for 27 out of 34
+          clips, then $\mathrm{Top5} = 27/34 = 79.41\%$.
+
+    \item \textbf{Macro-F1 - } This metric evaluates class-level behaviour by computing the F1 score
+          independently for each class and then averaging all classes with equal weight:
+          \begin{equation}
+              \mathrm{MacroF1} = \frac{1}{C}\sum_{c=1}^{C} \mathrm{F1}_c
+          \end{equation}
+          The F1 score for class $c$ combines precision and recall:
+          \begin{equation}
+              \mathrm{F1}_c =
+              2 \cdot \frac{\mathrm{Precision}_c \cdot \mathrm{Recall}_c}
+              {\mathrm{Precision}_c + \mathrm{Recall}_c}
+          \end{equation}
+          For example, a class with precision $0.80$ and recall $0.60$ obtains
+          $\mathrm{F1} = 2 \cdot (0.80 \cdot 0.60)/(0.80 + 0.60) = 0.69$. Macro-F1 is useful when
+          frequent classes could otherwise dominate the average.
+
+    \item \textbf{Balanced accuracy - } This metric averages recall across classes:
+          \begin{equation}
+              \mathrm{BalancedAccuracy} = \frac{1}{C}\sum_{c=1}^{C}\mathrm{Recall}_c
+          \end{equation}
+          For example, if three classes obtain recall values of $1.00$, $0.50$ and $0.00$, then
+          $\mathrm{BalancedAccuracy} = (1.00 + 0.50 + 0.00)/3 = 0.50$.
+\end{itemize}
 
 The evaluation protocols complement these metrics. A \textbf{multi-seed evaluation} trains the same
 configuration with different random seeds and reports the mean and standard deviation, which helps
