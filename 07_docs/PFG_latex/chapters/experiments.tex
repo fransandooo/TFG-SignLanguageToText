@@ -25,9 +25,10 @@ repeating long file paths in every caption.
 \label{sec:exp_methodology}
 
 The experimental methodology is organised as a sequence of phases. Each phase has a defined
-purpose, configuration, measurement procedure, positive evidence, negative evidence and final
-balance. The comparative metrics used throughout the chapter are those defined in
-Section~\ref{sec:plan_methods}: Top-1 accuracy, Top-5 accuracy, Macro-F1 and balanced accuracy.
+purpose, configuration and measurement procedure, then interprets the result by separating
+supporting evidence from limitations before closing with a bounded conclusion. The comparative
+metrics used throughout the chapter are those defined in Section~\ref{sec:plan_methods}: Top-1
+accuracy, Top-5 accuracy, Macro-F1 and balanced accuracy.
 
 \begin{enumerate}
     \item \textbf{M1 - Exploratory pilots:}
@@ -134,14 +135,13 @@ sample.
 \section{Phase 1 - Exploratory Work and Methodological Pivot}
 \label{sec:exp_phase1}
 
-\paragraph{Purpose:} The purpose of the first phase is not to obtain the final recognition result. Its role is to decide
+The first phase is not intended to obtain the final recognition result. Its role is to decide
 whether the project should remain in a pixel-based hand-detection and letter-classification path,
-or pivot towards word-level recognition from hand landmarks. The phase therefore evaluates two
-simpler problems first: locating hands in images and recognising static ASL letters.
-
-\paragraph{Configuration:} Table~\ref{tab:exp_phase1_config} summarises the two exploratory branches. The table is
-intentionally separated from the later result tables because these pilots do not use the same
-benchmark, task or metric as the final word-recognition experiments.
+or pivot towards word-level recognition from hand landmarks. It therefore evaluates two simpler
+problems first: locating hands in images and recognising static ASL letters. The two exploratory
+branches are summarised in Table~\ref{tab:exp_phase1_config}, which is intentionally separated from
+the later result tables because these pilots do not use the same benchmark, task or metric as the
+final word-recognition experiments.
 
 \begin{table}[!htbp]
     \centering
@@ -161,23 +161,22 @@ benchmark, task or metric as the final word-recognition experiments.
 
 \FloatBarrier
 
-\paragraph{Results:} The hand-localisation experiment produced a YOLOv8n detector with approximately \textbf{98\,\%
+The hand-localisation experiment produced a YOLOv8n detector with approximately \textbf{98\,\%
 mAP@0.5} and \textbf{87\,\% Mean IoU} on the held-out test split. This confirmed that locating
 hands was technically feasible. In parallel, the static-letter classifiers also achieved high
 accuracy on the simplified alphabet task, but the task itself was too far from the final objective:
 recognising a word from a temporal ASL clip.
 
-\paragraph{Positive evidence:} The positive contribution of this phase is that it de-risks the front of the pipeline. It shows
-that the project does not fail because hands cannot be detected or because hand-shape information
-is impossible to learn. It also provides evidence that a visual pipeline can extract useful signal
-from ASL-related images.
+The main contribution of this phase is that it de-risks the front of the pipeline. It shows that
+the project does not fail because hands cannot be detected or because hand-shape information is
+impossible to learn, and it provides evidence that a visual pipeline can extract useful signal from
+ASL-related images. At the same time, neither pilot solves word-level sign recognition: static
+images cannot represent signs whose meaning depends on movement, and an RGB sequence model would
+have to learn to ignore background, lighting and signer appearance from a very small number of
+clips per class. The pilot therefore exposes a representation problem rather than a model-selection
+problem.
 
-\paragraph{Negative evidence:} The limitation is that neither pilot solves word-level sign recognition. Static images cannot
-represent signs whose meaning depends on movement, and an RGB sequence model would have to learn to
-ignore background, lighting and signer appearance from a very small number of clips per class. The
-pilot therefore exposes a representation problem rather than a model-selection problem.
-
-\paragraph{Conclusion:} The phase achieves its objective as an exploratory phase. It does not produce a deployable
+Overall, the phase achieves its objective as an exploratory phase. It does not produce a deployable
 recogniser, but it justifies the methodological pivot used in the rest of the chapter: each frame
 is represented by 21 three-dimensional MediaPipe landmarks, flattened into 63 features, instead of
 by a $224 \times 224$ RGB image. This reduces the input dimensionality by approximately
@@ -187,14 +186,12 @@ sequence classification.
 \section{Phase 2 - Architecture Selection on WLASL30}
 \label{sec:exp_phase2}
 
-\paragraph{Purpose:} The purpose of this phase is to choose the architecture family that best converts one-hand
-MediaPipe landmark sequences into word-level ASL predictions. The question is specific: among the
-locally implemented and tuned candidates, which architecture should be carried forward to the
-validation phases?
-
-\paragraph{Configuration:} Table~\ref{tab:exp_phase2_config} defines the fixed comparison setup. The architecture itself is
-the variable under test; the dataset, preprocessing and training policy remain fixed except for the
-Transformer optimiser settings documented in the table note.
+This phase chooses the architecture family that best converts one-hand MediaPipe landmark sequences
+into word-level ASL predictions. The question is specific: among the locally implemented and tuned
+candidates, which architecture should be carried forward to the validation phases?
+Table~\ref{tab:exp_phase2_config} defines the fixed comparison setup: the architecture itself is
+the variable under test, while the dataset, preprocessing and training policy remain fixed except
+for the Transformer optimiser settings documented in the table note.
 
 \begin{table}[H]
     \centering
@@ -239,26 +236,22 @@ Transformer optimiser settings documented in the table note.
 \end{table}
 \FloatBarrier
 
-\FloatBarrier
-
-\paragraph{Results:} Table~\ref{tab:exp_arch_comparison} shows that GRU+Attention is the best candidate in this
+Table~\ref{tab:exp_arch_comparison} shows that GRU+Attention is the best candidate in this
 controlled comparison: 58.82\,\% Top-1 and 91.18\,\% Top-5. The attention layer improves over the
 plain GRU by 20.58 percentage points in Top-1 and over the enriched-feature GRU by 11.76 percentage
 points. The Transformer baseline reaches 50.00\,\% Top-1, which is competitive but below the
 selected recurrent model on both Top-1 and Top-5.
 
-\paragraph{Positive evidence:} The phase supports the choice of a recurrent model with temporal attention. This is coherent with
+This supports the choice of a recurrent model with temporal attention. The result is coherent with
 the structure of isolated sign clips: only some frames contain the most discriminative hand
 configuration or motion phase, and the attention head can weight those frames more heavily than
-preparation or recovery frames.
+preparation or recovery frames. The limitation is that the comparison is still a single-split
+result on only 34 test samples, so one error changes Top-1 by approximately 2.94 percentage points.
+In addition, the table cannot report Macro-F1 or balanced accuracy for all non-selected candidates
+because the stored comparison artefact only contains Top-1 and Top-5 for those rows. The result
+should therefore be read as architecture selection, not as a final statistical validation.
 
-\paragraph{Negative evidence:} The comparison is still a single-split result on only 34 test samples, so one error changes Top-1
-by approximately 2.94 percentage points. In addition, the table cannot report Macro-F1 or balanced
-accuracy for all non-selected candidates because the stored comparison artefact only contains Top-1
-and Top-5 for those rows. The result should therefore be read as architecture selection, not as a
-final statistical validation.
-
-\paragraph{Conclusion:} The phase achieves its objective. The selected architecture is a bidirectional GRU with hidden size
+The phase achieves its objective. The selected architecture is a bidirectional GRU with hidden size
 256, two layers, dropout $0.4$ and a Temporal Attention head. This configuration becomes the
 default for every downstream quantitative experiment.
 
@@ -297,12 +290,10 @@ most relevant examples from the stored confusion artefacts.
 \section{Phase 3 - Sequence Length Sweep}
 \label{sec:exp_seqlen}
 
-\paragraph{Purpose:} The purpose of this phase is to select the maximum temporal input length \texttt{max\_frames}. This
-is the only hyperparameter in the reported pipeline that changes the shape of the input sequence.
-Too few frames may remove discriminative motion; too many frames may increase padding and noise in
-short clips.
-
-\paragraph{Configuration:} Table~\ref{tab:exp_seqlen_config} gives the sweep design. The selected architecture from Phase 2 is
+This phase selects the maximum temporal input length \texttt{max\_frames}, the only hyperparameter
+in the reported pipeline that changes the shape of the input sequence. Too few frames may remove
+discriminative motion; too many frames may increase padding and noise in short clips.
+Table~\ref{tab:exp_seqlen_config} gives the sweep design: the selected architecture from Phase 2 is
 fixed, and only the temporal length changes.
 
 \begin{table}[H]
@@ -343,20 +334,19 @@ fixed, and only the temporal length changes.
 
 \FloatBarrier
 
-\paragraph{Results:} The 64-frame configuration gives the highest Top-1 mean and the most stable per-class metrics. Its
+The 64-frame configuration gives the highest Top-1 mean and the most stable per-class metrics. Its
 Macro-F1 standard deviation is $0.93$ percentage points and its balanced accuracy standard
 deviation is $0.76$ percentage points, both much lower than the corresponding values at 32 and 96
 frames.
 
-\paragraph{Positive evidence:} The sweep supports 64 frames as a practical default. It preserves enough temporal information to
+This supports 64 frames as a practical default: it preserves enough temporal information to
 outperform 32 and 96 frames on Top-1, while reducing seed-to-seed variation in Macro-F1 and
-balanced accuracy.
+balanced accuracy. The result should not be read as proof that 64 frames is universally optimal,
+because both alternative settings have higher mean Top-5 accuracy and the sweep is performed only
+on WLASL30. A dedicated sweep on MS-ASL50, where clips are longer on average, remains outside the
+executed experiments.
 
-\paragraph{Negative evidence:} The phase does not show that 64 frames is universally optimal. Both alternative settings have
-higher mean Top-5 accuracy, and the sweep is performed only on WLASL30. A dedicated sweep on
-MS-ASL50, where clips are longer on average, remains outside the executed experiments.
-
-\paragraph{Conclusion:} The phase achieves its objective for this project. The selected value is \texttt{max\_frames}=64,
+For this project, the phase achieves its objective. The selected value is \texttt{max\_frames}=64,
 which is fixed for the downstream WLASL30, MS-ASL50 and vocabulary-scaling experiments.
 
 \image{results/sequence_length_sweep.png}{0.75}{Per-metric distribution across the sequence-length sweep (3 seeds at 32, 64, and 96 frames). Source: self-created from experiment outputs.}{fig:exp_seqlen}
@@ -364,14 +354,12 @@ which is fixed for the downstream WLASL30, MS-ASL50 and vocabulary-scaling exper
 \section{Phase 4 - WLASL30 Validation}
 \label{sec:exp_wlasl30}
 
-\paragraph{Purpose:} The purpose of this phase is to validate the selected GRU+Attention pipeline on WLASL30 using
-protocols that reduce dependence on one random seed or one fixed test partition. This phase is the
-main answer to whether the selected configuration is reproducible on the dataset where it was
-tuned.
-
-\paragraph{Configuration:} Two complementary validation protocols are used. Table~\ref{tab:exp_wlasl30_protocol_summary} shows
-why both are needed: one varies the split, and the other varies the model initialisation on the
-original fixed split.
+This phase validates the selected GRU+Attention pipeline on WLASL30 using protocols that reduce
+dependence on one random seed or one fixed test partition. It is the main answer to whether the
+selected configuration is reproducible on the dataset where it was tuned. Two complementary
+validation protocols are used, and Table~\ref{tab:exp_wlasl30_protocol_summary} shows why both are
+needed: one varies the split, and the other varies the model initialisation on the original fixed
+split.
 
 \begin{table}[!htbp]
     \centering
@@ -426,23 +414,22 @@ original fixed split.
 
 \FloatBarrier
 
-\paragraph{Results:} The Stratified 5-Fold protocol reaches \textbf{63.85\,\% $\pm$ 4.50\,\%} Top-1 and
+The Stratified 5-Fold protocol reaches \textbf{63.85\,\% $\pm$ 4.50\,\%} Top-1 and
 \textbf{86.46\,\% $\pm$ 2.04\,\%} Top-5. The fixed-split multi-seed protocol reaches
 \textbf{58.82\,\% $\pm$ 2.94\,\%} Top-1 and \textbf{78.43\,\% $\pm$ 4.49\,\%} Top-5. The two
 numbers differ by approximately five percentage points because they answer different questions: the
 k-fold run varies the test partition, while the fixed-split run keeps the 34-sample test set and
 varies only the seed.
 
-\paragraph{Positive evidence:} The phase supports the reproducibility objective. The k-fold result is the strongest WLASL30
-estimate because it averages over multiple stratified partitions, and the multi-seed result shows
-that the selected pipeline does not collapse under different initialisations.
+Together, the two protocols support the reproducibility objective. The k-fold result is the
+strongest WLASL30 estimate because it averages over multiple stratified partitions, and the
+multi-seed result shows that the selected pipeline does not collapse under different
+initialisations. The main qualification is that the fixed WLASL30 test split remains small. Classes
+such as \emph{fine}, \emph{thanksgiving} and \emph{thin} have one or two supported test samples in
+the stored per-class metrics, so a single mistake can make their recall appear as zero. This limits
+the strength of per-class conclusions on WLASL30.
 
-\paragraph{Negative evidence:} The fixed WLASL30 test split remains small. Classes such as \emph{fine}, \emph{thanksgiving} and
-\emph{thin} have one or two supported test samples in the stored per-class metrics, so a single
-mistake can make their recall appear as zero. This limits the strength of per-class conclusions on
-WLASL30.
-
-\paragraph{Conclusion:} The phase achieves the WLASL30 validation objective, with an important qualification: the headline
+The phase achieves the WLASL30 validation objective, with an important qualification: the headline
 63.85\,\% Top-1 result is a cross-validation estimate, while the 58.82\,\% Top-1 result is the
 stricter fixed-split multi-seed estimate. Both are reported because they describe complementary
 sources of uncertainty.
@@ -450,13 +437,12 @@ sources of uncertainty.
 \section{Phase 5 - Cross-Dataset Validation on MS-ASL50}
 \label{sec:exp_msasl}
 
-\paragraph{Purpose:} The purpose of this phase is to test whether the selected pipeline is tied to WLASL30 or can be
-retrained on an independent ASL dataset without changing the architecture. This phase therefore
-evaluates generalisation at the pipeline level, not zero-shot transfer: the model is trained again
-on MS-ASL50, but the preprocessing and architecture remain the same.
-
-\paragraph{Configuration:} Table~\ref{tab:exp_msasl_config} summarises the cross-dataset setup. The only intended changes are
-the dataset path and the output vocabulary.
+This phase tests whether the selected pipeline is tied to WLASL30 or can be retrained on an
+independent ASL dataset without changing the architecture. It therefore evaluates generalisation at
+the pipeline level, not zero-shot transfer: the model is trained again on MS-ASL50, but the
+preprocessing and architecture remain the same. Table~\ref{tab:exp_msasl_config} summarises the
+cross-dataset setup, where the only intended changes are the dataset path and the output
+vocabulary.
 
 \begin{table}[!htbp]
     \centering
@@ -550,20 +536,19 @@ videos.
 
 \FloatBarrier
 
-\paragraph{Results:} The same GRU+Attention pipeline reaches \textbf{70.20\,\% $\pm$ 2.89\,\%} Top-1 and
+The same GRU+Attention pipeline reaches \textbf{70.20\,\% $\pm$ 2.89\,\%} Top-1 and
 \textbf{90.54\,\% $\pm$ 0.89\,\%} Top-5 on MS-ASL50. The seed-to-seed Top-1 standard deviation is
 almost identical to WLASL30 (2.89 percentage points versus 2.94), even though the MS-ASL50 test set
 is substantially larger.
 
-\paragraph{Positive evidence:} The phase supports cross-dataset reproducibility. The model does not require a new architecture or
+This supports cross-dataset reproducibility. The model does not require a new architecture or
 dataset-specific tuning to train successfully on MS-ASL50. The larger test split also gives a finer
 measurement grid: one MS-ASL50 test error changes Top-1 by approximately 0.42 percentage points,
-compared with 2.94 percentage points on the fixed WLASL30 test split.
-
-\paragraph{Negative evidence:} The higher MS-ASL50 Top-1 value should not be interpreted as proof that MS-ASL is intrinsically
-easier. MS-ASL50 has more training clips, a larger test set and a higher MediaPipe detection rate
-than WLASL30. These structural differences are enough to explain part of the performance gap. The
-experiment proves reproduction of the pipeline, not a universal ranking of dataset difficulty.
+compared with 2.94 percentage points on the fixed WLASL30 test split. The higher MS-ASL50 Top-1
+value should nevertheless not be interpreted as proof that MS-ASL is intrinsically easier. MS-ASL50
+has more training clips, a larger test set and a higher MediaPipe detection rate than WLASL30, and
+these structural differences are enough to explain part of the performance gap. The experiment
+proves reproduction of the pipeline, not a universal ranking of dataset difficulty.
 
 \paragraph{Confusion behaviour:} The full 50-class confusion matrix for the seed-2026 run is provided in
 Appendix~\ref{app:additional_experimental_figures}, Figure~\ref{fig:app_cm_msasl50}. The stored
@@ -575,21 +560,20 @@ file separately identifies three labels with zero recall on that run: \emph{here
 \emph{woman}. These errors indicate that some one-handed, location-similar signs still depend on
 fine-grained finger-shape cues that the one-hand landmark pipeline does not always separate.
 
-\paragraph{Conclusion:} The phase achieves its objective. It validates that the selected pipeline can be retrained on a
-second ASL corpus with stable performance. It does not remove the need for a larger, fully
+Overall, the phase achieves its objective. It validates that the selected pipeline can be retrained
+on a second ASL corpus with stable performance. It does not remove the need for a larger, fully
 reproducible benchmark, because MS-ASL reconstruction depends on YouTube clip availability.
 
 \section{Phase 6 - Vocabulary Scaling}
 \label{sec:exp_scaling}
 
-\paragraph{Purpose:} The purpose of this phase is to measure how the selected pipeline behaves as the recognition
-vocabulary grows. The question is not whether the model can reach deployment-ready accuracy at
-1{,}500 classes; the question is where and how performance degrades when the number of classes
-increases and the mean number of videos per class decreases.
-
-\paragraph{Configuration:} Table~\ref{tab:exp_scaling_config} summarises the scaling setup. The 30-class row is the multi-seed
-WLASL30 reference from Phase 4. All larger-vocabulary rows are single-seed runs and must be
-interpreted as trend evidence rather than precise multi-seed estimates.
+This phase measures how the selected pipeline behaves as the recognition vocabulary grows. The
+question is not whether the model can reach deployment-ready accuracy at 1{,}500 classes; the
+question is where and how performance degrades when the number of classes increases and the mean
+number of videos per class decreases. Table~\ref{tab:exp_scaling_config} summarises the scaling
+setup: the 30-class row is the multi-seed WLASL30 reference from Phase 4, while all
+larger-vocabulary rows are single-seed runs and must be interpreted as trend evidence rather than
+precise multi-seed estimates.
 
 \begin{table}[!htbp]
     \centering
@@ -638,25 +622,24 @@ interpreted as trend evidence rather than precise multi-seed estimates.
 
 \FloatBarrier
 
-\paragraph{Results:} Top-1 accuracy decreases at every measured vocabulary size, from $58.82\,\%$ at 30 classes to
+Top-1 accuracy decreases at every measured vocabulary size, from $58.82\,\%$ at 30 classes to
 $9.76\,\%$ at 1{,}500 classes. Top-5 also decreases strongly, although it rises slightly between
 1{,}200 and 1{,}500 classes (27.69 to 28.23), which is another reminder that the large-vocabulary
 rows are single-seed measurements.
 
-\paragraph{Positive evidence:} The phase quantifies the scaling bottleneck instead of hiding it. The drop is gradual rather than
+The phase quantifies the scaling bottleneck instead of hiding it. The drop is gradual rather than
 an abrupt implementation failure, and it is consistent with the reduction in per-class data as the
 vocabulary expands. The parallel-coordinates diagnostic in
 Appendix~\ref{app:additional_experimental_figures}, Figure~\ref{fig:app_scaling_parallel}, also
 supports this interpretation: the 30-class reference has 11.07 mean videos per class, 99.00\,\%
 final train accuracy and 63.90\,\% validation Top-1, while the 1{,}500-class run has 4.58 videos
-per class, 74.77\,\% final train accuracy and 11.67\,\% validation Top-1.
-
-\paragraph{Negative evidence:} The phase does not show that the selected model scales to large vocabularies in a practically
+per class, 74.77\,\% final train accuracy and 11.67\,\% validation Top-1. The limitation is that
+the phase does not show that the selected model scales to large vocabularies in a practically
 usable way. Above 700 classes, several runs reach the maximum epoch budget without a clear
 improvement in validation performance. Because these rows are single-seed, the exact slope of the
 curve should not be treated as a statistically validated law.
 
-\paragraph{Conclusion:} The phase achieves its analytical objective but not a deployment objective. It shows that the main
+The phase achieves its analytical objective but not a deployment objective. It shows that the main
 limitation is data starvation at the class level, not simply the number of labels or a single
 software failure. It also sets a clear boundary for the project: the implemented pipeline is
 appropriate as a research prototype and small-vocabulary recogniser, but it is not a
@@ -665,14 +648,12 @@ large-vocabulary ASL translator.
 \section{Phase 7 - Quantitative Balance and Limitations}
 \label{sec:exp_limitations}
 
-\paragraph{Purpose:} The purpose of the final quantitative phase is to separate what the preceding experiments
-demonstrate from what remains unresolved. No new model is trained here. The phase summarises the
-positive evidence, the negative evidence and the practical meaning of the results with respect to
-the project objectives.
-
-\paragraph{Configuration:} The input to this phase is the set of artefacts generated by phases M1 to M6: configuration files,
-metrics, confusion matrices, per-class reports, manifests and audit notes.
-Table~\ref{tab:exp_limitation_categories} classifies the limitations that affect interpretation.
+The final quantitative phase separates what the preceding experiments demonstrate from what remains
+unresolved. No new model is trained here; the phase summarises the supporting evidence, unresolved
+limitations and the practical meaning of the results with respect to the project objectives. Its
+input is the set of artefacts generated by phases M1 to M6: configuration files, metrics, confusion
+matrices, per-class reports, manifests and audit notes. Table~\ref{tab:exp_limitation_categories}
+classifies the limitations that affect interpretation.
 
 \begin{table}[!htbp]
     \centering
@@ -694,14 +675,14 @@ Table~\ref{tab:exp_limitation_categories} classifies the limitations that affect
     \end{tabularx}
 \end{table}
 
-\paragraph{Positive evidence:} The quantitative experiments support four project claims. First, landmark-based input is a viable
-representation for isolated ASL word recognition. Second, temporal attention improves the recurrent
-baseline on WLASL30 under the executed comparison. Third, the same pipeline can be retrained on
-MS-ASL50 without dataset-specific architecture changes. Fourth, vocabulary growth exposes a
-data-scarcity bottleneck that can be measured directly.
+Taken together, the quantitative experiments support four project claims. First, landmark-based
+input is a viable representation for isolated ASL word recognition. Second, temporal attention
+improves the recurrent baseline on WLASL30 under the executed comparison. Third, the same pipeline
+can be retrained on MS-ASL50 without dataset-specific architecture changes. Fourth, vocabulary
+growth exposes a data-scarcity bottleneck that can be measured directly.
 
-\paragraph{Negative evidence:} The experiments also constrain what can be claimed. The Transformer baseline was not dominant in
-the WLASL30 low-data setting, but this does not prove that Transformers are unsuitable for sign
+The same experiments also constrain what can be claimed. The Transformer baseline was not dominant
+in the WLASL30 low-data setting, but this does not prove that Transformers are unsuitable for sign
 language recognition in general. The WLASL30 fixed test split is too small for precise per-class
 conclusions. The MS-ASL50 reconstruction must be interpreted in light of YouTube attrition.
 Finally, the scaling study beyond 30 classes is single-seed, so it establishes a downward trend but
@@ -734,7 +715,7 @@ two-hand signs and for downstream studies of signer-handedness bias. Class-weigh
 minority-class oversampling were also not applied, despite the per-class disparities documented in
 Sections~\ref{sec:exp_wlasl30} and~\ref{sec:exp_msasl}.
 
-\paragraph{Conclusion:} The quantitative block passes the reproducibility objective for the selected pipeline: the model is
+The quantitative block passes the reproducibility objective for the selected pipeline: the model is
 selected through a controlled comparison, validated through repeated WLASL30 protocols and
 reproduced on MS-ASL50. The scalability objective is only partially achieved: the project measures
 the degradation from 30 to 1{,}500 WLASL classes, but it does not solve the large vocabulary
